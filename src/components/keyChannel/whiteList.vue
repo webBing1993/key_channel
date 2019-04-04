@@ -2,7 +2,7 @@
 <template>
   <div>
     <div class="whiteList" v-show="showTrue">
-      <div v-if="whiteList.length != 0">
+      <div>
         <div class="search_add">
           <div class="search">
             <input type="text" v-model="name" placeholder="请输入人员姓名">
@@ -10,27 +10,33 @@
           </div>
           <div class="add" @click="add">+添加</div>
         </div>
-        <el-row :gutter="20">
-          <el-col :span="6"  v-for="item in whiteList">
-            <div class="grid-content">
-              <div class="img">
-                <img :src="item.img_url" alt="">
+        <div v-if="whiteList.length != 0">
+          <el-row :gutter="20">
+            <el-col :span="6"  v-for="item in whiteList">
+              <div class="grid-content">
+                <div class="img">
+                  <img :src="item.img_url" alt="">
+                </div>
               </div>
-            </div>
-            <div class="content">
-              <div class="name">{{item.name}}</div>
-              <div class="remove" @click="remove(item)">删除</div>
-            </div>
-          </el-col>
-        </el-row>
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page.sync="currentPage"
-          :page-size="15"
-          layout="total, prev, pager, next"
-          :total="total">
-        </el-pagination>
+              <div class="content">
+                <div class="name">{{item.name}}</div>
+                <div class="remove" @click="remove(item)">删除</div>
+              </div>
+            </el-col>
+          </el-row>
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page.sync="currentPage"
+            :page-size="15"
+            layout="total, prev, pager, next"
+            :total="total">
+          </el-pagination>
+        </div>
+        <div class="noMsg" v-else>
+          <div class="img"><img src="../../assets/index/zanwuneirong.png" alt=""></div>
+          <p>暂无内容</p>
+        </div>
 
         <!-- 添加人员弹框-->
         <div class="addToggle" v-if="addShow">
@@ -71,10 +77,7 @@
           </div>
         </div>
       </div>
-      <div class="noMsg" v-else>
-        <div class="img"><img src="../../assets/index/zanwuneirong.png" alt=""></div>
-        <p>暂无内容</p>
-      </div>
+
     </div>
   </div>
 </template>
