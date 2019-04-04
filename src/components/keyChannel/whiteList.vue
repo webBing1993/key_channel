@@ -112,7 +112,7 @@
           offset: page,
           limit: 30,
           data:{
-            name: this.name,
+            likeName: this.name,
             createTimeStart:'',
             createTimeEnd:'',
             removed:false
@@ -225,7 +225,7 @@
     },
     computed: {
       uploadUrl(){
-        return this.httpUrlEnv()+'gemini/identity/whiteList/pic'
+        return this.httpUrlEnv + 'gemini/identity/whiteList/pic'
       },
       getHeader(){
         return {

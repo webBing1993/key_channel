@@ -5,7 +5,7 @@ import {mapState, mapGetters, mapActions, mapMutations} from 'vuex';
 Vue.mixin({
   data(){
     return{
-        httpUrlEnv:apiTool.httpUrlEnv,
+        httpUrlEnv: apiTool.httpUrlEnv(),
     }
   },
   computed:{

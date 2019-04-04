@@ -8,7 +8,7 @@
           </el-col>
           <el-col :span="6">
             <div class="name_logout">
-              <span class="name">您好，{{myname}}</span>
+              <span class="name">您好，{{myName}}</span>
               <span class="logout" @click="logout">退出</span>
             </div>
           </el-col>
@@ -33,6 +33,7 @@
     name: 'keyChannel',
     data () {
       return {
+        myName: '',
         total1: 0,
         total2: 0,
         total3: 0,
@@ -40,6 +41,7 @@
       }
     },
     mounted () {
+      this.myName = sessionStorage.getItem('myName');
       this.getDoubtful(0,['SUSPICIOUS_GUEST'],0);
       this.getDoubtful(0,["NONE", "VISITOR"],1);
       this.getDoubtful(0,["READ"],2);
@@ -104,9 +106,6 @@
 
     },
     computed: {
-      ...mapState ([
-        'myname'
-      ])
     }
   }
 </script>

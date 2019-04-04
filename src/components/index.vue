@@ -4,7 +4,7 @@
       <div :class="flagPc ? 'body ' : 'body flagBody'">
         <p class="title">
           <i><img src="../assets/index/tongdao.png" alt=""></i>
-          复创关键通道后台系统
+          关键通道系统
         </p>
         <div class="phone">
           <i><img src="../assets/index/shoujihao.png" alt=""></i>
@@ -128,6 +128,7 @@ export default {
         onsuccess: body => {
           console.log('body:',body);
           if (body.data.code == 0) {
+            sessionStorage.setItem('myName',body.data.data.name);
             this.MYNAME(body.data.data.name);
             this.TOKEN(body.data.data.token);
             sessionStorage.session_id = body.data.data.token;
