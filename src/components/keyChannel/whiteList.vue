@@ -229,6 +229,7 @@
         if (httpUrl.indexOf('key_channel')) {
           httpUrl = httpUrl.split('key_channel')[0];
         }
+        console.log('httpUrl:',httpUrl);
         return httpUrl + 'gemini/identity/whiteList/pic'
       },
       getHeader(){
