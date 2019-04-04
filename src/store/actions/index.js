@@ -3,6 +3,19 @@ import router from '../../router/index.js'
 import httpTool from '../../tool/httpTool.js'
 import Vue from 'vue'
 
+function openFullScreen() {
+  const loading = Vue.prototype.$loading({
+    lock: true,
+    text: '加载中...',
+    background: 'rgba(0, 0, 0, 0.7)'
+  });
+  return loading;
+}
+
+function closeFullScreen(loading){
+  loading.close();
+}
+
 const actions = {
 
   goto: (ctx, param) => {
@@ -30,6 +43,7 @@ const actions = {
       data: param.body || null,
       timeout: param.timeout || 60000,
     }).then(response => {
+      sessionStorage.setItem('onLoad',true);
       console.log("response",response);
       if (response.data.code == 0) {
         param.onSuccess && param.onSuccess(response)
@@ -52,6 +66,8 @@ const actions = {
   },
 
   resource: (ctx, param) => {
+    openFullScreen();
+
     axios({
       url: httpTool.httpUrlEnv() + 'gemini' + param.url,
       method: param.method || 'GET',
@@ -65,6 +81,7 @@ const actions = {
       timeout: param.timeout || 60000,
     }).then(response => {
       console.log("response",response);
+      closeFullScreen (openFullScreen());
       if (response.data.code == 0 || response.data.errcode == 0) {
         param.onSuccess && param.onSuccess(response)
       }
@@ -78,7 +95,7 @@ const actions = {
       }
     }).catch(
       error => {
-        // ctx.dispatch ('showLoading', false);
+        closeFullScreen (openFullScreen());
         if(error){
           console.log("error",error)
         }
