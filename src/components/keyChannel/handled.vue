@@ -58,6 +58,7 @@
       ]),
       getDoubtful (page) {
         this.doubtfulList = [];
+        page = page * 15;
         this.getDoubtfulList ({
           offset: page,
           limit: 15,

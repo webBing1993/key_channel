@@ -107,6 +107,7 @@
         'uploadBmd'
       ]),
       getWhite (page) {
+        page = page * 30;
         this.whiteList = [];
         this.getWhiteList ({
           offset: page,
@@ -225,12 +226,7 @@
     },
     computed: {
       uploadUrl(){
-        let httpUrl = this.httpUrlEnv;
-        if (httpUrl.indexOf('key_channel')) {
-          httpUrl = httpUrl.split('key_channel')[0];
-        }
-        console.log('httpUrl:',httpUrl);
-        return httpUrl + 'gemini/identity/whiteList/pic'
+        return this.httpUrlEnv + 'gemini/identity/whiteList/pic'
       },
       getHeader(){
         return {

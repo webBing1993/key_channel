@@ -5,7 +5,7 @@ import {mapState, mapGetters, mapActions, mapMutations} from 'vuex';
 Vue.mixin({
   data(){
     return{
-        httpUrlEnv: apiTool.httpUrlEnv(),
+        httpUrlEnv: '',
     }
   },
   computed:{
@@ -65,5 +65,12 @@ Vue.mixin({
 
           return newtimestamp ? output : ''
       }
-  }
+  },
+  mounted () {
+    let httpUrl = apiTool.httpUrlEnv();
+    if (httpUrl.indexOf('key_channel')) {
+      httpUrl = httpUrl.split('key_channel')[0];
+    }
+    this.httpUrlEnv = httpUrl;
+  },
 });

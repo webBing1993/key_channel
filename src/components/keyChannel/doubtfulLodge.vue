@@ -58,6 +58,7 @@
         'hasChecked'
       ]),
       getDoubtful (page) {
+        page = page * 15;
         this.doubtfulList = [];
         this.getDoubtfulList ({
           offset: page,
