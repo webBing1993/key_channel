@@ -1,30 +1,36 @@
 <!-- 可疑留宿-->
 <template>
   <div>
-    <div class="doubtful_lodge">
-      <p>*陌生人报警/滞留，请确认后点击移除按钮</p>
-      <el-row :gutter="20">
-        <el-col :span="6"  v-for="item in doubtfulList">
-          <div class="grid-content">
-            <div class="fl img">
-              <img :src="item.facial_pic" alt="">
+    <div class="doubtful_lodge" v-show="showTrue">
+      <div  v-if="doubtfulList.length != 0">
+        <p>*陌生人报警/滞留，请确认后点击移除按钮</p>
+        <el-row :gutter="20">
+          <el-col :span="6"  v-for="item in doubtfulList">
+            <div class="grid-content">
+              <div class="fl img">
+                <img :src="item.facial_pic" alt="">
+              </div>
             </div>
-          </div>
-          <div class="fr content">
-            <div class="time">时间 {{datetimeparse(item.filming_time,'YYYYMMDD hh:mm:ss')}}</div>
-            <div class="address">位置 -</div>
-            <div class="remove fr" @click="remove(item)">确认移除</div>
-          </div>
-        </el-col>
-      </el-row>
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page.sync="currentPage"
-        :page-size="15"
-        layout="total, prev, pager, next"
-        :total="total">
-      </el-pagination>
+            <div class="fr content">
+              <div class="time">时间 {{datetimeparse(item.filming_time,'YYYYMMDD hh:mm:ss')}}</div>
+              <div class="address">位置 -</div>
+              <div class="remove fr" @click="remove(item)">确认移除</div>
+            </div>
+          </el-col>
+        </el-row>
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page.sync="currentPage"
+          :page-size="15"
+          layout="total, prev, pager, next"
+          :total="total">
+        </el-pagination>
+      </div>
+      <div class="noMsg" v-else>
+        <div class="img"><img src="../../assets/index/zanwuneirong.png" alt=""></div>
+        <p>暂无内容</p>
+      </div>
     </div>
   </div>
 </template>
@@ -35,6 +41,7 @@
     name: 'keyChannel',
     data () {
       return {
+        showTrue: false,
         doubtfulList: [],
         currentPage: 1,
         total: 0,
@@ -61,6 +68,7 @@
             statuses: ['SUSPICIOUS_GUEST']
           },
           onsuccess: body => {
+              this.showTrue = true;
               this.total = parseInt(body.headers['x-total-count']);
               this.doubtfulList = [...body.data.data];
           }
@@ -154,6 +162,26 @@
           cursor: pointer;
         }
       }
+    }
+  }
+  .noMsg {
+    margin: 150px auto;
+    text-align: center;
+    .img {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto;
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+    }
+    p {
+      color: #606266;
+      font-size: 14px;
+      margin-top: 20px;
+      text-align: center;
     }
   }
 }

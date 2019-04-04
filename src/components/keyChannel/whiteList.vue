@@ -1,73 +1,79 @@
 <!-- 白名单-->
 <template>
   <div>
-    <div class="whiteList">
-      <div class="search_add">
-        <div class="search">
-          <input type="text" v-model="name" placeholder="请输入人员姓名">
-          <i @click="reach"><img src="../../assets/index/sousuo@2x.png" alt=""></i>
+    <div class="whiteList" v-show="showTrue">
+      <div v-if="whiteList.length != 0">
+        <div class="search_add">
+          <div class="search">
+            <input type="text" v-model="name" placeholder="请输入人员姓名">
+            <i @click="reach"><img src="../../assets/index/sousuo@2x.png" alt=""></i>
+          </div>
+          <div class="add" @click="add">+添加</div>
         </div>
-        <div class="add" @click="add">+添加</div>
-      </div>
-      <el-row :gutter="20">
-        <el-col :span="6"  v-for="item in whiteList">
-          <div class="grid-content">
-            <div class="img">
-              <img :src="item.img_url" alt="">
+        <el-row :gutter="20">
+          <el-col :span="6"  v-for="item in whiteList">
+            <div class="grid-content">
+              <div class="img">
+                <img :src="item.img_url" alt="">
+              </div>
             </div>
-          </div>
-          <div class="content">
-            <div class="name">{{item.name}}</div>
-            <div class="remove" @click="remove(item)">删除</div>
-          </div>
-        </el-col>
-      </el-row>
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page.sync="currentPage"
-        :page-size="15"
-        layout="total, prev, pager, next"
-        :total="total">
-      </el-pagination>
+            <div class="content">
+              <div class="name">{{item.name}}</div>
+              <div class="remove" @click="remove(item)">删除</div>
+            </div>
+          </el-col>
+        </el-row>
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page.sync="currentPage"
+          :page-size="15"
+          layout="total, prev, pager, next"
+          :total="total">
+        </el-pagination>
 
-      <!-- 添加人员弹框-->
-      <div class="addToggle" v-if="addShow">
-        <div class="shadow"></div>
-        <div class="add_content">
-          <div class="add_title">
-            <span>添加人员</span>
-            <i @click="cancel"><img src="../../assets/index/guanbi.png" alt=""></i>
-          </div>
-          <div class="add_list">
-            <div class="list">
-              <div class="name">人员姓名</div>
-              <div class="add_input">
-                <input type="text" v-model="add_name" placeholder="请输入姓名">
+        <!-- 添加人员弹框-->
+        <div class="addToggle" v-if="addShow">
+          <div class="shadow"></div>
+          <div class="add_content">
+            <div class="add_title">
+              <span>添加人员</span>
+              <i @click="cancel"><img src="../../assets/index/guanbi.png" alt=""></i>
+            </div>
+            <div class="add_list">
+              <div class="list">
+                <div class="name">人员姓名</div>
+                <div class="add_input">
+                  <input type="text" v-model="add_name" placeholder="请输入姓名">
+                </div>
+              </div>
+              <div class="list">
+                <div class="name">添加照片</div>
+                <div class="add_input">
+                  <el-upload
+                    class="avatar-uploader"
+                    :action="uploadUrl"
+                    :headers="getHeader"
+                    :show-file-list="false"
+                    :on-success="handleAvatarSuccess1"
+                    :before-upload="beforeAvatarUpload1"
+                    list-type="picture">
+                    <img :src="imageUrl" alt="" v-if="imageUrl != ''">
+                    <el-button v-else><img src="../../assets/index/tianjiazhaopian.png" alt=""></el-button>
+                  </el-upload>
+                </div>
               </div>
             </div>
-            <div class="list">
-              <div class="name">添加照片</div>
-              <div class="add_input">
-                <el-upload
-                  class="avatar-uploader"
-                  :action="uploadUrl"
-                  :headers="getHeader"
-                  :show-file-list="false"
-                  :on-success="handleAvatarSuccess1"
-                  :before-upload="beforeAvatarUpload1"
-                  list-type="picture">
-                  <img :src="imageUrl" alt="" v-if="imageUrl != ''">
-                  <el-button v-else><img src="../../assets/index/tianjiazhaopian.png" alt=""></el-button>
-                </el-upload>
-              </div>
+            <div class="btns">
+              <div class="cancel" @click="cancel">取消</div>
+              <div class="sure" @click="sure">确认</div>
             </div>
-          </div>
-          <div class="btns">
-            <div class="cancel" @click="cancel">取消</div>
-            <div class="sure" @click="sure">确认</div>
           </div>
         </div>
+      </div>
+      <div class="noMsg" v-else>
+        <div class="img"><img src="../../assets/index/zanwuneirong.png" alt=""></div>
+        <p>暂无内容</p>
       </div>
     </div>
   </div>
@@ -79,6 +85,7 @@
     name: 'keyChannel',
     data () {
       return {
+        showTrue: false,
         whiteList: [],
         currentPage: 1,
         total: 0,
@@ -111,6 +118,7 @@
             removed:false
           },
           onsuccess: body => {
+            this.showTrue = true;
             this.total = parseInt(body.headers['x-total-count']);
             this.whiteList = [...body.data.data];
           }
@@ -448,6 +456,26 @@
             background: #409EFF;
           }
         }
+      }
+    }
+    .noMsg {
+      margin: 150px auto;
+      text-align: center;
+      .img {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto;
+        img {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+      }
+      p {
+        color: #606266;
+        font-size: 14px;
+        margin-top: 20px;
+        text-align: center;
       }
     }
   }
