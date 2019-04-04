@@ -136,6 +136,7 @@
               ids: [item.id]
             },
             onsuccess:body=>{
+              this.$emit('getMessage', '');
               this.$message({
                 type: 'success',
                 message: '删除成功!'
@@ -201,6 +202,7 @@
               name: this.add_name
             },
             onsuccess:()=>{
+              this.$emit('getMessage', '');
               this.addShow = false;
               this.getWhite(0);
               this.add_name == '';

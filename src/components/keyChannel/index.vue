@@ -21,7 +21,7 @@
           <router-link  :to="'/handled'">已处理({{total3}})</router-link>
           <router-link  :to="'/whiteList'">白名单({{total4}})</router-link>
         </div>
-        <router-view></router-view>
+        <router-view @getMessage="showMsg"></router-view>
       </div>
     </div>
   </div>
@@ -94,6 +94,13 @@
           }
         })
       },
+
+      showMsg (val) {
+        this.getDoubtful(0,['SUSPICIOUS_GUEST'],0);
+        this.getDoubtful(0,["NONE", "VISITOR"],1);
+        this.getDoubtful(0,["READ"],2);
+        this.getWhite(0);
+      }
 
     },
     computed: {

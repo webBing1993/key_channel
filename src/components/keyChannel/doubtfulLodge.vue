@@ -85,6 +85,7 @@
           this.hasChecked({
             illegalGuestId: item.illegal_guest_id,
             onsuccess: body=>{
+              this.$emit('getMessage', '');
               this.$message({
                 type: 'success',
                 message: '移除成功!'
