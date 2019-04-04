@@ -225,7 +225,11 @@
     },
     computed: {
       uploadUrl(){
-        return this.httpUrlEnv + 'gemini/identity/whiteList/pic'
+        let httpUrl = this.httpUrlEnv;
+        if (httpUrl.indexOf('key_channel')) {
+          httpUrl = httpUrl.split('key_channel')[0];
+        }
+        return httpUrl + 'gemini/identity/whiteList/pic'
       },
       getHeader(){
         return {
