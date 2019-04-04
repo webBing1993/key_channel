@@ -208,9 +208,9 @@
             onsuccess:()=>{
               this.$emit('getMessage', '');
               this.addShow = false;
+              this.add_name = '';
+              this.imageUrl = '';
               this.getWhite(0);
-              this.add_name == '';
-              this.imageUrl == ''
             }
           })
         }
