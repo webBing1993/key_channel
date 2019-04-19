@@ -16,7 +16,7 @@
       </div>
       <div class="container">
         <div class="tabs">
-          <router-link  :to="'/keyChannel'">可以留宿({{total1}})</router-link>
+          <router-link  :to="'/keyChannel'">可疑留宿({{total1}})</router-link>
           <router-link  :to="'/transientPassengers'">过往来客({{total2}})</router-link>
           <router-link  :to="'/handled'">已处理({{total3}})</router-link>
           <router-link  :to="'/whiteList'">白名单({{total4}})</router-link>
