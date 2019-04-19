@@ -229,7 +229,7 @@
     },
     computed: {
       uploadUrl(){
-        return 'http://qa.fortrun.cn/' + 'gemini/identity/whiteList/pic'
+        return 'http://gem.fortrun.cn/' + 'gemini/identity/whiteList/pic'
       },
       getHeader(){
         return {
