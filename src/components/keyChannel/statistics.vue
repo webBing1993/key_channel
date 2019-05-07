@@ -172,12 +172,13 @@
           },
           onsuccess: body => {
               let list = body.data.data.list;
-              let timeArr = [],suspiciousList = [],staffList = [],visitorList = [];
+              let timeArr = [],suspiciousList = [],staffList = [],visitorList = [],guestList = [];
               list.forEach(item => {
                 timeArr.push(item.date);
                 suspiciousList.push(item.suspicious);
                 staffList.push(item.staff);
                 visitorList.push(item.visitor);
+                guestList.push(item.guest);
               });
 
               // 处理空日期的填充
@@ -187,6 +188,7 @@
                       suspiciousList.splice(index, 0, 0);
                       staffList.splice(index, 0, 0);
                       visitorList.splice(index, 0, 0);
+                      guestList.splice(index, 0, 0);
                   }
               });
 
@@ -194,17 +196,21 @@
               this.echarts1Options.suspiciousList = suspiciousList;
               this.echarts1Options.staffList = staffList;
               this.echarts1Options.visitorList = visitorList;
+              this.echarts1Options.guestList = guestList;
 
-              let obj = {},obj1 = {}, obj2 = {};
+              let obj = {},obj1 = {}, obj2 = {}, obj3 = {};
               obj.name = '陌生人';
               obj.value = body.data.data.suspicious;
               obj1.name = '在住人';
-              obj1.value = body.data.data.visitor;
+              obj1.value = body.data.data.guest;
               obj2.name = '工作人员';
               obj2.value = body.data.data.staff;
+              obj3.name = '访客';
+              obj3.value = body.data.data.visitor;
               this.echarts2Options.push(obj);
               this.echarts2Options.push(obj1);
               this.echarts2Options.push(obj2);
+              this.echarts2Options.push(obj3);
 
               this.$nextTick(() => {
                 // 折线图
@@ -229,7 +235,7 @@
           legend: {
             y: 'bottom',
             x: 'center',
-            data:['陌生人','在住人','工作人员']
+            data:['陌生人','在住人','工作人员','访客']
           },
           xAxis: {
             type: 'category',
@@ -250,13 +256,19 @@
               name:'在住人',
               type:'line',
               stack: '总量',
-              data: this.echarts1Options.visitorList
+              data: this.echarts1Options.guestList
             },
             {
               name:'工作人员',
               type:'line',
               stack: '总量',
               data: this.echarts1Options.staffList
+            },
+            {
+              name:'访客',
+              type:'line',
+              stack: '总量',
+              data: this.echarts1Options.visitorList
             }
           ]
         })
@@ -281,7 +293,7 @@
           legend: {
             y: 'bottom',
             x: 'center',
-            data: ['陌生人','在住人','工作人员']
+            data: ['陌生人','在住人','工作人员','访客']
           },
         });
       },

@@ -31,17 +31,24 @@
                 <el-col :span="12">
                   <div class="tabs">
                     <el-row>
-                      <el-col :span="6"  :class="tab1 ? 'active tab' : 'tab'" @click.native="tabClick(0)">
+                      <el-col :span="4"  :class="tab1 ? 'active tab' : 'tab'" @click.native="tabClick(0)">
                         <span>今日抓拍</span><span>({{total1}})</span>
                       </el-col>
-                      <el-col :span="6"  :class="tab2 ? 'active tab' : 'tab'" @click.native="tabClick(1)">
+                      <el-col :span="1" style="height: 100%"></el-col>
+                      <el-col :span="4"  :class="tab2 ? 'active tab' : 'tab'" @click.native="tabClick(1)">
                         <span>陌生人</span><span>({{total2}})</span>
                       </el-col>
-                      <el-col :span="6"  :class="tab3 ? 'active tab' : 'tab'" @click.native="tabClick(2)">
+                      <el-col :span="1" style="height: 100%"></el-col>
+                      <el-col :span="4"  :class="tab3 ? 'active tab' : 'tab'" @click.native="tabClick(2)">
                         <span>工作人员</span><span>({{total3}})</span>
                       </el-col>
-                      <el-col :span="6"  :class="tab4 ? 'active tab' : 'tab'" @click.native="tabClick(3)">
+                      <el-col :span="1" style="height: 100%"></el-col>
+                      <el-col :span="4"  :class="tab4 ? 'active tab' : 'tab'" @click.native="tabClick(3)">
                         <span>在住人</span><span>({{total4}})</span>
+                      </el-col>
+                      <el-col :span="1" style="height: 100%"></el-col>
+                      <el-col :span="4"  :class="tab5 ? 'active tab' : 'tab'" @click.native="tabClick(4)">
+                        <span>访客</span><span>({{total5}})</span>
                       </el-col>
                     </el-row>
                   </div>
@@ -79,7 +86,8 @@
                       </div>
                       <div class="list_content">
                         <div class="title" v-if="item.guestType == 'STAFF'">工作人员</div>
-                        <div class="title" v-else-if="item.guestType == 'VISITOR'">住客</div>
+                        <div class="title"  v-else-if="item.guestType == 'GUEST_ID' || item.guestType == 'GUEST_LIVE'">住客</div>
+                        <div class="title"  v-else-if="item.guestType == 'VISITOR'">访客</div>
                         <div class="title" v-else>陌生人</div>
                         <div class="content">
                           <p>
@@ -94,9 +102,17 @@
                             <span>来源：</span>
                             <span>{{hotelName}}工作人员库</span>
                           </p>
+                          <p v-else-if="item.guestType == 'GUEST_ID'">
+                            <span>来源：</span>
+                            <span>{{hotelName}}住客身份库</span>
+                          </p>
+                          <p v-else-if="item.guestType == 'GUEST_LIVE'">
+                            <span>来源：</span>
+                            <span>{{hotelName}}住客现场库</span>
+                          </p>
                           <p v-else-if="item.guestType == 'VISITOR'">
                             <span>来源：</span>
-                            <span>{{hotelName}}住客库</span>
+                            <span>{{hotelName}}访客库</span>
                           </p>
                           <p v-else>
                             <span>来源：</span>
@@ -105,7 +121,8 @@
                           <p>
                             <span>类型：</span>
                             <span v-if="item.guestType == 'STAFF'">工作人员</span>
-                            <span v-else-if="item.guestType == 'VISITOR'">住客</span>
+                            <span  v-else-if="item.guestType == 'GUEST_ID' || item.guestType == 'GUEST_LIVE'">住客</span>
+                            <span  v-else-if="item.guestType == 'VISITOR'">访客</span>
                             <span v-else>陌生人</span>
                           </p>
                         </div>
@@ -137,7 +154,8 @@
                       </div>
                       <div class="list_content">
                         <div class="title" v-if="item.guestType == 'STAFF'">工作人员</div>
-                        <div class="title" v-else-if="item.guestType == 'VISITOR'">住客</div>
+                        <div class="title"  v-else-if="item.guestType == 'GUEST_ID' || item.guestType == 'GUEST_LIVE'">住客</div>
+                        <div class="title"  v-else-if="item.guestType == 'VISITOR'">访客</div>
                         <div class="title" v-else>陌生人</div>
                         <div class="content">
                           <p>
@@ -152,9 +170,17 @@
                             <span>来源：</span>
                             <span>{{hotelName}}工作人员库</span>
                           </p>
+                          <p v-else-if="item.guestType == 'GUEST_ID'">
+                            <span>来源：</span>
+                            <span>{{hotelName}}住客身份库</span>
+                          </p>
+                          <p v-else-if="item.guestType == 'GUEST_LIVE'">
+                            <span>来源：</span>
+                            <span>{{hotelName}}住客现场库</span>
+                          </p>
                           <p v-else-if="item.guestType == 'VISITOR'">
                             <span>来源：</span>
-                            <span>{{hotelName}}住客库</span>
+                            <span>{{hotelName}}访客库</span>
                           </p>
                           <p v-else>
                             <span>来源：</span>
@@ -163,7 +189,8 @@
                           <p>
                             <span>类型：</span>
                             <span v-if="item.guestType == 'STAFF'">工作人员</span>
-                            <span v-else-if="item.guestType == 'VISITOR'">住客</span>
+                            <span v-else-if="item.guestType == 'GUEST_ID' || item.guestType == 'GUEST_LIVE'">住客</span>
+                            <span v-else-if="item.guestType == 'VISITOR'">访客</span>
                             <span v-else>陌生人</span>
                           </p>
                         </div>
@@ -195,7 +222,8 @@
                       </div>
                       <div class="list_content">
                         <div class="title" v-if="item.guestType == 'STAFF'">工作人员</div>
-                        <div class="title" v-else-if="item.guestType == 'VISITOR'">住客</div>
+                        <div class="title" v-else-if="item.guestType == 'GUEST_ID' || item.guestType == 'GUEST_LIVE'">住客</div>
+                        <div class="title"  v-else-if="item.guestType == 'VISITOR'">访客</div>
                         <div class="title" v-else>陌生人</div>
                         <div class="content">
                           <p>
@@ -210,9 +238,17 @@
                             <span>来源：</span>
                             <span>{{hotelName}}工作人员库</span>
                           </p>
+                          <p v-else-if="item.guestType == 'GUEST_ID'">
+                            <span>来源：</span>
+                            <span>{{hotelName}}住客身份库</span>
+                          </p>
+                          <p v-else-if="item.guestType == 'GUEST_LIVE'">
+                            <span>来源：</span>
+                            <span>{{hotelName}}住客现场库</span>
+                          </p>
                           <p v-else-if="item.guestType == 'VISITOR'">
                             <span>来源：</span>
-                            <span>{{hotelName}}住客库</span>
+                            <span>{{hotelName}}访客库</span>
                           </p>
                           <p v-else>
                             <span>来源：</span>
@@ -221,7 +257,8 @@
                           <p>
                             <span>类型：</span>
                             <span v-if="item.guestType == 'STAFF'">工作人员</span>
-                            <span v-else-if="item.guestType == 'VISITOR'">住客</span>
+                            <span v-else-if="item.guestType == 'GUEST_ID' || item.guestType == 'GUEST_LIVE'">住客</span>
+                            <span v-else-if="item.guestType == 'VISITOR'">访客</span>
                             <span v-else>陌生人</span>
                           </p>
                         </div>
@@ -253,7 +290,8 @@
                       </div>
                       <div class="list_content">
                         <div class="title" v-if="item.guestType == 'STAFF'">工作人员</div>
-                        <div class="title" v-else-if="item.guestType == 'VISITOR'">住客</div>
+                        <div class="title" v-else-if="item.guestType == 'GUEST_ID' || item.guestType == 'GUEST_LIVE'">住客</div>
+                        <div class="title"  v-else-if="item.guestType == 'VISITOR'">访客</div>
                         <div class="title" v-else>陌生人</div>
                         <div class="content">
                           <p>
@@ -268,9 +306,17 @@
                             <span>来源：</span>
                             <span>{{hotelName}}工作人员库</span>
                           </p>
+                          <p v-else-if="item.guestType == 'GUEST_ID'">
+                            <span>来源：</span>
+                            <span>{{hotelName}}住客身份库</span>
+                          </p>
+                          <p v-else-if="item.guestType == 'GUEST_LIVE'">
+                            <span>来源：</span>
+                            <span>{{hotelName}}住客现场库</span>
+                          </p>
                           <p v-else-if="item.guestType == 'VISITOR'">
                             <span>来源：</span>
-                            <span>{{hotelName}}住客库</span>
+                            <span>{{hotelName}}访客库</span>
                           </p>
                           <p v-else>
                             <span>来源：</span>
@@ -279,7 +325,8 @@
                           <p>
                             <span>类型：</span>
                             <span v-if="item.guestType == 'STAFF'">工作人员</span>
-                            <span v-else-if="item.guestType == 'VISITOR'">住客</span>
+                            <span v-else-if="item.guestType == 'GUEST_ID' || item.guestType == 'GUEST_LIVE'">住客</span>
+                            <span v-else-if="item.guestType == 'VISITOR'">访客</span>
                             <span v-else>陌生人</span>
                           </p>
                         </div>
@@ -300,6 +347,74 @@
                   <p>暂无内容</p>
                 </div>
               </div>
+              <!-- 访客列表-->
+              <div class="ailve_lists lists" v-if="tab5">
+                <el-row :gutter="15">
+                  <el-col :xs="12" :sm="8" :md="6" :lg="4" :xl="4"  class="list" v-for="(item,index) in visitorLists" v-bind:key="index">
+                    <div class="grid-content bg-purple">
+                      <div class="imgs">
+                        <div class="idCacrdImg"><img :src="item.most_similar_pic" alt=""  @click="bigImgShow(item.most_similar_pic)"></div>
+                        <div class="nowImg"><img :src="item.facial_pic" alt="" @click="bigImgShow(item.facial_pic)"></div>
+                      </div>
+                      <div class="list_content">
+                        <div class="title" v-if="item.guestType == 'STAFF'">工作人员</div>
+                        <div class="title" v-else-if="item.guestType == 'GUEST_ID' || item.guestType == 'GUEST_LIVE'">住客</div>
+                        <div class="title"  v-else-if="item.guestType == 'VISITOR'">访客</div>
+                        <div class="title" v-else>陌生人</div>
+                        <div class="content">
+                          <p>
+                            <span>时间：</span>
+                            <span>{{dateDiff(item.filming_time)}}小时前 ({{datetimeparse(item.filming_time,'hh:mm:ss')}})</span>
+                          </p>
+                          <p>
+                            <span>地点：</span>
+                            <span>{{item.location}}</span>
+                          </p>
+                          <p v-if="item.guestType == 'STAFF'">
+                            <span>来源：</span>
+                            <span>{{hotelName}}工作人员库</span>
+                          </p>
+                          <p v-else-if="item.guestType == 'GUEST_ID'">
+                            <span>来源：</span>
+                            <span>{{hotelName}}住客身份库</span>
+                          </p>
+                          <p v-else-if="item.guestType == 'GUEST_LIVE'">
+                            <span>来源：</span>
+                            <span>{{hotelName}}住客现场库</span>
+                          </p>
+                          <p v-else-if="item.guestType == 'VISITOR'">
+                            <span>来源：</span>
+                            <span>{{hotelName}}访客库</span>
+                          </p>
+                          <p v-else>
+                            <span>来源：</span>
+                            <span>-</span>
+                          </p>
+                          <p>
+                            <span>类型：</span>
+                            <span v-if="item.guestType == 'STAFF'">工作人员</span>
+                            <span v-else-if="item.guestType == 'GUEST_ID' || item.guestType == 'GUEST_LIVE'">住客</span>
+                            <span v-else-if="item.guestType == 'VISITOR'">访客</span>
+                            <span v-else>陌生人</span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </el-col>
+                </el-row>
+                <el-pagination
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange5"
+                  :current-page.sync="currentPage5"
+                  :page-size="15"
+                  layout="total, prev, pager, next"
+                  :total="total5" v-if="visitorLists.length != 0">
+                </el-pagination>
+                <div class="noMsg" v-else>
+                  <div class="img"><img src="../../assets/index/zanwuneirong.png" alt=""></div>
+                  <p>暂无内容</p>
+                </div>
+              </div>
             </el-main>
           </el-container>
         </el-main>
@@ -314,8 +429,9 @@
 
 <script>
   import {mapState,mapActions} from 'vuex';
+  import ElCol from "element-ui/packages/col/src/col";
   export default {
-    name: 'keyChannel',
+    components: {ElCol}, name: 'keyChannel',
     data () {
       return {
         hotelName: sessionStorage.hotelName, // 酒店名
@@ -327,14 +443,17 @@
         tab2: false,
         tab3: false,
         tab4: false,
+        tab5: false,
         currentPage1: 1,
         currentPage2: 1,
         currentPage3: 1,
         currentPage4: 1,
+        currentPage5: 1,
         total1: 0,              // 今日抓拍数量
         total2: 0,              // 陌生人数量
         total3: 0,              // 工作人员数量
         total4: 0,              // 在住人数量
+        total5: 0,              // 访客数量
         weekNum: 0,           // 本周抓拍数量
         monthNum: 0,          // 本月抓拍数量
         allNum: 0,            // 所有抓拍数量
@@ -342,12 +461,13 @@
         strangerLists: [],        // 陌生人列表
         whiteLists: [],        // 工作人员列表
         aliveLists: [],        // 在住人列表
+        visitorLists: [],        // 访客列表
         websock: null,
       }
     },
     mounted () {
       this.getLists(0,'',0,18,'');
-      this.getLists(0,'SUSPICIOUS_GUEST',4,200,'SUSPICIOUS_GUEST');
+      this.getLists(0,'SUSPICIOUS_GUEST',5,200,'SUSPICIOUS_GUEST');
       this.totalList();
       this.initWebSocket();
       console.log(this.datetimeparse(new Date(new Date(new Date().toLocaleDateString()).getTime()),'YYYY-MM-DD hh:mm:ss'));
@@ -371,30 +491,46 @@
 
       // tab切换
       tabClick(num) {
+        this.currentPage1 = 1;
+        this.currentPage2 = 1;
+        this.currentPage3 = 1;
+        this.currentPage4 = 1;
+        this.currentPage5 = 1;
         if (num == 0) {
           this.tab1 = true;
           this.tab2 = false;
           this.tab3 = false;
           this.tab4 = false;
+          this.tab5 = false;
           this.getLists(0,'',0,18,'');
         }else if (num == 1) {
           this.tab1 = false;
           this.tab2 = true;
           this.tab3 = false;
           this.tab4 = false;
+          this.tab5 = false;
           this.getLists(0,'SUSPICIOUS_GUEST',1,18,'READ');
         }else if (num == 2) {
           this.tab1 = false;
           this.tab2 = false;
           this.tab3 = true;
           this.tab4 = false;
+          this.tab5 = false;
           this.getLists(0,'STAFF',2,18,'');
-        }else {
+        }else if (num == 3) {
           this.tab1 = false;
           this.tab2 = false;
           this.tab3 = false;
           this.tab4 = true;
-          this.getLists(0,'VISITOR',3,18,'');
+          this.tab5 = false;
+          this.getLists(0,'GUEST',3,18,'');
+        }else {
+          this.tab1 = false;
+          this.tab2 = false;
+          this.tab3 = false;
+          this.tab4 = false;
+          this.tab5 = true;
+          this.getLists(0,'VISITOR',4,18,'');
         }
       },
 
@@ -417,7 +553,11 @@
       },
       handleCurrentChange4(val) {
         console.log(`当前页4: ${val}`);
-        this.getLists(val-1,'VISITOR',3,18,'');
+        this.getLists(val-1,'GUEST',3,18,'');
+      },
+      handleCurrentChange5(val) {
+        console.log(`当前页5: ${val}`);
+        this.getLists(val-1,'VISITOR',4,18,'');
       },
 
       // 距离现在相差几小时函数
@@ -460,6 +600,8 @@
             }else if (type == 3) {
 //              this.total4 = parseInt(body.headers['x-total-count']);
               this.aliveLists = [...body.data.data];
+            }else if (type == 4) {
+              this.visitorLists = [...body.data.data];
             }else {
               this.strangerNum = parseInt(body.headers['x-total-count']);
               this.strangerList = [...body.data.data];
@@ -476,7 +618,8 @@
               this.total1 = body.data.data.count;
               this.total2 = body.data.data.suspiciousCount;
               this.total3 = body.data.data.staffCount;
-              this.total4 = body.data.data.visitorCount;
+              this.total4 = body.data.data.guestCount;
+              this.total5 = body.data.data.visitorCount;
               this.weekNum = body.data.data.weekTotal;
               this.monthNum = body.data.data.monthTotal;
               this.allNum = body.data.data.total;
@@ -551,6 +694,27 @@
               this.toDayLists.unshift(newData);
               if (this.toDayLists.length > 18) {
                 this.toDayLists.splice(10,1);
+              }
+              if (newData.guestType == 'STAFF') {
+                this.total3++;
+                this.whiteLists.unshift(newData);
+                if (this.whiteLists.length > 18) {
+                  this.whiteLists.splice(10,1);
+                }
+              }
+              if (newData.guestType == 'GUEST_ID' || newData.guestType == 'GUEST_LIVE') {
+                this.total4++;
+                this.aliveLists.unshift(newData);
+                if (this.aliveLists.length > 18) {
+                  this.aliveLists.splice(10,1);
+                }
+              }
+              if (newData.guestType == 'VISITOR') {
+                this.total5++;
+                this.visitorLists.unshift(newData);
+                if (this.visitorLists.length > 18) {
+                  this.visitorLists.splice(10,1);
+                }
               }
             }
           });
