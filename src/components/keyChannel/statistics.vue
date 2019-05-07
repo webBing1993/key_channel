@@ -147,6 +147,7 @@
       getList (startTime,endTime) {
         let arr = this.getAll (startTime, endTime);
         console.log('arr:',arr);
+//        console.log('arr_:',arr.reverse());
         if (arr.length > 7) {
           this.$message('筛选时间不可大于7天');
           return
@@ -178,6 +179,17 @@
                 staffList.push(item.staff);
                 visitorList.push(item.visitor);
               });
+
+              // 处理空日期的填充
+              arr.forEach((item, index) => {
+                  if (arr[index] != timeArr[index]) {
+                      timeArr.splice(index, 0, item);
+                      suspiciousList.splice(index, 0, 0);
+                      staffList.splice(index, 0, 0);
+                      visitorList.splice(index, 0, 0);
+                  }
+              });
+
               this.echarts1Options.timeArr = timeArr;
               this.echarts1Options.suspiciousList = suspiciousList;
               this.echarts1Options.staffList = staffList;
