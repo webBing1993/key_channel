@@ -202,7 +202,7 @@
                   @size-change="handleSizeChange"
                   @current-change="handleCurrentChange2"
                   :current-page.sync="currentPage2"
-                  :page-size="12"
+                  :page-size="18"
                   layout="total, prev, pager, next"
                   :total="total2" v-if="strangerLists.length != 0">
                 </el-pagination>
@@ -270,7 +270,7 @@
                   @size-change="handleSizeChange"
                   @current-change="handleCurrentChange3"
                   :current-page.sync="currentPage3"
-                  :page-size="12"
+                  :page-size="18"
                   layout="total, prev, pager, next"
                   :total="total3" v-if="whiteLists.length != 0">
                 </el-pagination>
@@ -338,7 +338,7 @@
                   @size-change="handleSizeChange"
                   @current-change="handleCurrentChange4"
                   :current-page.sync="currentPage4"
-                  :page-size="15"
+                  :page-size="18"
                   layout="total, prev, pager, next"
                   :total="total4" v-if="aliveLists.length != 0">
                 </el-pagination>
@@ -406,7 +406,7 @@
                   @size-change="handleSizeChange"
                   @current-change="handleCurrentChange5"
                   :current-page.sync="currentPage5"
-                  :page-size="15"
+                  :page-size="18"
                   layout="total, prev, pager, next"
                   :total="total5" v-if="visitorLists.length != 0">
                 </el-pagination>
@@ -571,7 +571,7 @@
 
       // 获取数据列表
       getLists (page,statuses,type,limit,status) {
-        page = page * 15;
+        page = page * 18;
         this.doubtfulList = [];
         let obj = {
           createTimeStart: new Date(this.datetimeparse(new Date(new Date(new Date().toLocaleDateString()).getTime()),'YYYY-MM-DD hh:mm:ss')).getTime(),
