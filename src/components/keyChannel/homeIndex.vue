@@ -935,6 +935,10 @@
                   }
                   p:hover {
                     overflow: inherit;
+                    span {
+                      background-color: #fff;
+                      z-index: 5;
+                    }
                   }
                   p:nth-of-type(3) span:last-of-type {
                     color: #F46C6C;
