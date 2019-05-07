@@ -779,7 +779,7 @@
       }
     }
     .noMsg {
-      margin: 150px auto;
+      margin: 250px auto;
       text-align: center;
       .img {
         width: 100px;
