@@ -145,6 +145,17 @@ const actions = {
     })
   },
 
+  // 获取总数列表
+  totalGuest (ctx, param) {
+    ctx.dispatch('resource', {
+      url: '/identity/illegalGuest/total',
+      method: 'GET',
+      onSuccess: (body,headers) => {
+        param.onsuccess ? param.onsuccess(body,headers) : null
+      }
+    })
+  },
+
   // 可以留宿移除操作
   hasChecked(ctx, param){
     ctx.dispatch('resource', {
@@ -190,7 +201,19 @@ const actions = {
         param.onsuccess ? param.onsuccess (body) : null
       }
     })
-  }
+  },
+
+  // 获取图表数据
+  illegalGuest(ctx, param){
+    ctx.dispatch('resource', {
+      url: '/identity/illegalGuest/statistics',
+      method: 'POST',
+      body:param.data,
+      onSuccess: body => {
+        param.onsuccess ? param.onsuccess (body) : null
+      }
+    })
+  },
 
 };
 export default {

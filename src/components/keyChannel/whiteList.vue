@@ -3,16 +3,20 @@
   <div>
     <div class="whiteList" v-show="showTrue">
       <div>
+        <div class="white_title">
+          白名单
+        </div>
         <div class="search_add">
+          <div class="add" @click="add">+添加</div>
           <div class="search">
             <input type="text" v-model="name" placeholder="请输入人员姓名">
-            <i @click="reach"><img src="../../assets/index/sousuo@2x.png" alt=""></i>
+            <span  @click="reach">搜索</span>
+            <!--<i @click="reach"><img src="../../assets/index/sousuo@2x.png" alt=""></i>-->
           </div>
-          <div class="add" @click="add">+添加</div>
         </div>
         <div v-if="whiteList.length != 0">
           <el-row :gutter="20">
-            <el-col :span="6"  v-for="item in whiteList">
+            <el-col :span="6"  v-for="item in whiteList" v-bind:key="item.id">
               <div class="grid-content">
                 <div class="img">
                   <img :src="item.img_url" alt="">
@@ -245,14 +249,22 @@
 <style scoped lang="less">
 
   .whiteList {
+    width: calc(100vw - 30px);
+    margin: 15px 15px 0;
+    background-color: #fff;
+    padding: 15px;
+    .white_title {
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, .1);
+      text-align: left;
+      font-size: 14px;
+      color: #000;
+    }
     .search_add {
       margin: 30px 0;
       display: flex;
       justify-content: space-between;
       .search {
-        background: #FFFFFF;
-        border: 1px solid #D8DCE6;
-        border-radius: 4px;
         height: 40px;
         line-height: 40px;
         display: flex;
@@ -260,9 +272,11 @@
         input {
           font-size: 14px;
           color: #000;
-          border: none;
           padding-left: 15px;
           outline: none;
+          background: #FFFFFF;
+          border-radius: 4px;
+          border: 1px solid #D8DCE6;
         }
         input:hover {
           border: none;
@@ -283,6 +297,17 @@
         input::-webkit-input-placeholder {
           color: #C0C4CC;
           font-size: 14px;
+        }
+        span {
+          background-color: #409EFF;
+          width: 98px;
+          height: 40px;
+          line-height: 40px;
+          text-align: center;
+          border-radius: 4px;
+          font-size: 14px;
+          color: #fff;
+          margin-left: 15px;
         }
         i {
           padding: 10px;

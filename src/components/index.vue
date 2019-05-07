@@ -132,6 +132,8 @@ export default {
             this.MYNAME(body.data.data.name);
             this.TOKEN(body.data.data.token);
             sessionStorage.session_id = body.data.data.token;
+            sessionStorage.hotelName = body.data.data.hotelName;
+            sessionStorage.hotelId = body.data.data.hotelId;
             this.goto('/keyChannel');
           }else {
             this.$message.error(body.data.msg);

@@ -5,7 +5,7 @@ import HelloWorld from '@/components/index'
 Vue.use(Router)
 
 export default new Router({
-  // mode: 'history',
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -19,15 +19,11 @@ export default new Router({
       children: [
         {
           path: '/keyChannel',
-          component: resolve => require(['../components/keyChannel/doubtfulLodge.vue'],resolve),
+          component: resolve => require(['../components/keyChannel/homeIndex.vue'],resolve),
         },
         {
-          path: '/transientPassengers',
-          component: resolve => require(['../components/keyChannel/transientPassengers.vue'],resolve),
-        },
-        {
-          path: '/handled',
-          component: resolve => require(['../components/keyChannel/handled.vue'],resolve),
+          path: '/statistics',
+          component: resolve => require(['../components/keyChannel/statistics.vue'],resolve),
         },
         {
           path: '/whiteList',
