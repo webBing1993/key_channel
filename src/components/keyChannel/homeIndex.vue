@@ -783,6 +783,7 @@
               color: #909399;
               font-size: 14px;
               text-align: left;
+              display: -webkit-box;
             }
             p:last-of-type {
               overflow: hidden;
@@ -931,6 +932,9 @@
                       color: #303133;
                       font-size: 15px;
                     }
+                  }
+                  p:hover {
+                    overflow: inherit;
                   }
                   p:nth-of-type(3) span:last-of-type {
                     color: #F46C6C;
