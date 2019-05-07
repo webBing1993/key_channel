@@ -915,12 +915,15 @@
                     justify-content: flex-start;
                     font-size: 14px;
                     text-align: left;
+                    /*overflow: hidden;*/
+                    /*text-overflow: ellipsis;*/
+                    /*display: -webkit-box;*/
+                    /*-webkit-line-clamp: 1;*/
+                    /*display: -webkit-box;*/
+                    /*-webkit-box-orient: vertical;*/
                     overflow: hidden;
                     text-overflow: ellipsis;
-                    display: -webkit-box;
-                    -webkit-line-clamp: 1;
-                    display: -webkit-box;
-                    -webkit-box-orient: vertical;
+                    white-space: nowrap;
                     span:first-of-type {
                       color: #909399;
                     }
