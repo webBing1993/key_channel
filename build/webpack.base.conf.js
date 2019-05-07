@@ -58,21 +58,13 @@ module.exports = {
         }
       },
       {
-        test: /\.(eot|ttf|otf)(\?.*)?$/,
+        test: /\.(eot|otf)(\?.*)?$/,
         loader: 'url-loader',
         options: {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
       }
-      // {
-      //   test: /\.(eot|svg|ttf|woff|woff2?)$/,
-      //   loader: 'url-loader',
-      //   options: {
-      //     limit: 10000,
-      //     name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
-      //   }
-      // }
     ]
   },
   node: {
