@@ -666,7 +666,7 @@
       initWebSocket(){
         //ws地址
         // const wsuri = process.env.WS_API + "/websocket/threadsocket";
-        const wsuri = 'ws://qa.fortrun.cn:8012/websocket/' + sessionStorage.hotelId;
+        const wsuri = 'wss://qa.fortrun.cn/keychannel/websocket/' + sessionStorage.hotelId + '_' + sessionStorage.session_id;
         this.websock = new WebSocket(wsuri);
         this.websock.onopen = this.websocketonopen;
         this.websock.onmessage = this.websocketonmessage;
