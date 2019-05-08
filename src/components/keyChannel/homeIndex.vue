@@ -666,7 +666,7 @@
       initWebSocket(){
         //ws地址
         // const wsuri = process.env.WS_API + "/websocket/threadsocket";
-        const wsuri = 'wss://qa.fortrun.cn/keychannel/websocket/' + sessionStorage.hotelId + '_' + sessionStorage.session_id;
+        const wsuri = 'wss://qa.fortrun.cn/keychannel/websocket/' + sessionStorage.hotelId + '_' + encodeURIComponent(sessionStorage.session_id);
         this.websock = new WebSocket(wsuri);
         this.websock.onopen = this.websocketonopen;
         this.websock.onmessage = this.websocketonmessage;
@@ -740,7 +740,7 @@
 <style scoped lang="less">
 
   .homeIndex {
-    margin: 10px 15px;
+    margin: 10px 15px 0;
     width: calc(100vw - 30px);
     .el-aside {
       background-color: #fff;

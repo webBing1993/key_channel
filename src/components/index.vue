@@ -90,7 +90,8 @@ export default {
 
         this.getCode({
           data: {
-            phone: this.phone
+            phone: this.phone,
+            type: 'key_channel'
           },
           onsuccess: body => {
             this.entryAll = true;
