@@ -317,7 +317,7 @@
   }
 
   .box-card {
-    width: 100vw;
+    /*width: 100vw;*/
     /deep/ .el-card__body {
       width: 100%;
       display: flex;
@@ -340,7 +340,7 @@
     padding: 15px;
     background-color: #fff;
     position: relative;
-    width: calc(100vw - 30px);
+    width: calc(100vw - 60px);
     .preparation {
       color: #303133;
       font-size: 16px;

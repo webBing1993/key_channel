@@ -249,7 +249,7 @@
 <style scoped lang="less">
 
   .whiteList {
-    width: calc(100vw - 30px);
+    width: calc(100vw - 60px);
     margin: 15px 15px 0;
     background-color: #fff;
     padding: 15px;

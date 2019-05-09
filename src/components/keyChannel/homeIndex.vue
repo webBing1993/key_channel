@@ -741,7 +741,7 @@
 
   .homeIndex {
     margin: 10px 15px 0;
-    width: calc(100vw - 30px);
+    width: calc(100vw - 47px);
     .el-aside {
       background-color: #fff;
       width: 200px;
