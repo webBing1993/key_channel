@@ -19,7 +19,7 @@
             <el-col :span="6"  v-for="item in whiteList" v-bind:key="item.id">
               <div class="grid-content">
                 <div class="img">
-                  <img :src="item.img_url" alt="">
+                  <img :src="item.img_url" alt=""  @click="bigImgShow(item.img_url)">
                 </div>
               </div>
               <div class="content">
@@ -81,7 +81,10 @@
           </div>
         </div>
       </div>
-
+      <!-- 大图预览效果-->
+      <div class="img-show-mask" id="img-show-mask" v-show="maskBtn" @click="closeBigImg">
+        <img :src="bigImgSrc" class="bigImg" id="bigImg" />
+      </div>
     </div>
   </div>
 </template>
@@ -100,6 +103,8 @@
         add_name: '',
         imageUrl: '',
         addShow: false,
+        bigImgSrc: "",
+        maskBtn:false,         // 控制大图
       }
     },
     mounted () {
@@ -228,7 +233,18 @@
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
         this.getWhite(val - 1);
-      }
+      },
+
+      // 打开大图效果
+      bigImgShow: function(url) {
+        this.bigImgSrc = url;
+        this.maskBtn = true;
+      },
+
+      // 关闭大图效果
+      closeBigImg: function() { //关闭图片预览
+        this.maskBtn = false;
+      },
 
     },
     computed: {
@@ -509,6 +525,26 @@
         text-align: center;
       }
     }
+  }
+
+  .img-show-mask {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 3000;
+    background: rgba(0, 0, 0, .5);
+  }
+
+  .img-show-mask .bigImg {
+    width: 500px;
+    position: fixed;
+    z-index: 3100;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: auto;
   }
 
 </style>
