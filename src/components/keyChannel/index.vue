@@ -52,6 +52,7 @@
 
       // 退出事件
       logout () {
+        sessionStorage.removeItem('tab');
         this.replaceto('/');
       },
 
