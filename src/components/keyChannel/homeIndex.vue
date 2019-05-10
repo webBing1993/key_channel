@@ -81,8 +81,9 @@
                   <el-col :xs="12" :sm="8" :md="6" :lg="4" :xl="4"  class="list" v-for="(item,index) in toDayLists" v-bind:key="index">
                     <div class="grid-content bg-purple">
                       <div class="imgs">
-                        <div class="idCacrdImg"><img :src="item.most_similar_pic" alt=""  @click="bigImgShow(item.most_similar_pic)"></div>
                         <div class="nowImg"><img :src="item.facial_pic" alt="" @click="bigImgShow(item.facial_pic)"></div>
+                        <div class="idCacrdImg" v-if="item.most_similar_pic"><img :src="item.most_similar_pic" alt=""  @click="bigImgShow(item.most_similar_pic)"></div>
+                        <div class="idCacrdImg" v-else><img src="../../assets/index/noMan.png" alt=""  @click="bigImgShow('../../assets/index/noMan.png')"></div>
                       </div>
                       <div class="list_content">
                         <div class="title" v-if="item.guestType == 'STAFF'">工作人员</div>
@@ -149,8 +150,9 @@
                   <el-col :xs="12" :sm="8" :md="6" :lg="4" :xl="4"  class="list" v-for="(item,index) in strangerLists" v-bind:key="index">
                     <div class="grid-content bg-purple">
                       <div class="imgs">
-                        <div class="idCacrdImg"><img :src="item.most_similar_pic" alt=""  @click="bigImgShow(item.most_similar_pic)"></div>
                         <div class="nowImg"><img :src="item.facial_pic" alt="" @click="bigImgShow(item.facial_pic)"></div>
+                        <div class="idCacrdImg" v-if="item.most_similar_pic"><img :src="item.most_similar_pic" alt=""  @click="bigImgShow(item.most_similar_pic)"></div>
+                        <div class="idCacrdImg" v-else><img src="../../assets/index/noMan.png" alt=""  @click="bigImgShow('../../assets/index/noMan.png')"></div>
                       </div>
                       <div class="list_content">
                         <div class="title" v-if="item.guestType == 'STAFF'">工作人员</div>
@@ -217,8 +219,9 @@
                   <el-col :xs="12" :sm="8" :md="6" :lg="4" :xl="4"  class="list" v-for="(item,index) in whiteLists" v-bind:key="index">
                     <div class="grid-content bg-purple">
                       <div class="imgs">
-                        <div class="idCacrdImg"><img :src="item.most_similar_pic" alt=""  @click="bigImgShow(item.most_similar_pic)"></div>
                         <div class="nowImg"><img :src="item.facial_pic" alt="" @click="bigImgShow(item.facial_pic)"></div>
+                        <div class="idCacrdImg" v-if="item.most_similar_pic"><img :src="item.most_similar_pic" alt=""  @click="bigImgShow(item.most_similar_pic)"></div>
+                        <div class="idCacrdImg" v-else><img src="../../assets/index/noMan.png" alt=""  @click="bigImgShow('../../assets/index/noMan.png')"></div>
                       </div>
                       <div class="list_content">
                         <div class="title" v-if="item.guestType == 'STAFF'">工作人员</div>
@@ -285,8 +288,9 @@
                   <el-col :xs="12" :sm="8" :md="6" :lg="4" :xl="4"  class="list" v-for="(item,index) in aliveLists" v-bind:key="index">
                     <div class="grid-content bg-purple">
                       <div class="imgs">
-                        <div class="idCacrdImg"><img :src="item.most_similar_pic" alt=""  @click="bigImgShow(item.most_similar_pic)"></div>
                         <div class="nowImg"><img :src="item.facial_pic" alt="" @click="bigImgShow(item.facial_pic)"></div>
+                        <div class="idCacrdImg" v-if="item.most_similar_pic"><img :src="item.most_similar_pic" alt=""  @click="bigImgShow(item.most_similar_pic)"></div>
+                        <div class="idCacrdImg" v-else><img src="../../assets/index/noMan.png" alt=""  @click="bigImgShow('../../assets/index/noMan.png')"></div>
                       </div>
                       <div class="list_content">
                         <div class="title" v-if="item.guestType == 'STAFF'">工作人员</div>
@@ -353,8 +357,9 @@
                   <el-col :xs="12" :sm="8" :md="6" :lg="4" :xl="4"  class="list" v-for="(item,index) in visitorLists" v-bind:key="index">
                     <div class="grid-content bg-purple">
                       <div class="imgs">
-                        <div class="idCacrdImg"><img :src="item.most_similar_pic" alt=""  @click="bigImgShow(item.most_similar_pic)"></div>
                         <div class="nowImg"><img :src="item.facial_pic" alt="" @click="bigImgShow(item.facial_pic)"></div>
+                        <div class="idCacrdImg" v-if="item.most_similar_pic"><img :src="item.most_similar_pic" alt=""  @click="bigImgShow(item.most_similar_pic)"></div>
+                        <div class="idCacrdImg" v-else><img src="../../assets/index/noMan.png" alt=""  @click="bigImgShow('../../assets/index/noMan.png')"></div>
                       </div>
                       <div class="list_content">
                         <div class="title" v-if="item.guestType == 'STAFF'">工作人员</div>
@@ -480,7 +485,11 @@
 
       // 打开大图效果
       bigImgShow: function(url) {
-        this.bigImgSrc = url;
+        if (url.indexOf('assets/index') != -1) {
+          this.bigImgSrc = require('../../assets/index/noMan.png');
+        }else {
+          this.bigImgSrc = url;
+        }
         this.maskBtn = true;
       },
 
