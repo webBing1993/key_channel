@@ -912,6 +912,7 @@
                 }
                 .content {
                   p {
+                    height: 22px;
                     display: flex;
                     justify-content: flex-start;
                     font-size: 14px;
