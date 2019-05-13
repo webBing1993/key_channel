@@ -656,12 +656,12 @@
                     if (this.tab1 && this.currentPage1 == 1) {
                       this.toDayLists.unshift(item);
                       if (this.toDayLists.length > 18) {
-                        this.toDayLists.splice(10,1);
+                        this.toDayLists.splice(18,1);
                       }
                     }else if (this.tab2 && this.currentPage2 == 1) {
                       this.strangerLists.unshift(item);
-                      if (this.strangerLists.length > 10) {
-                        this.strangerLists.splice(10,1);
+                      if (this.strangerLists.length > 18) {
+                        this.strangerLists.splice(18,1);
                       }
                     }
                   });
@@ -702,27 +702,27 @@
             }else {
               this.toDayLists.unshift(newData);
               if (this.toDayLists.length > 18) {
-                this.toDayLists.splice(10,1);
+                this.toDayLists.splice(18,1);
               }
               if (newData.guestType == 'STAFF') {
                 this.total3++;
                 this.whiteLists.unshift(newData);
                 if (this.whiteLists.length > 18) {
-                  this.whiteLists.splice(10,1);
+                  this.whiteLists.splice(18,1);
                 }
               }
               if (newData.guestType == 'GUEST_ID' || newData.guestType == 'GUEST_LIVE') {
                 this.total4++;
                 this.aliveLists.unshift(newData);
                 if (this.aliveLists.length > 18) {
-                  this.aliveLists.splice(10,1);
+                  this.aliveLists.splice(18,1);
                 }
               }
               if (newData.guestType == 'VISITOR') {
                 this.total5++;
                 this.visitorLists.unshift(newData);
                 if (this.visitorLists.length > 18) {
-                  this.visitorLists.splice(10,1);
+                  this.visitorLists.splice(18,1);
                 }
               }
             }
