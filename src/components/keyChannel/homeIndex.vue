@@ -693,13 +693,13 @@
           this.weekNum = val.weekTotal;
           this.monthNum = val.monthTotal;
           this.allNum = val.total;
-          this.total1++;
           let newData = JSON.parse(val.illegalGuest);
           this.$nextTick(() => {
             if (newData.guestType == 'SUSPICIOUS_GUEST') {
               this.strangerNum++;
               this.strangerList.unshift(newData);
             }else {
+              this.total1++;
               this.toDayLists.unshift(newData);
               if (this.toDayLists.length > 18) {
                 this.toDayLists.splice(18,1);
