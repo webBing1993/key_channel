@@ -22,14 +22,15 @@ export default new Router({
           component: resolve => require(['../components/keyChannel/homeIndex.vue'],resolve),
         },
         {
-          path: '/statistics',
-          component: resolve => require(['../components/keyChannel/statistics.vue'],resolve),
-        },
-        {
           path: '/whiteList',
           component: resolve => require(['../components/keyChannel/whiteList.vue'],resolve),
         }
       ]
+    },
+    {
+      path: '/statistics',
+      name: '/statistics',
+      component: resolve => require(['../components/keyChannel/statistics.vue'],resolve),
     }
   ]
 })

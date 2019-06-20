@@ -211,7 +211,7 @@ export default {
       transform: translate(-50%, -50%);
       padding-bottom: 80px;
       .title {
-        color: #4A4A4A;
+        color: #fff;
         font-size: 24px;
         text-align: center;
         margin-bottom: 80px;
@@ -254,6 +254,7 @@ export default {
           font-size: 16px;
           line-height: 30px;
           background-color: transparent;
+          color: #fff;
         }
         input:-moz-placeholder {
           color: #999;

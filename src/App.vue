@@ -16,8 +16,7 @@ export default {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    color: #2c3e50;
-    background-color: #F0F2F5;
+    /*background-color: #041740;*/
   }
   h1, h2 {
     font-weight: normal;

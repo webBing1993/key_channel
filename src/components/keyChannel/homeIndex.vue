@@ -3,8 +3,9 @@
     <div class="homeIndex">
       <!-- 陌生人待处理-->
       <el-container>
-        <el-aside>
-          <div class="stranger_title">陌生人(未处理{{strangerNum}})</div>
+        <el-aside ref="elAside">
+          <div class="bg"><img src="../../assets/index/zuo.png" alt="" ></div>
+          <div class="stranger_title"><img src="../../assets/index/zuoxuanzhong.png" alt="">陌生人(未处理)</div>
           <div class="stranger_list" v-if="strangerList.length != 0">
             <div class="list" v-for="(item,index) in strangerList" :key="index">
               <div class="img">
@@ -14,7 +15,7 @@
                 <p><span>时间：</span><span>{{datetimeparse(item.filming_time,'YYYY-MM-DD')}}</span></p>
                 <p><span>地点：</span><span>{{item.location ? item.location : '-'}}</span></p>
                 <p><span>来源：</span><span>-</span></p>
-                <div class="handle" @click="handelBtn(item.illegal_guest_id)">处置</div>
+                <div class="handle" @click="handelBtn(item.illegal_guest_id)"><img src="../../assets/index/chuli.png" alt=""></div>
               </div>
             </div>
           </div>
@@ -23,12 +24,13 @@
             <p>暂无内容</p>
           </div>
         </el-aside>
-        <!-- 右边主页-->
-        <el-main>
+        <!-- 中间主页-->
+        <el-main ref="mainHeight">
           <el-container>
             <el-header>
               <el-row>
                 <el-col :span="12">
+                  <div class="bg"><img src="../../assets/index/zhongshnag.png" alt=""></div>
                   <div class="tabs">
                     <el-row>
                       <el-col :span="4"  :class="tab1 ? 'active tab' : 'tab'" @click.native="tabClick(0)">
@@ -54,6 +56,7 @@
                   </div>
                 </el-col>
                 <el-col :span="12">
+                  <div class="bg"><img src="../../assets/index/zhongshnag.png" alt=""></div>
                   <el-row>
                     <el-col :span="6">
                       <img src="../../assets/index/paizhao.png" alt="">
@@ -75,6 +78,7 @@
               </el-row>
             </el-header>
             <el-main>
+              <div class="bg"><img src="../../assets/index/zhong.png" alt=""></div>
               <!-- 今日抓拍列表-->
               <div class="toDay_lists lists" v-if="tab1">
                 <el-row :gutter="15">
@@ -101,19 +105,19 @@
                           </p>
                           <p v-if="item.guestType == 'STAFF'">
                             <span>来源：</span>
-                            <span>{{hotelName}}工作人员库</span>
+                            <span>工作人员库</span>
                           </p>
                           <p v-else-if="item.guestType == 'GUEST_ID'">
                             <span>来源：</span>
-                            <span>{{hotelName}}住客身份库</span>
+                            <span>住客身份库</span>
                           </p>
                           <p v-else-if="item.guestType == 'GUEST_LIVE'">
                             <span>来源：</span>
-                            <span>{{hotelName}}住客现场库</span>
+                            <span>住客现场库</span>
                           </p>
                           <p v-else-if="item.guestType == 'VISITOR'">
                             <span>来源：</span>
-                            <span>{{hotelName}}访客库</span>
+                            <span>访客库</span>
                           </p>
                           <p v-else>
                             <span>来源：</span>
@@ -170,19 +174,19 @@
                           </p>
                           <p v-if="item.guestType == 'STAFF'">
                             <span>来源：</span>
-                            <span>{{hotelName}}工作人员库</span>
+                            <span>工作人员库</span>
                           </p>
                           <p v-else-if="item.guestType == 'GUEST_ID'">
                             <span>来源：</span>
-                            <span>{{hotelName}}住客身份库</span>
+                            <span>住客身份库</span>
                           </p>
                           <p v-else-if="item.guestType == 'GUEST_LIVE'">
                             <span>来源：</span>
-                            <span>{{hotelName}}住客现场库</span>
+                            <span>住客现场库</span>
                           </p>
                           <p v-else-if="item.guestType == 'VISITOR'">
                             <span>来源：</span>
-                            <span>{{hotelName}}访客库</span>
+                            <span>访客库</span>
                           </p>
                           <p v-else>
                             <span>来源：</span>
@@ -239,19 +243,19 @@
                           </p>
                           <p v-if="item.guestType == 'STAFF'">
                             <span>来源：</span>
-                            <span>{{hotelName}}工作人员库</span>
+                            <span>工作人员库</span>
                           </p>
                           <p v-else-if="item.guestType == 'GUEST_ID'">
                             <span>来源：</span>
-                            <span>{{hotelName}}住客身份库</span>
+                            <span>住客身份库</span>
                           </p>
                           <p v-else-if="item.guestType == 'GUEST_LIVE'">
                             <span>来源：</span>
-                            <span>{{hotelName}}住客现场库</span>
+                            <span>住客现场库</span>
                           </p>
                           <p v-else-if="item.guestType == 'VISITOR'">
                             <span>来源：</span>
-                            <span>{{hotelName}}访客库</span>
+                            <span>访客库</span>
                           </p>
                           <p v-else>
                             <span>来源：</span>
@@ -308,19 +312,19 @@
                           </p>
                           <p v-if="item.guestType == 'STAFF'">
                             <span>来源：</span>
-                            <span>{{hotelName}}工作人员库</span>
+                            <span>工作人员库</span>
                           </p>
                           <p v-else-if="item.guestType == 'GUEST_ID'">
                             <span>来源：</span>
-                            <span>{{hotelName}}住客身份库</span>
+                            <span>住客身份库</span>
                           </p>
                           <p v-else-if="item.guestType == 'GUEST_LIVE'">
                             <span>来源：</span>
-                            <span>{{hotelName}}住客现场库</span>
+                            <span>住客现场库</span>
                           </p>
                           <p v-else-if="item.guestType == 'VISITOR'">
                             <span>来源：</span>
-                            <span>{{hotelName}}访客库</span>
+                            <span>访客库</span>
                           </p>
                           <p v-else>
                             <span>来源：</span>
@@ -377,19 +381,19 @@
                           </p>
                           <p v-if="item.guestType == 'STAFF'">
                             <span>来源：</span>
-                            <span>{{hotelName}}工作人员库</span>
+                            <span>工作人员库</span>
                           </p>
                           <p v-else-if="item.guestType == 'GUEST_ID'">
                             <span>来源：</span>
-                            <span>{{hotelName}}住客身份库</span>
+                            <span>住客身份库</span>
                           </p>
                           <p v-else-if="item.guestType == 'GUEST_LIVE'">
                             <span>来源：</span>
-                            <span>{{hotelName}}住客现场库</span>
+                            <span>住客现场库</span>
                           </p>
                           <p v-else-if="item.guestType == 'VISITOR'">
                             <span>来源：</span>
-                            <span>{{hotelName}}访客库</span>
+                            <span>访客库</span>
                           </p>
                           <p v-else>
                             <span>来源：</span>
@@ -423,6 +427,10 @@
             </el-main>
           </el-container>
         </el-main>
+        <!-- 右边图表-->
+        <el-aside>
+          <statistics :totalLists="totalLists"></statistics>
+        </el-aside>
       </el-container>
       <!-- 大图预览效果-->
       <div class="img-show-mask" id="img-show-mask" v-show="maskBtn" @click="closeBigImg">
@@ -435,8 +443,10 @@
 <script>
   import {mapState,mapActions} from 'vuex';
   import ElCol from "element-ui/packages/col/src/col";
+  import Statistics from './statistics.vue';
   export default {
-    components: {ElCol}, name: 'keyChannel',
+    components: {ElCol, Statistics},
+    name: 'keyChannel',
     data () {
       return {
         hotelName: sessionStorage.hotelName, // 酒店名
@@ -459,6 +469,7 @@
         total3: 0,              // 工作人员数量
         total4: 0,              // 在住人数量
         total5: 0,              // 访客数量
+        totalLists: [],         // 总的数组，存放各个数量
         weekNum: 0,           // 本周抓拍数量
         monthNum: 0,          // 本月抓拍数量
         allNum: 0,            // 所有抓拍数量
@@ -473,9 +484,10 @@
     mounted () {
       this.getLists(0,'',0,18,'');
       this.getLists(0,'SUSPICIOUS_GUEST',5,200,'SUSPICIOUS_GUEST');
-      this.totalList();
       this.initWebSocket();
-      console.log(this.datetimeparse(new Date(new Date(new Date().toLocaleDateString()).getTime()),'YYYY-MM-DD hh:mm:ss'));
+//      console.log(this.$refs.mainHeight.$el.firstChild.style.height);
+//      this.$refs.elAside.$el.style.height = (this.$refs.mainHeight.$el.firstChild.offsetHeight) + 'px';
+//      this.$refs.elAside.$el.firstChild.firstChild.style.height = (this.$refs.mainHeight.$el.firstChild.offsetHeight) + 'px';
     },
     methods: {
 
@@ -541,6 +553,7 @@
           this.tab5 = true;
           this.getLists(0,'VISITOR',4,18,'');
         }
+        this.totalList();
       },
 
       // 分页
@@ -614,6 +627,7 @@
             }else {
               this.strangerNum = parseInt(body.headers['x-total-count']);
               this.strangerList = [...body.data.data];
+              this.totalList();
             }
           }
         })
@@ -632,8 +646,27 @@
               this.weekNum = body.data.data.weekTotal;
               this.monthNum = body.data.data.monthTotal;
               this.allNum = body.data.data.total;
+              this.totalAll();
             }
           }
+        })
+      },
+
+      // 各组数量组成数组 日抓拍
+      totalAll() {
+        this.$nextTick(() => {
+          this.totalLists = [];
+          let obj = {},obj1 = {}, obj2 = {}, obj3 = {};
+          obj.name = '陌生人';
+          obj.value = this.total2+this.strangerNum;
+          obj1.name = '在住人';
+          obj1.value = this.total4;
+          obj2.name = '工作人员';
+          obj2.value = this.total3;
+          obj3.name = '访客';
+          obj3.value = this.total5;
+          this.totalLists.push(obj, obj1, obj2, obj3);
+          console.log('this.totalLists',this.totalLists);
         })
       },
 
@@ -666,6 +699,7 @@
                     }
                   });
                 }
+                this.totalAll();
             })
           }
         })
@@ -726,6 +760,7 @@
                 }
               }
             }
+            this.totalAll();
           });
           console.log(newData);
         }
@@ -752,27 +787,63 @@
     margin: 10px 15px 0;
     width: calc(100vw - 47px);
     .el-aside {
-      background-color: #fff;
       width: 200px;
       padding: 8px;
       margin-right: 15px;
+      position: relative;
+      overflow: hidden;
+      min-height: calc(100vh - 81px);
+      .bg {
+        position: absolute;
+        z-index: -1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        img {
+          display: block;
+          width: 100%;
+          height: calc(100vh - 81px);
+        }
+      }
       .stranger_title {
-        font-size: 16px;
-        color: #303133;
+        font-size: 14px;
+        color: #fff;
         text-align: left;
+        line-height: 24px;
+        position: relative;
+        /*display: inline-block;*/
+        /*width: 120px;*/
+        img {
+          display: none;
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          z-index: -1;
+          left: 0;
+          top: 0;
+        }
       }
       .stranger_list {
-        max-height: 800px;
+        max-height: calc(100vh - 100px);
         overflow-y: scroll;
+        -webkit-overflow-scrolling: touch; // 为了滚动顺畅
+        -ms-scroll-chaining: chained;
+        -ms-overflow-style: none;
+        -ms-content-zooming: zoom;
+        -ms-scroll-rails: none;
+        -ms-content-zoom-limit-min: 100%;
+        -ms-content-zoom-limit-max: 500%;
+        -ms-scroll-snap-type: proximity;
+        -ms-scroll-snap-points-x: snapList(100%, 200%, 300%, 400%, 500%);
+        -ms-overflow-style: none;
         .list {
-          margin-top: 5px;
+          margin-top: 8px;
           border: 1px solid #F46C6C;
           border-radius: 8px;
           padding: 8px;
           display: flex;
           justify-content: flex-start;
           .img {
-            margin-right: 8px;
             width: 100px;
             height: 100px;
             border-radius: 8px;
@@ -786,10 +857,11 @@
           .list_content {
             width: 174px;
             position: relative;
+            margin-left: 8px;
             p {
               display: flex;
               justify-content: flex-start;
-              color: #909399;
+              color: #fff;
               font-size: 14px;
               text-align: left;
               display: -webkit-box;
@@ -803,11 +875,9 @@
               -webkit-box-orient: vertical;
             }
             .handle {
-              background: #409EFF;
-              border-radius: 2px;
-              padding: 0 12px;
-              font-size: 14px;
-              color: #fff;
+              width: 60px;
+              height: 24px;
+              display: inline-block;
               position: absolute;
               bottom: 0;
               right: 0;
@@ -816,6 +886,16 @@
           }
         }
       }
+      .stranger_list::-webkit-scrollbar {
+        display: none; // 隐藏滚动条
+        width:0px;
+        height:0px;
+      }
+      .stranger_list .-o-scrollbar{
+        -moz-appearance: none !important;
+        background: rgba(0,255,0,0) !important;
+      }
+
     }
     .el-main {
       padding: 0;
@@ -823,15 +903,34 @@
         height: 70px !important;
         padding: 0;
         .el-col-12 {
-          background-color: #fff;
           height: 70px;
           margin-right: 15px;
+          position: relative;
+          .bg {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 8;
+            width: 100%;
+            height: 70px;
+            img {
+              display: inline-block;
+              width: 100%;
+              height: 100%;
+            }
+          }
           .tabs {
             height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
             .el-row {
               height: 100%;
               .tab {
-                color: #909399;
+                color: #408FE9;
                 font-size: 14px;
                 cursor: pointer;
                 height: 100%;
@@ -844,7 +943,7 @@
                 }
               }
               .active {
-                color: #409EFF;
+                color: #fff;
               }
             }
           }
@@ -854,6 +953,12 @@
           margin-right: 0;
           .el-row {
             height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
             .el-col-6 {
               display: flex;
               align-items: center;
@@ -877,8 +982,24 @@
       }
       .el-main {
         margin-top: 15px;
-        padding: 15px;
-        background-color: #fff;
+        padding: 15px 15px 65px;
+        position: relative;
+        overflow: hidden;
+        .bg {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          img {
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .lists {
+          min-height: calc(100vh - 260px);
+        }
         .lists {
           .el-row {
             margin-bottom: 15px;
@@ -889,7 +1010,7 @@
           .list {
             margin: 0 0 15px;
             .grid-content {
-              border: 1px solid #D2D6E1;
+              border: 1px solid #3798FC;
               border-radius: 8px;
               padding: 5px;
               .imgs {
@@ -915,7 +1036,7 @@
               .list_content {
                 .title {
                   font-size: 20px;
-                  color: #606266;
+                  color: #fff;
                   margin: 8px 0;
                   text-align: left;
                 }
@@ -936,17 +1057,17 @@
                     text-overflow: ellipsis;
                     white-space: nowrap;
                     span:first-of-type {
-                      color: #909399;
+                      color: #408FE9;
                     }
                     span:last-of-type {
-                      color: #303133;
+                      color: #fff;
                       font-size: 15px;
                     }
                   }
                   p:hover {
                     overflow: inherit;
                     span {
-                      background-color: #fff;
+                      background-color: #041740;
                       z-index: 5;
                     }
                   }
@@ -963,8 +1084,13 @@
         }
       }
     }
+    .el-aside:last-of-type {
+      padding: 0;
+      margin-right: 0;
+      margin-left: 15px;
+    }
     .noMsg {
-      margin: 250px auto;
+      margin: 260px auto;
       text-align: center;
       .img {
         width: 100px;
@@ -977,7 +1103,7 @@
         }
       }
       p {
-        color: #606266;
+        color: #fff;
         font-size: 14px;
         margin-top: 20px;
         text-align: center;
@@ -1003,6 +1129,39 @@
       transform: translate(-50%, -50%);
       margin: auto;
     }
+  }
+
+  /deep/ .el-pagination__total {
+    color: #5691D1;
+  }
+
+  /deep/ .el-pagination {
+    position: absolute;
+    bottom: 30px;
+    text-align: center;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /deep/ .el-pagination button {
+    background: #015296;
+    border: 1px solid #5691D1;
+    color: #5691D1;
+    border-radius: 8px;
+  }
+
+  /deep/ .el-pager li {
+    background-color: transparent;
+    border: 1px solid #5691D1;
+    color: #5691D1;
+    margin: 0 5px;
+    border-radius: 8px;
+  }
+
+  /deep/ .el-pager li.active {
+    color: #fff;
+    background: #015296;
+    border: 1px solid #5691D1;
   }
 
 </style>

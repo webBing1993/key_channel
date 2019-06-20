@@ -2,20 +2,21 @@
 <template>
   <div>
     <div class="whiteList" v-show="showTrue">
-      <div>
+      <div class="bg"><img src="../../assets/index/baimingdan.png" alt=""></div>
+      <div class="whiteContent">
         <div class="white_title">
           白名单
         </div>
         <div class="search_add">
-          <div class="add" @click="add">+添加</div>
+          <div class="add" @click="add"><img src="../../assets/index/tianjia.png" alt=""></div>
           <div class="search">
             <input type="text" v-model="name" placeholder="请输入人员姓名">
-            <span  @click="reach">搜索</span>
+            <span  @click="reach"><img src="../../assets/index/sousuo.png" alt=""></span>
             <!--<i @click="reach"><img src="../../assets/index/sousuo@2x.png" alt=""></i>-->
           </div>
         </div>
-        <div v-if="whiteList.length != 0">
-          <el-row :gutter="20">
+        <div v-if="whiteList.length != 0" class="whiteLists">
+          <el-row>
             <el-col :span="6"  v-for="item in whiteList" v-bind:key="item.id">
               <div class="grid-content">
                 <div class="img">
@@ -23,8 +24,10 @@
                 </div>
               </div>
               <div class="content">
-                <div class="name">{{item.name}}</div>
-                <div class="remove" @click="remove(item)">删除</div>
+                <p>工作人员</p>
+                <div class="name"><span>姓名：</span>{{item.name}}</div>
+                <div class="name"><span>类型：</span>白名单</div>
+                <div class="remove" @click="remove(item)"><img src="../../assets/index/shanchu.png" alt=""></div>
               </div>
             </el-col>
           </el-row>
@@ -47,7 +50,7 @@
           <div class="shadow"></div>
           <div class="add_content">
             <div class="add_title">
-              <span>添加人员</span>
+              <span>添加白名单</span>
               <i @click="cancel"><img src="../../assets/index/guanbi.png" alt=""></i>
             </div>
             <div class="add_list">
@@ -55,6 +58,12 @@
                 <div class="name">人员姓名</div>
                 <div class="add_input">
                   <input type="text" v-model="add_name" placeholder="请输入姓名">
+                </div>
+              </div>
+              <div class="list">
+                <div class="name">白名单类型</div>
+                <div class="add_input">
+                  <input type="text" value="工作人员" readonly>
                 </div>
               </div>
               <div class="list">
@@ -140,9 +149,10 @@
 
       // 删除操作
       remove (item) {
-        this.$confirm('请确认删除该人员', '', {
+        this.$confirm('请确认删除该人员', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
+          type: 'warning',
         }).then(() => {
           this.delWhiteItem({
             data:{
@@ -267,63 +277,85 @@
   .whiteList {
     width: calc(100vw - 60px);
     margin: 15px 15px 0;
-    background-color: #fff;
     padding: 15px;
+    position: relative;
+    .bg {
+      position: absolute;
+      z-index: 5;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: calc(100vh - 60px);
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .whiteContent {
+      position: absolute;
+      z-index: 10;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: calc(100vh - 60px);
+    }
     .white_title {
-      padding: 15px 0;
-      border-bottom: 1px solid rgba(0, 0, 0, .1);
+      padding: 5px 10px;
       text-align: left;
       font-size: 14px;
-      color: #000;
+      color: #fff;
     }
     .search_add {
       margin: 30px 0;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
+      padding: 0 10px;
       .search {
+        margin-left: 180px;
         height: 40px;
         line-height: 40px;
         display: flex;
         justify-content: space-between;
         input {
           font-size: 14px;
-          color: #000;
+          color: #408FE9;
           padding-left: 15px;
           outline: none;
-          background: #FFFFFF;
+          background: #041740;
           border-radius: 4px;
-          border: 1px solid #D8DCE6;
+          border: 1px solid #5691D1;
         }
         input:hover {
           border: none;
           background-color: transparent;
         }
         input:-moz-placeholder {
-          color: #C0C4CC;
+          color: #408FE9;
           font-size: 14px;
         }
         input:-ms-input-placeholder {
-          color: #C0C4CC;
+          color: #408FE9;
           font-size: 14px;
         }
         input::-moz-placeholder {
-          color: #C0C4CC;
+          color: #408FE9;
           font-size: 14px;
         }
         input::-webkit-input-placeholder {
-          color: #C0C4CC;
+          color: #408FE9;
           font-size: 14px;
         }
         span {
-          background-color: #409EFF;
-          width: 98px;
-          height: 40px;
-          line-height: 40px;
-          text-align: center;
-          border-radius: 4px;
-          font-size: 14px;
-          color: #fff;
+          width: 100px;
+          height: 36px;
+          cursor: pointer;
           margin-left: 15px;
+          img {
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+          }
         }
         i {
           padding: 10px;
@@ -339,33 +371,38 @@
         }
       }
       .add {
-        width: 108px;
+        width: 100px;
         height: 36px;
-        line-height: 36px;
-        background: #389FFF;
-        border-radius: 4px;
-        font-size: 14px;
-        color: #fff;
         cursor: pointer;
+        img {
+          display: inline-block;
+          width: 100%;
+          height: 100%;
+        }
       }
+    }
+    .whiteLists {
+      padding: 0 10px;
     }
     .el-row {
       margin: 0 !important;
       .el-col {
-        width: 158px;
-        border: 1px solid #409EFF;
+        width: 320px;
+        border: 1px solid #3798FC;
         position: relative;
-        padding: 0 !important;
-        margin-right: 30px;
-        margin-bottom: 30px;
+        margin-right: 15px;
+        margin-bottom: 15px;
+        background-color: #103A72;
         display: flex;
         justify-content: flex-start;
-        height: 82px;
+        border-radius: 8px;
+        padding: 8px;
         .img {
           display: inline-block;
-          width: 80px;
-          height: 80px;
+          width: 100px;
+          height: 100px;
           margin-right: 8px;
+          border-radius: 8px;
           img {
             display: inline-block;
             width: 100%;
@@ -374,21 +411,31 @@
         }
         .content {
           text-align: left;
+          p {
+            font-size: 20px;
+            color: #fff;
+          }
           .name {
             margin-top: 5px;
-            font-size: 12px;
-            color: #000;
+            font-size: 15px;
+            color: #fff;
+            span {
+              color: #408FE9;
+              font-size: 14px;
+            }
           }
           .remove {
             position: absolute;
-            left: 88px;
+            right: 8px;
             bottom: 8px;
-            padding: 8px 15px;
-            border: 1px solid #DBDFE6;
-            border-radius: 3px;
-            color: #606266 ;
-            font-size: 12px;
+            width: 60px;
+            height: 24px;
             cursor: pointer;
+            img {
+              display: inline-block;
+              width: 100%;
+              height: 100%;
+            }
           }
         }
       }
@@ -432,7 +479,7 @@
           .list {
             margin-top: 15px;
             display: flex;
-            justify-content: flex-start;
+            justify-content: space-between;
             .name {
               font-size: 14px;
               color: #909399;
@@ -475,6 +522,12 @@
                 width: 100px;
                 height: 100px;
               }
+            }
+          }
+          .list:last-of-type {
+            justify-content: flex-start;
+            .name {
+              margin-right: 49px;
             }
           }
         }
@@ -545,6 +598,31 @@
     left: 50%;
     transform: translate(-50%, -50%);
     margin: auto;
+  }
+
+  /deep/ .el-pagination__total {
+    color: #5691D1;
+  }
+
+  /deep/ .el-pagination button {
+    background: #015296;
+    border: 1px solid #5691D1;
+    color: #5691D1;
+    border-radius: 8px;
+  }
+
+  /deep/ .el-pager li {
+    background-color: transparent;
+    border: 1px solid #5691D1;
+    color: #5691D1;
+    margin: 0 5px;
+    border-radius: 8px;
+  }
+
+  /deep/ .el-pager li.active {
+    color: #fff;
+    background: #015296;
+    border: 1px solid #5691D1;
   }
 
 </style>

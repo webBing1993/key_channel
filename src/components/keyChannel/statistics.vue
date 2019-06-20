@@ -1,26 +1,33 @@
 <template>
-  <div>
+  <div style="height: calc(100vh - 60px)">
     <div class="statistics_chat">
-      <div class="preparation">筛选</div>
-      <div class="timeChoose">
-        <span>日期</span>
-        <span class="calendarChoose" @click="calendarShow = true">
-          <img src="../../assets/index/riqi.png" alt="">
-          <input type="text" readonly placeholder="选择日期" v-model="startTime">
-        </span>
-        <span>至</span>
-        <span class="calendarChoose" @click="calendarShow_ = true">
-          <img src="../../assets/index/riqi.png" alt="">
-          <input type="text" readonly placeholder="选择日期" v-model="endTime">
-        </span>
-        <span class="inquire" @click="inquire">查询</span>
-      </div>
+      <!--<div class="preparation">筛选</div>-->
+      <!--<div class="timeChoose">-->
+        <!--<span>日期</span>-->
+        <!--<span class="calendarChoose" @click="calendarShow = true">-->
+          <!--<img src="../../assets/index/riqi.png" alt="">-->
+          <!--<input type="text" readonly placeholder="选择日期" v-model="startTime">-->
+        <!--</span>-->
+        <!--<span>至</span>-->
+        <!--<span class="calendarChoose" @click="calendarShow_ = true">-->
+          <!--<img src="../../assets/index/riqi.png" alt="">-->
+          <!--<input type="text" readonly placeholder="选择日期" v-model="endTime">-->
+        <!--</span>-->
+        <!--<span class="inquire" @click="inquire">查询</span>-->
+      <!--</div>-->
 
        <el-card class="box-card">
-         <!-- 折线图-->
-        <div id="myChart1"/>
          <!-- 饼图-->
-         <div id="myChart2"/>
+         <div class="pie">
+           <img src="../../assets/index/youshang.png" alt="">
+           <p>日抓拍统计</p>
+           <div id="myChart2"/>
+         </div>
+         <!-- 折线图-->
+         <div class="lineChart">
+           <img src="../../assets/index/youxia.png" alt="">
+           <div id="myChart1"/>
+         </div>
       </el-card>
 
 
@@ -70,20 +77,23 @@
         echarts1Options: {},   // 折线图数据
       }
     },
+    props: {
+      totalLists: {
+        type: Array,
+        required: true
+      }
+    },
     mounted () {
 
       // 初始化时间为当前天前七天的数据
       this.startTime = this.fun_date(-7);
       this.endTime = this.datetimeparse(new Date().getTime(),'YYYY/MM/DD');
-
-//      console.log(this.datetimeparse(new Date(new Date(new Date(this.fun_date(-7)).toLocaleDateString()).getTime()),'YYYY-MM-DD hh:mm:ss'));
-//      console.log(this.datetimeparse(new Date(new Date(new Date(this.endTime).toLocaleDateString()).getTime()+24*60*60*1000-1),'YYYY-MM-DD hh:mm:ss'));
-//      console.log(this.fun_date(-7));
-//      console.log(new Date(this.datetimeparse(new Date(new Date(new Date(this.startTime).toLocaleDateString()).getTime()),'YYYY-MM-DD hh:mm:ss')).getTime());
-//      console.log(new Date(this.datetimeparse(new Date(new Date(new Date(this.endTime).toLocaleDateString()).getTime()+24*60*60*1000-1),'YYYY-MM-DD hh:mm:ss')).getTime());
-
       // 获取数据列表
-      this.getList (this.startTime, this.endTime);
+      setTimeout(() => {
+        // 饼图
+        this.getPie();
+        this.getList (this.startTime, this.endTime);
+      },1500);
     },
     methods: {
 
@@ -198,26 +208,14 @@
               this.echarts1Options.visitorList = visitorList;
               this.echarts1Options.guestList = guestList;
 
-              let obj = {},obj1 = {}, obj2 = {}, obj3 = {};
-              obj.name = '陌生人';
-              obj.value = body.data.data.suspicious;
-              obj1.name = '在住人';
-              obj1.value = body.data.data.guest;
-              obj2.name = '工作人员';
-              obj2.value = body.data.data.staff;
-              obj3.name = '访客';
-              obj3.value = body.data.data.visitor;
-              this.echarts2Options.push(obj);
-              this.echarts2Options.push(obj1);
-              this.echarts2Options.push(obj2);
-              this.echarts2Options.push(obj3);
-
               this.$nextTick(() => {
                 // 折线图
                 this.getLine();
-
-                // 饼图
-                this.getPie();
+                setTimeout(() => {       // 隔一天加载折线图
+                  this.startTime = this.fun_date(-7);
+                  this.endTime = this.datetimeparse(new Date().getTime(),'YYYY/MM/DD');
+                  this.getList (this.startTime, this.endTime);
+                },((new Date(new Date().toLocaleDateString()).getTime()+24*60*60*1000-1) - new Date().getTime()))
               })
           }
         })
@@ -228,6 +226,7 @@
         // 基于准备好的dom，初始化echarts实例
         let myChart1 = echarts.init(document.getElementById('myChart1'));
         // 绘制图表，this.echarts1_option是数据
+        myChart1.clear();
         myChart1.setOption({
           tooltip: {
             trigger: 'axis'
@@ -235,15 +234,32 @@
           legend: {
             y: 'bottom',
             x: 'center',
+            textStyle:{
+              fontSize: 12,//字体大小
+              color: '#ffffff'//字体颜色
+            },
             data:['陌生人','在住人','工作人员','访客']
           },
           xAxis: {
             type: 'category',
             boundaryGap: false,
-            data: this.echarts1Options.timeArr
+            data: this.echarts1Options.timeArr,
+            axisLabel: {
+              show: true,
+              showMaxLabel: true,
+              textStyle: {
+                color: '#ffffff'
+              }
+            }
           },
           yAxis: {
-            type: 'value'
+            type: 'value',
+            axisLabel: {
+              show: true,
+              textStyle: {
+                color: '#ffffff'
+              }
+            }
           },
           series: [
             {
@@ -271,7 +287,7 @@
               data: this.echarts1Options.visitorList
             }
           ]
-        })
+        },true)
       },
 
       // 饼图
@@ -279,13 +295,16 @@
         // 基于准备好的dom，初始化echarts实例
         let myChart = echarts.init(document.getElementById('myChart2'));
         // 绘制图表，this.echarts1_option是数据
+        console.log('this.totalLists',this.totalLists);
+        console.log(this.totalLists.length);
+        myChart.clear();
         myChart.setOption({
           series: [{
             name: '访问来源',
             type: 'pie',
             radius: '55%',
             hoverAnimation:false, // 是否开启 hover 在扇区上的放大动画效果
-            data: this.echarts2Options
+            data: this.totalLists
           }],
           tooltip: {
             formatter: '{b} : {c}',// 默认值null，内容格式器
@@ -293,14 +312,22 @@
           legend: {
             y: 'bottom',
             x: 'center',
+            textStyle:{
+              fontSize: 12,//字体大小
+              color: '#ffffff'//字体颜色
+            },
             data: ['陌生人','在住人','工作人员','访客']
           },
-        });
+        },true);
       },
 
     },
     watch: {
-
+      totalLists (newV, oldV) { // watch监听props里status的变化，然后执行操作
+        console.log(newV, oldV);
+        this.totalLists = newV;
+        this.getPie();
+      }
     }
   }
 </script>
@@ -310,44 +337,81 @@
 
   .el-card {
     border: none;
+    background-color: transparent;
   }
 
   .el-card.is-always-shadow, .el-card.is-hover-shadow:focus, .el-card.is-hover-shadow:hover {
     box-shadow: none;
+    height: 100%;
   }
 
   .box-card {
     /*width: 100vw;*/
     /deep/ .el-card__body {
       width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      padding: 0;
+      height: 100%;
+      position: absolute;
+      z-index: 10;
+      left: 0;
+      top: 0;
+    }
+    .pie {
+      position: relative;
+      width: 100%;
+      img {
+        display: block;
+        width: 100%;
+      }
+      p {
+        position: absolute;
+        z-index: 10;
+        font-size: 14px;
+        color: #fff;
+        padding: 8px;
+        left: 8px;
+        top: 0;
+
+      }
+    }
+    .lineChart {
+      position: relative;
+      width: 100%;
+      margin-top: 20px;
+      img {
+        display: block;
+        width: 100%;
+      }
     }
     #myChart1, #myChart2 {
-      display: inline-flex;
-      width: 50%;
-      height: 360px;
+      display: block;
+      width: calc(100% - 32px);
+      padding: 8px;
+      height: 300px;
+      position: absolute;
+      z-index: 10;
+      left: 8px;
+      top: 18px;
       div {
         width: 100%;
         height: 100%;
       }
     }
+    #myChart1 {
+      top: -25px;
+    }
   }
 
   .statistics_chat {
-    margin: 15px 15px 0;
-    padding: 15px;
-    background-color: #fff;
     position: relative;
-    width: calc(100vw - 60px);
+    height: 100%;
     .preparation {
-      color: #303133;
+      color: #fff;
       font-size: 16px;
       text-align: left;
     }
     .timeChoose {
-      color: #303133;
+      color: #fff;
       font-size: 14px;
       display: flex;
       align-items: center;
