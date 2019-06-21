@@ -1090,8 +1090,11 @@
       margin-left: 15px;
     }
     .noMsg {
-      margin: 260px auto;
       text-align: center;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50% ,-50%);
       .img {
         width: 100px;
         height: 100px;
