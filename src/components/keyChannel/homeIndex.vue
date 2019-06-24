@@ -12,7 +12,7 @@
                 <img :src="item.facial_pic" alt="" @click="bigImgShow(item.facial_pic)">
               </div>
               <div class="list_content">
-                <p><span>时间：</span><span>{{datetimeparse(item.filming_time,'YYYY-MM-DD')}}</span></p>
+                <p><span>时间：</span><span>{{datetimeparse(item.filming_time,'MM-DD hh:mm:ss')}}</span></p>
                 <p><span>地点：</span><span>{{item.location ? item.location : '-'}}</span></p>
                 <p><span>来源：</span><span>-</span></p>
                 <div class="handle" @click="handelBtn(item.illegal_guest_id)"><img src="../../assets/index/chuli.png" alt=""></div>
@@ -81,7 +81,7 @@
               <div class="bg"><img src="../../assets/index/zhong.png" alt=""></div>
               <!-- 今日抓拍列表-->
               <div class="toDay_lists lists" v-if="tab1">
-                <el-row :gutter="15">
+                <el-row :gutter="8">
                   <el-col :xs="12" :sm="8" :md="6" :lg="4" :xl="4"  class="list" v-for="(item,index) in toDayLists" v-bind:key="index">
                     <div class="grid-content bg-purple">
                       <div class="imgs">
@@ -150,7 +150,7 @@
               </div>
               <!-- 陌生人列表-->
               <div class="stranger_lists lists" v-if="tab2">
-                <el-row :gutter="15">
+                <el-row :gutter="8">
                   <el-col :xs="12" :sm="8" :md="6" :lg="4" :xl="4"  class="list" v-for="(item,index) in strangerLists" v-bind:key="index">
                     <div class="grid-content bg-purple">
                       <div class="imgs">
@@ -219,7 +219,7 @@
               </div>
               <!-- 工作人员列表-->
               <div class="white_lists lists" v-if="tab3">
-                <el-row :gutter="15">
+                <el-row :gutter="8">
                   <el-col :xs="12" :sm="8" :md="6" :lg="4" :xl="4"  class="list" v-for="(item,index) in whiteLists" v-bind:key="index">
                     <div class="grid-content bg-purple">
                       <div class="imgs">
@@ -288,7 +288,7 @@
               </div>
               <!-- 在住人列表-->
               <div class="ailve_lists lists" v-if="tab4">
-                <el-row :gutter="15">
+                <el-row :gutter="8">
                   <el-col :xs="12" :sm="8" :md="6" :lg="4" :xl="4"  class="list" v-for="(item,index) in aliveLists" v-bind:key="index">
                     <div class="grid-content bg-purple">
                       <div class="imgs">
@@ -357,7 +357,7 @@
               </div>
               <!-- 访客列表-->
               <div class="ailve_lists lists" v-if="tab5">
-                <el-row :gutter="15">
+                <el-row :gutter="8">
                   <el-col :xs="12" :sm="8" :md="6" :lg="4" :xl="4"  class="list" v-for="(item,index) in visitorLists" v-bind:key="index">
                     <div class="grid-content bg-purple">
                       <div class="imgs">
@@ -665,7 +665,7 @@
           obj2.value = this.total3;
           obj3.name = '访客';
           obj3.value = this.total5;
-          this.totalLists.push(obj, obj1, obj2, obj3);
+          this.totalLists.push(obj1, obj2, obj3, obj);
           console.log('this.totalLists',this.totalLists);
         })
       },
@@ -792,7 +792,7 @@
       margin-right: 15px;
       position: relative;
       overflow: hidden;
-      min-height: calc(100vh - 81px);
+      height: calc(100vh - 81px);
       .bg {
         position: absolute;
         z-index: -1;
@@ -981,8 +981,8 @@
         }
       }
       .el-main {
-        margin-top: 15px;
-        padding: 15px 15px 65px;
+        margin-top: 12px;
+        padding: 12px 12px 40px;
         position: relative;
         overflow: hidden;
         .bg {
@@ -998,17 +998,17 @@
           }
         }
         .lists {
-          min-height: calc(100vh - 260px);
+          min-height: calc(100vh - 214px);
         }
         .lists {
           .el-row {
-            margin-bottom: 15px;
+            /*margin-bottom: 10px;*/
             &:last-child {
               margin-bottom: 0;
             }
           }
           .list {
-            margin: 0 0 15px;
+            margin: 0 0 8px;
             .grid-content {
               border: 1px solid #3798FC;
               border-radius: 8px;
@@ -1140,7 +1140,7 @@
 
   /deep/ .el-pagination {
     position: absolute;
-    bottom: 30px;
+    bottom: 10px;
     text-align: center;
     left: 50%;
     transform: translateX(-50%);

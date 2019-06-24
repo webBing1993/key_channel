@@ -327,7 +327,6 @@
           border: 1px solid #5691D1;
         }
         input:hover {
-          border: none;
           background-color: transparent;
         }
         input:-moz-placeholder {

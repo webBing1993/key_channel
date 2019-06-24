@@ -253,7 +253,7 @@ export default {
           border: none;
           font-size: 16px;
           line-height: 30px;
-          background-color: transparent;
+          background-color: #041740;
           color: #fff;
         }
         input:-moz-placeholder {

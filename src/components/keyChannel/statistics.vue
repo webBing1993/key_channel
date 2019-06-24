@@ -238,7 +238,7 @@
               fontSize: 12,//字体大小
               color: '#ffffff'//字体颜色
             },
-            data:['陌生人','在住人','工作人员','访客']
+            data:['在住人','工作人员','访客','陌生人']
           },
           xAxis: {
             type: 'category',
@@ -263,12 +263,6 @@
           },
           series: [
             {
-              name:'陌生人',
-              type:'line',
-              stack: '总量',
-              data: this.echarts1Options.suspiciousList
-            },
-            {
               name:'在住人',
               type:'line',
               stack: '总量',
@@ -285,6 +279,12 @@
               type:'line',
               stack: '总量',
               data: this.echarts1Options.visitorList
+            },
+            {
+              name:'陌生人',
+              type:'line',
+              stack: '总量',
+              data: this.echarts1Options.suspiciousList
             }
           ]
         },true)
@@ -316,7 +316,7 @@
               fontSize: 12,//字体大小
               color: '#ffffff'//字体颜色
             },
-            data: ['陌生人','在住人','工作人员','访客']
+            data: ['在住人','工作人员','访客','陌生人']
           },
         },true);
       },
