@@ -7,6 +7,9 @@
           <div class="bg"><img src="../../assets/index/zuo.png" alt="" ></div>
           <div class="stranger_title"><img src="../../assets/index/zuoxuanzhong.png" alt="">酒店名称</div>
           <div class="stranger_list" v-if="hotelList.length != 0">
+            <p class="tig">
+              <span class="blue"></span>全部正常 &nbsp;&nbsp; <span class="yellow"></span>部分正常 &nbsp;&nbsp; <span class="red"></span> 全部瘫痪
+            </p>
             <div class="list" v-for="(item,index) in hotelList" :key="index">
               <p>
                 <span>酒店名称：</span>
@@ -193,6 +196,26 @@
         -ms-scroll-snap-type: proximity;
         -ms-scroll-snap-points-x: snapList(100%, 200%, 300%, 400%, 500%);
         -ms-overflow-style: none;
+        .tig {
+          color: #fff;
+          font-size: 14px;
+          span {
+            display: inline-flex;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+          }
+          .blue {
+            background-color: blue;
+          }
+          .yellow {
+            background-color: yellow;
+          }
+          .red {
+            background-color: red;
+          }
+        }
         .list {
           margin-top: 8px;
           border: 1px solid #F46C6C;
