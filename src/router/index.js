@@ -24,6 +24,10 @@ export default new Router({
         {
           path: '/whiteList',
           component: resolve => require(['../components/keyChannel/whiteList.vue'],resolve),
+        },
+        {
+          path: '/hotelStatus',
+          component: resolve => require(['../components/keyChannel/hotelStatus.vue'],resolve),
         }
       ]
     },

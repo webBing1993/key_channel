@@ -9,6 +9,7 @@
               <div class="tabs">
                 <span :class="handleIndex == 1 ? 'active' : ''" @click="handleClick(1)"><img :src="handleIndex == 1 ? handerImg.img[1] : handerImg.img[0]" alt="">首页</span>
                 <span :class="handleIndex == 2 ? 'active' : ''" @click="handleClick(2)"><img :src="handleIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">设置</span>
+                <span :class="handleIndex == 3 ? 'active' : ''" @click="handleClick(3)"><img :src="handleIndex == 3 ? handerImg.img[1] : handerImg.img[0]" alt="">设备监控</span>
               </div>
             </el-col>
             <el-col :span="8">
@@ -35,7 +36,7 @@
     data () {
       return {
         myName: '',
-        handleIndex: 1,
+        handleIndex: sessionStorage.getItem('handleIndex') ? sessionStorage.getItem('handleIndex') : 1,
         handerImg: {
           img: [require('../../assets/index/topweixuan.png'),require('../../assets/index/topxuanzhong.png')],
         },
@@ -60,10 +61,13 @@
       handleClick(tab) {
         if (tab == 1) {
           this.replaceto('keyChannel')
-        }else {
+        }else if(tab == 2) {
           this.replaceto('whiteList')
+        }else {
+          this.replaceto('hotelStatus');
         }
         this.handleIndex = tab;
+        sessionStorage.setItem('handleIndex', tab);
       }
 
     },
@@ -73,6 +77,12 @@
           this.replaceto('/');
         }
       }
+    },
+    beforeRouteLeave(to,from,next) {
+      if (to.path == '/') {
+        sessionStorage.removeItem('handleIndex');
+      }
+      next();
     }
   }
 </script>
