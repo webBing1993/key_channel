@@ -234,6 +234,10 @@
           legend: {
             y: 'bottom',
             x: 'center',
+            icon: 'rect',
+            itemWidth: 20,
+            itemHeight: 10,
+            itemGap: 10,
             textStyle:{
               fontSize: 12,//字体大小
               color: '#ffffff'//字体颜色
@@ -258,8 +262,21 @@
               show: true,
               textStyle: {
                 color: '#ffffff'
+              },
+              margin: 2,
+              formatter: function (value, index) {
+                if (value >= 1000 && value < 10000) {
+                  value = value / 1000 + "千";
+                } else if (value >= 10000) {
+                  value = value / 10000 + "万";
+                }
+                return value;
               }
             }
+          },
+          grid: {
+            left: 40,
+            right: 40
           },
           series: [
             {
