@@ -40,7 +40,7 @@
         handerImg: {
           img: [require('../../assets/index/topweixuan.png'),require('../../assets/index/topxuanzhong.png')],
         },
-        massage: sessionStorage.manage ? sessionStorage.manage :false
+        massage: sessionStorage.manage == 'true' ? true :false
       }
     },
     mounted () {
