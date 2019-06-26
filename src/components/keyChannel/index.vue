@@ -9,7 +9,7 @@
               <div class="tabs">
                 <span :class="handleIndex == 1 ? 'active' : ''" @click="handleClick(1)"><img :src="handleIndex == 1 ? handerImg.img[1] : handerImg.img[0]" alt="">首页</span>
                 <span :class="handleIndex == 2 ? 'active' : ''" @click="handleClick(2)"><img :src="handleIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">设置</span>
-                <span :class="handleIndex == 3 ? 'active' : ''" @click="handleClick(3)"><img :src="handleIndex == 3 ? handerImg.img[1] : handerImg.img[0]" alt="">设备监控</span>
+                <span :class="handleIndex == 3 ? 'active' : ''" @click="handleClick(3)" v-if="massage"><img :src="handleIndex == 3 ? handerImg.img[1] : handerImg.img[0]" alt="" >设备监控</span>
               </div>
             </el-col>
             <el-col :span="8">
@@ -40,6 +40,7 @@
         handerImg: {
           img: [require('../../assets/index/topweixuan.png'),require('../../assets/index/topxuanzhong.png')],
         },
+        massage: sessionStorage.manage ? sessionStorage.manage :false
       }
     },
     mounted () {

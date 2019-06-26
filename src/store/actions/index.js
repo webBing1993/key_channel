@@ -104,6 +104,45 @@ const actions = {
     )
   },
 
+  resource_: (ctx, param) => {
+    openFullScreen();
+
+    axios({
+      url: httpTool.httpUrlEnv() + 'key-channel' + param.url,
+      method: param.method || 'GET',
+      baseURL: '/',
+      headers: param.headers || {
+        Session: sessionStorage.session_id,
+        token: sessionStorage.session_id,
+      },
+      params: param.params || null,
+      data: param.body || null,
+      timeout: param.timeout || 60000,
+    }).then(response => {
+      console.log("response",response);
+      closeFullScreen (openFullScreen());
+      if (response.data.code == 0 || response.data.errcode == 0) {
+        param.onSuccess && param.onSuccess(response)
+      }
+      else if (response.data.errcode !== 0) {
+        Vue.prototype.$message.error(response.body.msg);
+        param.onFail && param.onFail(response)
+      }
+      else {
+        Vue.prototype.$message.error(response.body.msg);
+        param.onFail && param.onFail(response)
+      }
+    }).catch(
+      error => {
+        closeFullScreen (openFullScreen());
+        if(error){
+          console.log("error",error)
+        }
+
+      }
+    )
+  },
+
   // 获取验证码
   getCode (ctx,param){
     ctx.dispatch('request',{
@@ -211,6 +250,28 @@ const actions = {
       body:param.data,
       onSuccess: body => {
         param.onsuccess ? param.onsuccess (body) : null
+      }
+    })
+  },
+
+  // 获取酒店列表
+  getHotel (ctx, param) {
+    ctx.dispatch('resource_', {
+      url: '/keychannel/hotelStatus',
+      method: 'GET',
+      onSuccess: (body,headers) => {
+        param.onsuccess ? param.onsuccess(body,headers) : null
+      }
+    })
+  },
+
+  // 获取酒店摄像头
+  hotelCamera (ctx, param) {
+    ctx.dispatch('resource_', {
+      url: '/keychannel/hotelCameraStatus/' +param.hotelId,
+      method: 'GET',
+      onSuccess: (body,headers) => {
+        param.onsuccess ? param.onsuccess(body,headers) : null
       }
     })
   },

@@ -398,6 +398,7 @@
       img {
         display: block;
         width: 100%;
+        height: 360px;
       }
     }
     #myChart1, #myChart2 {

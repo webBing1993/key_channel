@@ -24,12 +24,19 @@ module.exports = {
           pathRewrite: {
               '^/gemini':'/gemini'
           }
+      },
+      '/key-channel': {
+        target: 'http://qa.fortrun.cn',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/key-channel':'/key-channel'
+        }
       }
     },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
-    port: 8081, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    port: 3000, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,

@@ -10,14 +10,14 @@
             <p class="tig">
               <span class="blue"></span>全部正常 &nbsp;&nbsp; <span class="yellow"></span>部分正常 &nbsp;&nbsp; <span class="red"></span> 全部瘫痪
             </p>
-            <div class="list" v-for="(item,index) in hotelList" :key="index">
+            <div class="list" v-for="(item,index) in hotelList" :key="index" @click="hotelClick(item.hotelId)">
               <p>
                 <span>酒店名称：</span>
                 <span>{{item.hotelName}}</span>
               </p>
               <p>
-                <span>程序状态：<span :class="item.courseStatus == 0 ? 'blue' : 'red'"></span></span>
-                <span>摄像头状态：<span :class="item.cameraStatus == 0 ? 'blue' : item.cameraStatus == 1 ? 'yellow' : 'red'"></span></span>
+                <span>程序状态：<span :class="item.processStatus == 0 ? 'red' : 'blue'"></span></span>
+                <span>摄像头状态：<span :class="item.processStatus == 0 ? 'red' : item.cameraStatus == 2 ? 'blue' : (item.cameraStatus == 0 || item.cameraStatus == 3) ? 'red' : 'yellow'"></span></span>
               </p>
             </div>
           </div>
@@ -32,29 +32,25 @@
           <!-- 摄像头列表-->
           <div class="lists">
             <el-row :gutter="15">
-              <el-col :xs="12" :sm="8" :md="6" :lg="4" :xl="3"  class="list" v-for="(item,index) in cameraList" v-bind:key="index">
+              <el-col :xs="12" :sm="8" :md="6" :lg="6" :xl="6"  class="list" v-for="(item,index) in cameraList" v-bind:key="index">
                 <div class="grid-content bg-purple">
                   <div class="img">
-                    <img src="../../assets/index/canmera.png" alt="" v-if="item.cameraStatus == 0">
+                    <img src="../../assets/index/canmera.png" alt="" v-if="item.cameraStatus == 1">
                     <img src="../../assets/index/canmera_.png" alt="" v-else>
                   </div>
                   <div class="list_content">
-                    <p><span>状态：</span><span :class="item.cameraStatus == 0 ? 'blue' : 'red'"></span></p>
-                    <p><span>序列号：</span><span>{{item.serialNum}}</span></p>
-                    <p><span>时间：</span><span>{{datetimeparse(item.endTime, 'yy/MM/dd hh/mm/ss')}}</span></p>
+                    <p><span>类型：</span><span>{{item.cameraType == 'IN' ? '入口' : '出口'}}</span></p>
+                    <p><span>状态：</span><span :class="item.cameraStatus == 1 ? 'blue' : 'red'"></span></p>
+                    <p><span>序列号：</span><span>{{item.id}}</span></p>
+                    <p><span>IP地址：</span><span>{{item.ipAddress}}</span></p>
+                    <p><span>上次下载时间：</span><span>{{datetimeparse(item.lastDownLoadTime, 'yy/MM/dd hh/mm/ss')}}</span></p>
+                    <p><span>上次登录时间：</span><span>{{datetimeparse(item.lastLoginTime, 'yy/MM/dd hh/mm/ss')}}</span></p>
+                    <p><span>本次上报时间：</span><span>{{datetimeparse(item.createTime, 'yy/MM/dd hh/mm/ss')}}</span></p>
                   </div>
                 </div>
               </el-col>
             </el-row>
-            <el-pagination
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :current-page.sync="currentPage"
-              :page-size="18"
-              layout="total, prev, pager, next"
-              :total="total" v-if="cameraList.length != 0">
-            </el-pagination>
-            <div class="noMsg" v-else>
+            <div class="noMsg" v-if="cameraList.length == 0">
               <div class="img"><img src="../../assets/index/zanwuneirong.png" alt=""></div>
               <p>暂无内容</p>
             </div>
@@ -74,54 +70,19 @@
     name: 'hotelStatus',
     data () {
       return {
-        hotelList: [
-          {
-            hotelName: '全季酒店',
-            cameraStatus: 0,
-            courseStatus: 0,
-            id: 1111,
-          },
-          {
-            hotelName: '全季酒店',
-            cameraStatus: 1,
-            courseStatus: 0,
-            id: 1111,
-          },
-          {
-            hotelName: '全季酒店',
-            cameraStatus: 2,
-            courseStatus: 0,
-            id: 1111,
-          }
-        ],   // 酒店列表
+        hotelList: [],   // 酒店列表
         currentPage: 1,
         total: 0,
-        cameraList: [
-          {
-            cameraStatus: 0,
-            endTime: 1561366130,
-            serialNum: 1445421445624,
-          },
-          {
-            cameraStatus: 1,
-            endTime: 1561366130,
-            serialNum: 1445421445624,
-          },
-          {
-            cameraStatus: 0,
-            endTime: 1561366130,
-            serialNum: 1445421445624,
-          }
-        ],  // 摄像头列表
+        cameraList: [],  // 摄像头列表
       }
     },
     mounted () {
-
+      this.getHotelList();
     },
     methods: {
 
       ...mapActions([
-
+        'getHotel','hotelCamera'
       ]),
 
       // 分页
@@ -131,6 +92,31 @@
 
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
+      },
+
+
+      // 获取左边酒店数据
+      getHotelList() {
+        this.getHotel({
+          onsuccess: body => {
+            if (body.data.code == 0 && body.data.data) {
+                this.hotelList = body.data.data;
+                this.hotelClick( this.hotelList[0].hotelId);
+            }
+          }
+        })
+      },
+
+      // 获取酒店对应的摄像头
+      hotelClick (hotelId) {
+        this.hotelCamera({
+          hotelId: hotelId,
+          onsuccess: body => {
+            if (body.data.code == 0 && body.data.data) {
+                this.cameraList = body.data.data;
+            }
+          }
+        })
       },
 
     },
