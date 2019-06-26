@@ -33,7 +33,7 @@ const actions = {
 
   request: (ctx, param) => {
     axios({
-      url: httpTool.httpUrlEnv() + 'ecard-wechat' + param.url,
+      url: httpTool.httpUrlEnv() + 'key-channel' + param.url,
       method: param.method || 'GET',
       baseURL: '/',
       headers: {
@@ -146,7 +146,7 @@ const actions = {
   // 获取验证码
   getCode (ctx,param){
     ctx.dispatch('request',{
-      url: '/ecard/workWechat/sendCode',
+      url: '/keychannel/sendCode',
       method: 'POST',
       params: param.data,
       onSuccess: body => {
@@ -160,7 +160,7 @@ const actions = {
   // 登录
   loginEntry (ctx,param){
     ctx.dispatch('request',{
-      url: '/ecard/workWechat/channelLogin',
+      url: '/keychannel/login',
       method: 'POST',
       params: param.data,
       onSuccess: body => {
