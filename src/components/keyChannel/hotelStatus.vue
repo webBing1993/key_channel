@@ -17,7 +17,7 @@
               </p>
               <p>
                 <span>程序状态：<span :class="item.processStatus == 0 ? 'red' : 'blue'"></span></span>
-                <span>摄像头状态：<span :class="item.processStatus == 0 ? 'red' : item.cameraStatus == 2 ? 'blue' : (item.cameraStatus == 0 || item.cameraStatus == 3) ? 'red' : 'yellow'"></span></span>
+                <span>摄像头状态：<span :class="item.processStatus == 0 ? 'red' : item.cameraStatus == 1 ? 'blue' : (item.cameraStatus == 0 || item.cameraStatus == 3) ? 'red' : 'yellow'"></span></span>
               </p>
             </div>
           </div>
