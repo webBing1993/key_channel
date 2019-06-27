@@ -138,7 +138,7 @@
       margin-right: 15px;
       position: relative;
       overflow: hidden;
-      min-height: calc(100vh - 81px);
+      height: calc(100vh - 81px);
       .bg {
         position: absolute;
         z-index: -1;
