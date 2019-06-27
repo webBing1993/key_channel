@@ -282,25 +282,21 @@
             {
               name:'在住人',
               type:'line',
-              stack: '总量',
               data: this.echarts1Options.guestList
             },
             {
               name:'工作人员',
               type:'line',
-              stack: '总量',
               data: this.echarts1Options.staffList
             },
             {
               name:'访客',
               type:'line',
-              stack: '总量',
               data: this.echarts1Options.visitorList
             },
             {
               name:'陌生人',
               type:'line',
-              stack: '总量',
               data: this.echarts1Options.suspiciousList
             }
           ]
