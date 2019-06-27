@@ -1,5 +1,5 @@
 <template>
-  <div style="height: calc(100vh - 60px)">
+  <div>
     <div class="statistics_chat">
       <!--<div class="preparation">筛选</div>-->
       <!--<div class="timeChoose">-->
@@ -364,10 +364,10 @@
       width: 100%;
       padding: 0;
       height: 100%;
-      position: absolute;
+      /*position: absolute;*/
       z-index: 10;
-      left: 0;
-      top: 0;
+      /*left: 0;*/
+      /*top: 0;*/
     }
     .pie {
       position: relative;
@@ -394,7 +394,7 @@
       img {
         display: block;
         width: 100%;
-        height: 360px;
+        /*height: 360px;*/
       }
     }
     #myChart1, #myChart2 {

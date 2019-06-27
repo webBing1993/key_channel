@@ -1088,6 +1088,7 @@
       padding: 0;
       margin-right: 0;
       margin-left: 15px;
+      height: auto;
     }
     .noMsg {
       text-align: center;
