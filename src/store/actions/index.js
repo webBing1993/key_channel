@@ -48,7 +48,7 @@ const actions = {
       if (response.data.code == 0) {
         param.onSuccess && param.onSuccess(response)
       }
-      else if (response.data.errcode !== 0) {
+      else if (response.data.code !== 0) {
         param.onFail && param.onFail(response)
       }
       else {
@@ -153,6 +153,7 @@ const actions = {
         param.onsuccess ? param.onsuccess(body) : null
       },
       onFail: body => {
+        param.onfail ? param.onfail(body) : null
       }
     })
   },
