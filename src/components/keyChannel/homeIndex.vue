@@ -2,8 +2,8 @@
   <div>
     <div class="homeIndex">
       <!-- 陌生人待处理-->
-      <el-container>
-        <el-aside ref="elAside">
+      <el-container  ref="elAside">
+        <el-aside>
           <div class="bg"><img src="../../assets/index/zuo.png" alt="" ></div>
           <div class="stranger_title"><img src="../../assets/index/zuoxuanzhong.png" alt="">陌生人(未处理)</div>
           <div class="stranger_list" v-if="strangerList.length != 0">
@@ -485,9 +485,14 @@
       this.getLists(0,'',0,18,'');
       this.getLists(0,'SUSPICIOUS_GUEST',5,200,'SUSPICIOUS_GUEST');
       this.initWebSocket();
-//      console.log(this.$refs.mainHeight.$el.firstChild.style.height);
-//      this.$refs.elAside.$el.style.height = (this.$refs.mainHeight.$el.firstChild.offsetHeight) + 'px';
-//      this.$refs.elAside.$el.firstChild.firstChild.style.height = (this.$refs.mainHeight.$el.firstChild.offsetHeight) + 'px';
+//      console.log(this.$refs.mainHeight.$el.offsetHeight);
+      this.$refs.elAside.$children[0].$el.style.height = this.$refs.mainHeight.$el.offsetHeight + 'px';
+      this.$refs.elAside.$children[0].$el.firstChild.firstChild.style.height = (this.$refs.mainHeight.$el.offsetHeight - 1) + 'px';
+      this.$refs.elAside.$children[0].$el.lastChild.style.maxHeight = (this.$refs.mainHeight.$el.offsetHeight - 40)+ 'px';
+      console.log(this.$refs.elAside.$children[0].$el.lastChild.style.maxHeight);
+      console.log(this.$refs.elAside.$children[0]);
+//      console.log(this.$refs.elAside.$children[0].$el.firstChild.firstChild.style.height);
+//      console.log(this.$refs.elAside.$children[0]);
     },
     methods: {
 
@@ -1039,6 +1044,14 @@
                   color: #fff;
                   margin: 8px 0;
                   text-align: left;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                }
+                .title:hover {
+                  overflow: inherit;
+                  background-color: #041740;
+                  z-index: 5;
                 }
                 .content {
                   p {
