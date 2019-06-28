@@ -486,11 +486,9 @@
       this.getLists(0,'SUSPICIOUS_GUEST',5,200,'SUSPICIOUS_GUEST');
       this.initWebSocket();
 //      console.log(this.$refs.mainHeight.$el.offsetHeight);
-      this.$refs.elAside.$children[0].$el.style.height = this.$refs.mainHeight.$el.offsetHeight + 'px';
-      this.$refs.elAside.$children[0].$el.firstChild.firstChild.style.height = (this.$refs.mainHeight.$el.offsetHeight - 1) + 'px';
-      this.$refs.elAside.$children[0].$el.lastChild.style.maxHeight = (this.$refs.mainHeight.$el.offsetHeight - 40)+ 'px';
-      console.log(this.$refs.elAside.$children[0].$el.lastChild.style.maxHeight);
-      console.log(this.$refs.elAside.$children[0]);
+
+//      console.log(this.$refs.elAside.$children[0].$el.lastChild.style.maxHeight);
+//      console.log(this.$refs.elAside.$children[0]);
 //      console.log(this.$refs.elAside.$children[0].$el.firstChild.firstChild.style.height);
 //      console.log(this.$refs.elAside.$children[0]);
     },
@@ -634,6 +632,11 @@
               this.strangerList = [...body.data.data];
               this.totalList();
             }
+            this.$nextTick(() => {
+              this.$refs.elAside.$children[0].$el.style.height = this.$refs.mainHeight.$el.offsetHeight + 'px';
+              this.$refs.elAside.$children[0].$el.firstChild.firstChild.style.height = (this.$refs.mainHeight.$el.offsetHeight - 1) + 'px';
+              this.$refs.elAside.$children[0].$el.lastChild.style.maxHeight = (this.$refs.mainHeight.$el.offsetHeight - 40)+ 'px';
+            })
           }
         })
       },
@@ -1003,7 +1006,7 @@
           }
         }
         .lists {
-          min-height: calc(100vh - 123px);
+          min-height: calc(100vh - 214px);
         }
         .lists {
           .el-row {
