@@ -1003,7 +1003,7 @@
           }
         }
         .lists {
-          min-height: calc(100vh - 214px);
+          min-height: calc(100vh - 123px);
         }
         .lists {
           .el-row {
