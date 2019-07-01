@@ -704,7 +704,7 @@
           this.totalLists = [];
           let obj = {},obj1 = {}, obj2 = {}, obj3 = {};
           obj.name = '陌生人';
-          obj.value = this.total2+this.strangerNum;
+          obj.value = this.total2;
           obj1.name = '在住人';
           obj1.value = this.total4;
           obj2.name = '工作人员';

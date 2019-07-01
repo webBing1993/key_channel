@@ -317,7 +317,25 @@
             type: 'pie',
             radius: '55%',
             hoverAnimation:false, // 是否开启 hover 在扇区上的放大动画效果
-            data: this.totalLists
+            data: this.totalLists,
+            avoidLabelOverlap: true,   //是否启用防止标签重叠策略
+            label:{
+              align: 'left',
+              normal:{
+                formatter(v) {
+                  let text = v.name;
+                  if(text.length <= 2)
+                  {
+                    return text;
+                  }else if(text.length > 2 && text.length <= 4){
+                    return text = `${text.slice(0,2)}\n${text.slice(2)}`
+                  }
+                },
+                textStyle : {
+                  fontSize : 12
+                }
+              }
+            }
           }],
           tooltip: {
             formatter: '{b} : {c}',// 默认值null，内容格式器
