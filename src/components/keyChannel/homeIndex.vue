@@ -5,8 +5,19 @@
       <el-container  ref="elAside">
         <el-aside>
           <div class="bg"><img src="../../assets/index/zuo.png" alt="" ></div>
-          <div class="stranger_title"><img src="../../assets/index/zuoxuanzhong.png" alt="">陌生人(未处理)</div>
-          <div class="stranger_list" v-if="strangerList.length != 0">
+          <div class="stranger_title">
+            <div :class="strangerTab == 1 ? 'active stranger_tab' : 'stranger_tab'" @click="strangerTabClick(1)">
+              <img src="../../assets/index/zuoxuanzhong.png" alt="" v-if="strangerTab == 1">
+              <img src="../../assets/index/zuoweixuan.png" alt="" v-else>
+              陌生人(未处理)
+            </div>
+            <div :class="strangerTab == 2 ? 'active stranger_tab' : 'stranger_tab'" @click="strangerTabClick(2)">
+              <img src="../../assets/index/zuoxuanzhong.png" alt="" v-if="strangerTab == 2">
+              <img src="../../assets/index/zuoweixuan.png" alt="" v-else>
+              模糊抓拍
+            </div>
+          </div>
+          <div class="stranger_list" v-if="strangerTab == 1">
             <div class="list" v-for="(item,index) in strangerList" :key="index">
               <div class="img">
                 <img :src="item.facial_pic" alt="" @click="bigImgShow(item.facial_pic)">
@@ -15,13 +26,30 @@
                 <p><span>时间：</span><span>{{datetimeparse(item.filming_time,'MM-DD hh:mm:ss')}}</span></p>
                 <p><span>地点：</span><span>{{item.location ? item.location : '-'}}</span></p>
                 <p><span>来源：</span><span>-</span></p>
-                <div class="handle" @click="handelBtn(item.illegal_guest_id)"><img src="../../assets/index/chuli.png" alt=""></div>
+                <div class="handle" @click="handelBtn(item.illegal_guest_id,1)"><img src="../../assets/index/chuli.png" alt=""></div>
               </div>
             </div>
+            <div class="noMsg" v-if="strangerList.length == 0">
+              <div class="img"><img src="../../assets/index/zanwuneirong.png" alt=""></div>
+              <p>暂无内容</p>
+            </div>
           </div>
-          <div class="noMsg" v-else>
-            <div class="img"><img src="../../assets/index/zanwuneirong.png" alt=""></div>
-            <p>暂无内容</p>
+          <div class="stranger_list" v-if="strangerTab == 2">
+            <div class="list" v-for="(item,index) in indistinctList" :key="index">
+              <div class="img">
+                <img :src="item.facial_pic" alt="" @click="bigImgShow(item.facial_pic)">
+              </div>
+              <div class="list_content">
+                <p><span>时间：</span><span>{{datetimeparse(item.filming_time,'MM-DD hh:mm:ss')}}</span></p>
+                <p><span>地点：</span><span>{{item.location ? item.location : '-'}}</span></p>
+                <p><span>来源：</span><span>-</span></p>
+                <div class="handle" @click="handelBtn(item.illegal_guest_id,2)"><img src="../../assets/index/chuli.png" alt=""></div>
+              </div>
+            </div>
+            <div class="noMsg" v-if="indistinctList.length == 0">
+              <div class="img"><img src="../../assets/index/zanwuneirong.png" alt=""></div>
+              <p>暂无内容</p>
+            </div>
           </div>
         </el-aside>
         <!-- 中间主页-->
@@ -453,6 +481,7 @@
         maskBtn:false,         // 控制大图
         bigImgSrc: '',         // 大图url
         strangerList: [],   // 陌生人待处理的列表
+        indistinctList: [], // 陌生人模糊抓拍列表
         strangerNum: 0,     // 陌生人待处理的数量
         tab1: true,
         tab2: false,
@@ -479,18 +508,13 @@
         aliveLists: [],        // 在住人列表
         visitorLists: [],        // 访客列表
         websock: null,
+        strangerTab: 1,      // 左边tab切换
       }
     },
     mounted () {
       this.getLists(0,'',0,18,'');
-      this.getLists(0,'SUSPICIOUS_GUEST',5,200,'SUSPICIOUS_GUEST');
+      this.getLists(0,'SUSPICIOUS_GUEST',5,500,'SUSPICIOUS_GUEST');
       this.initWebSocket();
-//      console.log(this.$refs.mainHeight.$el.offsetHeight);
-
-//      console.log(this.$refs.elAside.$children[0].$el.lastChild.style.maxHeight);
-//      console.log(this.$refs.elAside.$children[0]);
-//      console.log(this.$refs.elAside.$children[0].$el.firstChild.firstChild.style.height);
-//      console.log(this.$refs.elAside.$children[0]);
     },
     methods: {
 
@@ -559,6 +583,11 @@
         this.totalList();
       },
 
+      // 左边tab切换
+      strangerTabClick(index) {
+        this.strangerTab = index;
+      },
+
       // 分页
       handleSizeChange (val) {
 
@@ -598,6 +627,8 @@
       getLists (page,statuses,type,limit,status) {
         page = page * 18;
         this.doubtfulList = [];
+        this.indistinctList = [];
+        this.strangerNum = [];
         let obj = {
           createTimeStart: new Date(this.datetimeparse(new Date(new Date(new Date().toLocaleDateString()).getTime()),'YYYY-MM-DD hh:mm:ss')).getTime(),
           createTimeEnd: ''
@@ -629,7 +660,14 @@
               this.visitorLists = [...body.data.data];
             }else {
               this.strangerNum = parseInt(body.headers['x-total-count']);
-              this.strangerList = [...body.data.data];
+              body.data.data.forEach(item => {
+                if (item.bluriness && item.bluriness >= 0.6) {
+                  this.indistinctList.push(item);
+                }else {
+                  this.strangerList.push(item);
+                }
+              });
+//              this.strangerList = [...body.data.data];
               this.totalList();
             }
             this.$nextTick(() => {
@@ -679,7 +717,7 @@
       },
 
       // 待处理的处置事件
-      handelBtn(id){
+      handelBtn(id,type){
         this.hasChecked({
           illegalGuestId: id,
           onsuccess:body=>{
@@ -687,8 +725,9 @@
               message: '处置成功',
               type: 'success'
             });
-            this.strangerNum--;
-            this.strangerList.forEach((item,index) => {
+            if (type == 1) {
+              this.strangerNum--;
+              this.strangerList.forEach((item,index) => {
                 if (item.illegal_guest_id == id) {
                   this.$nextTick(() => {
                     this.strangerList.splice(index, 1);
@@ -708,7 +747,31 @@
                   });
                 }
                 this.totalAll();
-            })
+              })
+            }else {
+              this.indistinctList.forEach((item,index) => {
+                if (item.illegal_guest_id == id) {
+                  this.$nextTick(() => {
+                    this.indistinctList.splice(index, 1);
+                    this.total1++;
+                    this.total2++;
+                    if (this.tab1 && this.currentPage1 == 1) {
+                      this.toDayLists.unshift(item);
+                      if (this.toDayLists.length > 18) {
+                        this.toDayLists.splice(18,1);
+                      }
+                    }else if (this.tab2 && this.currentPage2 == 1) {
+                      this.strangerLists.unshift(item);
+                      if (this.strangerLists.length > 18) {
+                        this.strangerLists.splice(18,1);
+                      }
+                    }
+                  });
+                }
+                this.totalAll();
+              })
+            }
+
           }
         })
       },
@@ -739,7 +802,11 @@
           this.$nextTick(() => {
             if (newData.guestType == 'SUSPICIOUS_GUEST') {
               this.strangerNum++;
-              this.strangerList.unshift(newData);
+              if (newData.bluriness && newData.bluriness >= 0.6) {
+                this.indistinctList.unshift(newData);
+              }else {
+                this.strangerList.unshift(newData);
+              }
             }else {
               this.total1++;
               this.toDayLists.unshift(newData);
@@ -815,20 +882,28 @@
       }
       .stranger_title {
         font-size: 14px;
-        color: #fff;
         text-align: left;
         line-height: 24px;
-        position: relative;
-        /*display: inline-block;*/
-        /*width: 120px;*/
-        img {
-          display: none;
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          z-index: -1;
-          left: 0;
-          top: 0;
+        display: inline-block;
+        .stranger_tab {
+          display: inline-block;
+          width: 120px;
+          position: relative;
+          text-align: center;
+          margin-right: 20px;
+          cursor: pointer;
+          color: #3596FC;
+          img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            left: 0;
+            top: 0;
+          }
+        }
+        .active {
+          color: #fff;
         }
       }
       .stranger_list {
