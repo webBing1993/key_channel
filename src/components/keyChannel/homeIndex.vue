@@ -513,6 +513,8 @@
     },
     mounted () {
       this.getLists(0,'',0,18,'');
+      this.indistinctList = [];
+      this.strangerNum = [];
       this.getLists(0,'SUSPICIOUS_GUEST',5,500,'SUSPICIOUS_GUEST');
       this.initWebSocket();
     },
@@ -627,8 +629,6 @@
       getLists (page,statuses,type,limit,status) {
         page = page * 18;
         this.doubtfulList = [];
-        this.indistinctList = [];
-        this.strangerNum = [];
         let obj = {
           createTimeStart: new Date(this.datetimeparse(new Date(new Date(new Date().toLocaleDateString()).getTime()),'YYYY-MM-DD hh:mm:ss')).getTime(),
           createTimeEnd: ''
