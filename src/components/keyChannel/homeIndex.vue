@@ -661,7 +661,7 @@
             }else {
               this.strangerNum = parseInt(body.headers['x-total-count']);
               body.data.data.forEach(item => {
-                if (item.bluriness && item.bluriness >= 0.6) {
+                if (Math.abs(item.bluriness && item.bluriness) >= 0.6) {
                   this.indistinctList.push(item);
                 }else {
                   this.strangerList.push(item);
@@ -673,7 +673,7 @@
             this.$nextTick(() => {
               this.$refs.elAside.$children[0].$el.style.height = this.$refs.mainHeight.$el.offsetHeight + 'px';
               this.$refs.elAside.$children[0].$el.firstChild.firstChild.style.height = (this.$refs.mainHeight.$el.offsetHeight - 1) + 'px';
-              this.$refs.elAside.$children[0].$el.lastChild.style.maxHeight = (this.$refs.mainHeight.$el.offsetHeight - 40)+ 'px';
+              this.$refs.elAside.$children[0].$el.lastChild.style.maxHeight = (this.$refs.mainHeight.$el.offsetHeight - 48)+ 'px';
             })
           }
         })
@@ -907,7 +907,7 @@
         }
       }
       .stranger_list {
-        max-height: calc(100vh - 100px);
+        max-height: calc(100vh - 118px);
         overflow-y: scroll;
         -webkit-overflow-scrolling: touch; // 为了滚动顺畅
         -ms-scroll-chaining: chained;
