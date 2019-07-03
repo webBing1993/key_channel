@@ -806,7 +806,7 @@
           this.$nextTick(() => {
             if (newData.guestType == 'SUSPICIOUS_GUEST') {
               this.strangerNum++;
-              if (newData.bluriness && newData.bluriness >= 0.6) {
+              if (newData.bluriness && Math.abs(newData.bluriness) >= 0.6) {
                 this.indistinctList.unshift(newData);
               }else {
                 this.strangerList.unshift(newData);
