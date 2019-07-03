@@ -509,6 +509,7 @@
         visitorLists: [],        // 访客列表
         websock: null,
         strangerTab: 1,      // 左边tab切换
+        timer: null,
       }
     },
     mounted () {
@@ -517,6 +518,9 @@
       this.strangerNum = [];
       this.getLists(0,'SUSPICIOUS_GUEST',5,500,'SUSPICIOUS_GUEST');
       this.initWebSocket();
+      this.timer = setInterval(() => {
+        this.websocketsend(888);
+      },10000)
     },
     methods: {
 
@@ -793,7 +797,7 @@
       websocketonmessage(e){ //数据接收
         console.log('============websocket数据接收成功==============');
         console.log(e.data);
-        if (e.data != '连接成功') {
+        if (e.data != '连接成功' && e.data != 888) {
           let val = JSON.parse(e.data);
           this.weekNum = val.weekTotal;
           this.monthNum = val.monthTotal;
@@ -847,7 +851,11 @@
       websocketclose(e){  //关闭通道
         console.log("关闭通道connection closed (" + e.code + ")");
       },
-
+      beforeRouteLeave(to,from,next) {
+        this.websock.close();
+        clearInterval(this.timer);
+        next();
+      }
     },
     watch: {
 
