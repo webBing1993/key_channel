@@ -523,11 +523,11 @@
       this.indistinctList = [];
       this.strangerNum = [];
       this.getLists(0,'SUSPICIOUS_GUEST',5,500,'SUSPICIOUS_GUEST');
-//      this.initWebSocket();
-      this.createWebSocket(wsUrl);
-//      this.timer = setInterval(() => {
-//        this.websocketsend(888);
-//      },10000)
+      this.initWebSocket();
+//      this.createWebSocket(wsUrl);
+      this.timer = setInterval(() => {
+        this.websocketsend(888);
+      },10000)
     },
     methods: {
 
@@ -857,6 +857,7 @@
       },
       websocketclose(e){  //关闭通道
         console.log("关闭通道connection closed (" + e.code + ")");
+        location.reload();
       },
 
 
@@ -900,7 +901,7 @@
         ws.onclose = function () {
           console.log('链接关闭');
           that.reconnect(wsUrl);
-          location.reload();
+          location.reload()
         };
         ws.onerror = function() {
           console.log('发生异常了');
@@ -979,7 +980,7 @@
 
 
       beforeRouteLeave(to,from,next) {
-        ws.close();
+//        this.websock.close();
         clearInterval(this.timer);
         next();
       }
