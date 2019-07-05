@@ -469,6 +469,12 @@
 </template>
 
 <script>
+
+  let lockReconnect = false;//避免重复连接
+  let wsUrl = 'wss://qa.fortrun.cn/keychannel/websocket/' + sessionStorage.hotelId + '_' + encodeURIComponent(sessionStorage.session_id);
+  let ws;
+  let tt;
+
   import {mapState,mapActions} from 'vuex';
   import ElCol from "element-ui/packages/col/src/col";
   import Statistics from './statistics.vue';
@@ -517,10 +523,11 @@
       this.indistinctList = [];
       this.strangerNum = [];
       this.getLists(0,'SUSPICIOUS_GUEST',5,500,'SUSPICIOUS_GUEST');
-      this.initWebSocket();
-      this.timer = setInterval(() => {
-        this.websocketsend(888);
-      },10000)
+//      this.initWebSocket();
+      this.createWebSocket(wsUrl);
+//      this.timer = setInterval(() => {
+//        this.websocketsend(888);
+//      },10000)
     },
     methods: {
 
@@ -851,6 +858,124 @@
       websocketclose(e){  //关闭通道
         console.log("关闭通道connection closed (" + e.code + ")");
       },
+
+
+      createWebSocket() {
+        let that = this;
+        try {
+          ws = new WebSocket(wsUrl);
+          this.init();
+        } catch(e) {
+          console.log('catch');
+          that.reconnect(wsUrl);
+        }
+      },
+      init() {
+        let that = this;
+
+        //心跳检测
+        let heartCheck = {
+          timeout: 3000,
+          timeoutObj: null,
+          serverTimeoutObj: null,
+          start: function(){
+            console.log('start');
+            let self = this;
+            this.timeoutObj && clearTimeout(this.timeoutObj);
+            this.serverTimeoutObj && clearTimeout(this.serverTimeoutObj);
+            this.timeoutObj = setTimeout(function(){
+              //这里发送一个心跳，后端收到后，返回一个心跳消息，
+              console.log('55555');
+              ws.send("888");
+              self.serverTimeoutObj = setTimeout(function() {
+                console.log(111);
+                console.log(ws);
+                ws.close();
+                // createWebSocket();
+              }, self.timeout);
+
+            }, this.timeout)
+          }
+        };
+        ws.onclose = function () {
+          console.log('链接关闭');
+          that.reconnect(wsUrl);
+        };
+        ws.onerror = function() {
+          console.log('发生异常了');
+          that.reconnect(wsUrl);
+        };
+        ws.onopen = function () {
+          //心跳检测重置
+          heartCheck.start();
+        };
+        ws.onmessage = function (e) {
+          //拿到任何消息都说明当前连接是正常的
+          console.log('接收到消息');
+          console.log(e);
+          if (e.data != '连接成功' && e.data != 888 && e.data != '888') {
+            let val = JSON.parse(e.data);
+            this.weekNum = val.weekTotal;
+            this.monthNum = val.monthTotal;
+            this.allNum = val.total;
+            let newData = JSON.parse(val.illegalGuest);
+            this.$nextTick(() => {
+              if (newData.guestType == 'SUSPICIOUS_GUEST') {
+                this.strangerNum++;
+                if (newData.bluriness && Math.abs(newData.bluriness) >= 0.6) {
+                  this.indistinctList.unshift(newData);
+                }else {
+                  this.strangerList.unshift(newData);
+                }
+              }else {
+                this.total1++;
+                this.toDayLists.unshift(newData);
+                if (this.toDayLists.length > 18) {
+                  this.toDayLists.splice(18,1);
+                }
+                if (newData.guestType == 'STAFF') {
+                  this.total3++;
+                  this.whiteLists.unshift(newData);
+                  if (this.whiteLists.length > 18) {
+                    this.whiteLists.splice(18,1);
+                  }
+                }
+                if (newData.guestType == 'GUEST_ID' || newData.guestType == 'GUEST_LIVE') {
+                  this.total4++;
+                  this.aliveLists.unshift(newData);
+                  if (this.aliveLists.length > 18) {
+                    this.aliveLists.splice(18,1);
+                  }
+                }
+                if (newData.guestType == 'VISITOR') {
+                  this.total5++;
+                  this.visitorLists.unshift(newData);
+                  if (this.visitorLists.length > 18) {
+                    this.visitorLists.splice(18,1);
+                  }
+                }
+              }
+              this.totalAll();
+            });
+            console.log(newData);
+          }
+          heartCheck.start();
+        }
+      },
+      reconnect(url) {
+        if(lockReconnect) {
+          return;
+        }
+        lockReconnect = true;
+        //没连接上会一直重连，设置延迟避免请求过多
+        tt && clearTimeout(tt);
+        tt = setTimeout( () => {
+          this.createWebSocket(url);
+          lockReconnect = false;
+        }, 4000);
+      },
+
+
       beforeRouteLeave(to,from,next) {
         this.websock.close();
         clearInterval(this.timer);
