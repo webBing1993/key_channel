@@ -979,7 +979,7 @@
 
 
       beforeRouteLeave(to,from,next) {
-        this.websock.close();
+        ws.close();
         clearInterval(this.timer);
         next();
       }
