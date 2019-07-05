@@ -796,6 +796,7 @@
         this.websock.onopen = this.websocketonopen;
         this.websock.onmessage = this.websocketonmessage;
         this.websock.onclose = this.websocketclose;
+        this.websock.onerror = this.websocketerror;
       },
       websocketonopen(e){ //建立通道
         // let redata = e;
@@ -857,6 +858,10 @@
       },
       websocketclose(e){  //关闭通道
         console.log("关闭通道connection closed (" + e.code + ")");
+        location.reload();
+      },
+      websocketerror(e){  //通道异常
+        console.log("通道异常connection closed (" + e.code + ")");
         location.reload();
       },
 
