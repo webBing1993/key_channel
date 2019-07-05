@@ -900,10 +900,12 @@
         ws.onclose = function () {
           console.log('链接关闭');
           that.reconnect(wsUrl);
+          location.reload();
         };
         ws.onerror = function() {
           console.log('发生异常了');
           that.reconnect(wsUrl);
+          location.reload();
         };
         ws.onopen = function () {
           //心跳检测重置
