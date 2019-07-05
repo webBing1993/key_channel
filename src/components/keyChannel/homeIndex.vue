@@ -915,47 +915,47 @@
           console.log(e);
           if (e.data != '连接成功' && e.data != 888 && e.data != '888') {
             let val = JSON.parse(e.data);
-            this.weekNum = val.weekTotal;
-            this.monthNum = val.monthTotal;
-            this.allNum = val.total;
+            that.weekNum = val.weekTotal;
+            that.monthNum = val.monthTotal;
+            that.allNum = val.total;
             let newData = JSON.parse(val.illegalGuest);
-            this.$nextTick(() => {
+            that.$nextTick(() => {
               if (newData.guestType == 'SUSPICIOUS_GUEST') {
-                this.strangerNum++;
+                that.strangerNum++;
                 if (newData.bluriness && Math.abs(newData.bluriness) >= 0.6) {
-                  this.indistinctList.unshift(newData);
+                  that.indistinctList.unshift(newData);
                 }else {
-                  this.strangerList.unshift(newData);
+                  that.strangerList.unshift(newData);
                 }
               }else {
-                this.total1++;
-                this.toDayLists.unshift(newData);
-                if (this.toDayLists.length > 18) {
-                  this.toDayLists.splice(18,1);
+                that.total1++;
+                that.toDayLists.unshift(newData);
+                if (that.toDayLists.length > 18) {
+                  that.toDayLists.splice(18,1);
                 }
                 if (newData.guestType == 'STAFF') {
-                  this.total3++;
-                  this.whiteLists.unshift(newData);
-                  if (this.whiteLists.length > 18) {
-                    this.whiteLists.splice(18,1);
+                  that.total3++;
+                  that.whiteLists.unshift(newData);
+                  if (that.whiteLists.length > 18) {
+                    that.whiteLists.splice(18,1);
                   }
                 }
                 if (newData.guestType == 'GUEST_ID' || newData.guestType == 'GUEST_LIVE') {
-                  this.total4++;
-                  this.aliveLists.unshift(newData);
-                  if (this.aliveLists.length > 18) {
-                    this.aliveLists.splice(18,1);
+                  that.total4++;
+                  that.aliveLists.unshift(newData);
+                  if (that.aliveLists.length > 18) {
+                    that.aliveLists.splice(18,1);
                   }
                 }
                 if (newData.guestType == 'VISITOR') {
-                  this.total5++;
-                  this.visitorLists.unshift(newData);
-                  if (this.visitorLists.length > 18) {
-                    this.visitorLists.splice(18,1);
+                  that.total5++;
+                  that.visitorLists.unshift(newData);
+                  if (that.visitorLists.length > 18) {
+                    that.visitorLists.splice(18,1);
                   }
                 }
               }
-              this.totalAll();
+              that.totalAll();
             });
             console.log(newData);
           }
