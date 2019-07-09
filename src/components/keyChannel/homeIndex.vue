@@ -684,7 +684,7 @@
             this.$nextTick(() => {
               this.$refs.elAside.$children[0].$el.style.height = this.$refs.mainHeight.$el.offsetHeight + 'px';
               this.$refs.elAside.$children[0].$el.firstChild.firstChild.style.height = (this.$refs.mainHeight.$el.offsetHeight - 1) + 'px';
-              this.$refs.elAside.$children[0].$el.lastChild.style.maxHeight = (this.$refs.mainHeight.$el.offsetHeight - 48)+ 'px';
+              this.$refs.elAside.$children[0].$el.lastElementChild.style.maxHeight = (this.$refs.mainHeight.$el.offsetHeight - 48)+ 'px';
             })
           }
         })
