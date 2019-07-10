@@ -74,10 +74,14 @@
         currentPage: 1,
         total: 0,
         cameraList: [],  // 摄像头列表
+        timer: null,  // 定时器
       }
     },
     mounted () {
       this.getHotelList();
+      this.timer = setInterval(() => {
+        this.getHotelList();
+      },60000)
     },
     methods: {
 
@@ -101,7 +105,7 @@
           onsuccess: body => {
             if (body.data.code == 0 && body.data.data) {
                 this.hotelList = body.data.data;
-                this.hotelClick( this.hotelList[0].hotelId);
+                this.hotelClick(sessionStorage.getItem('hotelClickId') ? sessionStorage.getItem('hotelClickId') : this.hotelList[0].hotelId);
             }
           }
         })
@@ -109,6 +113,7 @@
 
       // 获取酒店对应的摄像头
       hotelClick (hotelId) {
+        sessionStorage.setItem('hotelClickId', hotelId);
         this.hotelCamera({
           hotelId: hotelId,
           onsuccess: body => {
@@ -122,6 +127,11 @@
     },
     watch: {
 
+    },
+    beforeRouteLeave(to,from,next) {
+      sessionStorage.removeItem('hotelClickId');
+      clearInterval(this.timer);
+      next();
     }
   }
 </script>
