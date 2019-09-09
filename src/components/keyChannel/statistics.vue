@@ -430,7 +430,7 @@
       }
     }
     #myChart1 {
-      top: -25px;
+      top: -34px;
     }
   }
 

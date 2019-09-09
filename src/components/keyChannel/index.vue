@@ -6,7 +6,10 @@
           <el-row>
             <el-col :span="16">
               <img src="../../assets/index/logo.png" alt="">
-              <div class="tabs">
+              <div class="tabs" v-if="roleShow">
+                <span class="active"><img :src="handerImg.img[1]" alt="">首页</span>
+              </div>
+              <div class="tabs" v-else>
                 <span :class="handleIndex == 1 ? 'active' : ''" @click="handleClick(1)"><img :src="handleIndex == 1 ? handerImg.img[1] : handerImg.img[0]" alt="">首页</span>
                 <span :class="handleIndex == 2 ? 'active' : ''" @click="handleClick(2)"><img :src="handleIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">设置</span>
                 <span :class="handleIndex == 3 ? 'active' : ''" @click="handleClick(3)" v-if="massage"><img :src="handleIndex == 3 ? handerImg.img[1] : handerImg.img[0]" alt="" >设备监控</span>
@@ -35,6 +38,7 @@
     name: 'keyChannel',
     data () {
       return {
+        roleShow: sessionStorage.roleId != '' ? true : false,  // 判断权限
         myName: '',
         handleIndex: sessionStorage.getItem('handleIndex') ? sessionStorage.getItem('handleIndex') : 1,
         handerImg: {
@@ -62,6 +66,7 @@
       handleClick(tab) {
         if (tab == 1) {
           this.replaceto('keyChannel')
+//          this.replaceto('home')
         }else if(tab == 2) {
           this.replaceto('whiteList')
         }else {

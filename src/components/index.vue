@@ -18,7 +18,7 @@
         </div>
         <!--<p class="login" v-if="entryAll" @click="login">登录</p>-->
         <!--<p class="login" v-else>登录</p>-->
-        <p class="login"  @click="login">登录</p>
+        <el-button type="primary" class="login" :loading="loginLoading"  @click="login()" >登录</el-button>
       </div>
       <p class="footer">上海复创科技提供技术支持</p>
     </div>
@@ -38,6 +38,7 @@ export default {
       phone: '',
       flagPc: false,    // 判断是否为pc端
       entryAll: false,  // 判断是否可以点击确定按钮
+      loginLoading: false, // 登录loading
     }
   },
   mounted () {
@@ -143,6 +144,7 @@ export default {
         } else if (this.code.length != 6) {
           this.$message('请输入６位数验证码');
         } else {
+          this.loginLoading = true;
           this.loginEntry({
             data: {
               phone: this.phone,
@@ -158,12 +160,19 @@ export default {
                 sessionStorage.hotelName = body.data.data.hotelName;
                 sessionStorage.hotelId = body.data.data.hotelId;
                 sessionStorage.manage = body.data.data.manage;
-                this.goto('/keyChannel');
+                sessionStorage.roleId = body.data.data.role;
+                if (body.data.data.role == '') {
+                  this.goto('/keyChannel');
+                }else {
+                  this.goto('/keyChannel/home');
+                }
               }else {
                 this.$message.error(body.data.msg);
               }
+              this.loginLoading = false;
             },
             onfail: body => {
+              this.loginLoading = false;
               this.$message.error(body.data.msg);
             }
           })

@@ -478,6 +478,7 @@
   import {mapState,mapActions} from 'vuex';
   import ElCol from "element-ui/packages/col/src/col";
   import Statistics from './statistics.vue';
+  import Vue from 'vue'
   export default {
     components: {ElCol, Statistics},
     name: 'keyChannel',
@@ -516,9 +517,15 @@
         websock: null,
         strangerTab: 1,      // 左边tab切换
         timer: null,
+        loading: null,
       }
     },
     mounted () {
+      this.loading = Vue.prototype.$loading({
+        lock: true,
+        text: '加载中...',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
       this.getLists(0,'',0,18,'');
       this.indistinctList = [];
       this.strangerNum = [];
@@ -642,7 +649,8 @@
         this.doubtfulList = [];
         let obj = {
           createTimeStart: new Date(this.datetimeparse(new Date(new Date(new Date().toLocaleDateString()).getTime()),'YYYY-MM-DD hh:mm:ss')).getTime(),
-          createTimeEnd: ''
+          createTimeEnd: '',
+          hotelId: sessionStorage.hotelId,
         };
         if (status != '') {
           obj.status = status
@@ -682,6 +690,7 @@
               this.totalList();
             }
             this.$nextTick(() => {
+              this.loading.close();
               this.$refs.elAside.$children[0].$el.style.height = this.$refs.mainHeight.$el.offsetHeight + 'px';
               this.$refs.elAside.$children[0].$el.firstChild.firstChild.style.height = (this.$refs.mainHeight.$el.offsetHeight - 1) + 'px';
               this.$refs.elAside.$children[0].$el.lastElementChild.style.maxHeight = (this.$refs.mainHeight.$el.offsetHeight - 48)+ 'px';
@@ -693,8 +702,9 @@
       // 获取总数列表
       totalList () {
         this.totalGuest({
+          hotelId: sessionStorage.hotelId,
           onsuccess: body => {
-            if (body.data.errcode == 0) {
+            if (body.data.code == 0) {
               this.total1 = body.data.data.count;
               this.total2 = body.data.data.suspiciousCount;
               this.total3 = body.data.data.staffCount;

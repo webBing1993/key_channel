@@ -22,6 +22,11 @@ export default new Router({
           component: resolve => require(['../components/keyChannel/homeIndex.vue'],resolve),
         },
         {
+          path: '/keyChannel/home',
+          name: 'home',
+          component: resolve => require(['../components/keyChannel/home.vue'],resolve),
+        },
+        {
           path: '/whiteList',
           component: resolve => require(['../components/keyChannel/whiteList.vue'],resolve),
         },

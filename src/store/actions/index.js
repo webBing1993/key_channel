@@ -142,6 +142,40 @@ const actions = {
       }
     )
   },
+  resourceLoading: (ctx, param) => {
+
+    axios({
+      url: httpTool.httpUrlEnv() + 'key-channel' + param.url,
+      method: param.method || 'GET',
+      baseURL: '/',
+      headers: param.headers || {
+        Session: sessionStorage.session_id,
+        token: sessionStorage.session_id,
+      },
+      params: param.params || null,
+      data: param.body || null,
+      timeout: param.timeout || 60000,
+    }).then(response => {
+      if (response.data.code == 0 || response.data.errcode == 0) {
+        param.onSuccess && param.onSuccess(response)
+      }
+      else if (response.data.errcode !== 0) {
+        Vue.prototype.$message.error(response.body.msg);
+        param.onFail && param.onFail(response)
+      }
+      else {
+        Vue.prototype.$message.error(response.body.msg);
+        param.onFail && param.onFail(response)
+      }
+    }).catch(
+      error => {
+        if(error){
+          console.log("error",error)
+        }
+
+      }
+    )
+  },
 
   // 获取验证码
   getCode (ctx,param){
@@ -173,10 +207,21 @@ const actions = {
     })
   },
 
+  // 获取酒店列表
+  hotelListAll (ctx, param) {
+    ctx.dispatch('resourceLoading', {
+      url: '/keychannel/hotels',
+      method: 'GET',
+      onSuccess: (body,headers) => {
+        param.onsuccess ? param.onsuccess(body,headers) : null
+      }
+    })
+  },
+
   // 获取列表
   getDoubtfulList (ctx, param) {
-    ctx.dispatch('resource', {
-      url: '/identity/illegalGuest/list?limit='+param.limit+'&offset='+param.offset,
+    ctx.dispatch('resourceLoading', {
+      url: '/keychannel/illegalGuest/list?limit='+param.limit+'&offset='+param.offset,
       method: 'POST',
       body:param.data,
       onSuccess: (body,headers) => {
@@ -187,8 +232,8 @@ const actions = {
 
   // 获取总数列表
   totalGuest (ctx, param) {
-    ctx.dispatch('resource', {
-      url: '/identity/illegalGuest/total',
+    ctx.dispatch('resourceLoading', {
+      url: '/keychannel/illegalGuest/total?hotelId='+param.hotelId,
       method: 'GET',
       onSuccess: (body,headers) => {
         param.onsuccess ? param.onsuccess(body,headers) : null
@@ -198,8 +243,8 @@ const actions = {
 
   // 可以留宿移除操作
   hasChecked(ctx, param){
-    ctx.dispatch('resource', {
-      url: '/identity/illegalGuest/read/'+param.illegalGuestId,
+    ctx.dispatch('resourceLoading', {
+      url: '/keychannel/illegalGuest/read/'+param.illegalGuestId,
       method: 'PUT',
       onSuccess: body => {
         param.onsuccess ? param.onsuccess(body) : null
