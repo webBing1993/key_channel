@@ -61,7 +61,8 @@
                     <p><span>时间：</span><span>{{datetimeparse(item.filming_time,'MM-DD hh:mm:ss')}}</span></p>
                     <p><span>地点：</span><span>{{item.hotelName}}{{item.location ? item.location : '-'}}</span></p>
                     <p><span>来源：</span><span>-</span></p>
-                    <div class="handle" @click="handelBtn(item.illegal_guest_id,1)"><img src="../../assets/index/chuli.png" alt=""></div>
+                    <!--<div class="handle" @click="handelBtn(item.illegal_guest_id,1)"><img src="../../assets/index/chuli.png" alt=""></div>-->
+                    <el-button type="primary" class="handle" :loading="item.handleLoading"  @click="handelBtn(item,1)" :style="handleBg"></el-button>
                   </div>
                 </div>
                 <div class="noMsg" v-if="strangerList.length == 0">
@@ -78,7 +79,7 @@
                     <p><span>时间：</span><span>{{datetimeparse(item.filming_time,'MM-DD hh:mm:ss')}}</span></p>
                     <p><span>地点：</span><span>{{item.hotelName}}{{item.location ? item.location : '-'}}</span></p>
                     <p><span>来源：</span><span>-</span></p>
-                    <div class="handle" @click="handelBtn(item.illegal_guest_id,2)"><img src="../../assets/index/chuli.png" alt=""></div>
+                    <el-button type="primary" class="handle" :loading="item.handleLoading"  @click="handelBtn(item,2)"  :style="handleBg"></el-button>
                   </div>
                 </div>
                 <div class="noMsg" v-if="indistinctList.length == 0">
@@ -577,6 +578,11 @@
           'width: calc(100vw - 30px);'
         ],   // main 宽度
         contentWidthIndex: 0,  // 状态
+        handleBg: {
+          backgroundImage: "url(" + require("../../assets/index/chuli.png") + ")",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "100%, 100%",
+        },
       }
     },
     mounted () {
@@ -586,13 +592,18 @@
         text: '加载中...',
         background: 'rgba(0, 0, 0, 0.7)'
       });
+      setTimeout(() => {
+        this.loading.close();
+      }, 3000);
       this.hotelAllList();
       this.getLists(0,'',0,18,'');
       this.indistinctList = [];
       this.strangerNum = [];
       this.getLists(0,'SUSPICIOUS_GUEST',5,500,'SUSPICIOUS_GUEST');
       this.wsuri = 'wss://qa.fortrun.cn/keychannel/websocket/' + sessionStorage.roleId + '_' + encodeURIComponent(sessionStorage.session_id);
-      this.initWebSocket();
+      this.$nextTick(() => {
+        this.initWebSocket();
+      });
       this.timer = setInterval(() => {
         this.websocketsend(888);
       },10000)
@@ -649,7 +660,7 @@
             if (body.data.code == 0) {
               this.hotelLists = body.data.data;
               this.changeLists = body.data.data;
-              let data = this.hotelLists;
+              let data = this.sortList(this.hotelLists);
               for (var i = 0; i < data.length;) {
                 let count = 0;
                 let arr = [];
@@ -677,6 +688,13 @@
               })
             }
           }
+        })
+      },
+
+      // 数组排序
+      sortList(singers){
+        return singers.sort((a, b) => {
+          return a['area'].localeCompare(b['area'])
         })
       },
 
@@ -868,6 +886,7 @@
             }else {
               this.strangerNum = parseInt(body.headers['x-total-count']);
               body.data.data.forEach(item => {
+                item.handleLoading = false;
                 if (Math.abs(item.bluriness && item.bluriness) >= 0.6) {
                   this.indistinctList.push(item);
                 }else {
@@ -877,8 +896,8 @@
 //              this.strangerList = [...body.data.data];
               this.totalList();
             }
+            this.loading.close();
             this.$nextTick(() => {
-              this.loading.close();
               this.homeIndexShow = true;
               this.$refs.elAside.$children[0].$el.style.height = this.$refs.mainHeight.$el.offsetHeight + 'px';
               this.$refs.elAside.$children[0].$el.firstChild.firstChild.style.height = (this.$refs.mainHeight.$el.offsetHeight - 1) + 'px';
@@ -927,9 +946,10 @@
       },
 
       // 待处理的处置事件
-      handelBtn(id,type){
+      handelBtn(item,type){
+        item.handleLoading = true;
         this.hasChecked({
-          illegalGuestId: id,
+          illegalGuestId: item.illegal_guest_id,
           onsuccess:body=>{
             this.$message({
               message: '处置成功',
@@ -937,19 +957,19 @@
             });
             if (type == 1) {
               this.strangerNum--;
-              this.strangerList.forEach((item,index) => {
-                if (item.illegal_guest_id == id) {
+              this.strangerList.forEach((i,index) => {
+                if (i.illegal_guest_id == item.illegal_guest_id) {
                   this.$nextTick(() => {
                     this.strangerList.splice(index, 1);
                     this.total1++;
                     this.total2++;
                     if (this.tab1 && this.currentPage1 == 1) {
-                      this.toDayLists.unshift(item);
+                      this.toDayLists.unshift(i);
                       if (this.toDayLists.length > 18) {
                         this.toDayLists.splice(18,1);
                       }
                     }else if (this.tab2 && this.currentPage2 == 1) {
-                      this.strangerLists.unshift(item);
+                      this.strangerLists.unshift(i);
                       if (this.strangerLists.length > 18) {
                         this.strangerLists.splice(18,1);
                       }
@@ -959,19 +979,19 @@
                 this.totalAll();
               })
             }else {
-              this.indistinctList.forEach((item,index) => {
-                if (item.illegal_guest_id == id) {
+              this.indistinctList.forEach((i,index) => {
+                if (i.illegal_guest_id == item.illegal_guest_id) {
                   this.$nextTick(() => {
                     this.indistinctList.splice(index, 1);
                     this.total1++;
                     this.total2++;
                     if (this.tab1 && this.currentPage1 == 1) {
-                      this.toDayLists.unshift(item);
+                      this.toDayLists.unshift(i);
                       if (this.toDayLists.length > 18) {
                         this.toDayLists.splice(18,1);
                       }
                     }else if (this.tab2 && this.currentPage2 == 1) {
-                      this.strangerLists.unshift(item);
+                      this.strangerLists.unshift(i);
                       if (this.strangerLists.length > 18) {
                         this.strangerLists.splice(18,1);
                       }
@@ -981,7 +1001,7 @@
                 this.totalAll();
               })
             }
-
+            item.handleLoading = false;
           }
         })
       },
@@ -992,20 +1012,21 @@
         //ws地址
         // const wsuri = process.env.WS_API + "/websocket/threadsocket";
         this.websock = new WebSocket(this.wsuri);
-        this.websock.onopen = this.websocketonopen;
+        console.log(this.websock);
+        this.websock.onopen = this.websocketonopen();
         this.websock.onmessage = this.websocketonmessage;
         this.websock.onclose = this.websocketclose;
         this.websock.onerror = this.websocketerror;
       },
       websocketonopen(e){ //建立通道
-        this.wsuri_ = this.wsuri;
         // let redata = e;
-        console.log('============websocket建立链接==============')
+        console.log('============websocket建立链接==============');
+        this.wsuri_ = this.wsuri;
       },
       websocketonmessage(e){ //数据接收
         console.log('============websocket数据接收成功==============');
         console.log(e.data);
-        if (e.data != '连接成功' && e.data != 888) {
+        if (e.data && e.data != '连接成功' && e.data != 888) {
           let val = JSON.parse(e.data);
           this.weekNum = val.weekTotal;
           this.monthNum = val.monthTotal;
@@ -1014,6 +1035,7 @@
           this.$nextTick(() => {
             if (newData.guestType == 'SUSPICIOUS_GUEST') {
               this.strangerNum++;
+              newData.handleLoading = false;
               if (newData.bluriness && Math.abs(newData.bluriness) >= 0.6) {
                 this.indistinctList.unshift(newData);
               }else {
@@ -1054,7 +1076,11 @@
       },
       websocketsend(agentData){//数据发送
         console.log('============websocket数据发送成功==============');
-        this.websock.send(agentData);
+        if (this.websock.readyState===1) {
+          this.websock.send(agentData);
+        }else{
+          this.initWebSocket();
+        }
       },
       websocketclose(e){  //关闭通道
         console.log("关闭通道connection closed (" + e.code + ")");
@@ -1066,6 +1092,7 @@
       },
       websocketerror(e){  //通道异常
         console.log("通道异常connection closed (" + e.code + ")");
+        this.websock.close();
         this.initWebSocket();
       },
 
@@ -1096,6 +1123,7 @@
         position: relative;
         height: calc(100vh - 81px);
         margin-right: 15px;
+        overflow: hidden;
         .el-aside {
           width: 280px !important;
         }
@@ -1182,6 +1210,10 @@
           }
           .hotel_lists {
             overflow-y: scroll;
+            /*隐藏滚动条，当IE下溢出，仍然可以滚动*/
+            -ms-overflow-style:none;
+            /*火狐下隐藏滚动条*/
+            overflow:-moz-scrollbars-none;
             -webkit-overflow-scrolling: touch; // 为了滚动顺畅
             .list {
               margin-bottom: 10px;
@@ -1273,6 +1305,10 @@
           .stranger_list {
             max-height: calc(100vh - 118px);
             overflow-y: scroll;
+            /*隐藏滚动条，当IE下溢出，仍然可以滚动*/
+            -ms-overflow-style:none;
+            /*火狐下隐藏滚动条*/
+            overflow:-moz-scrollbars-none;
             -webkit-overflow-scrolling: touch; // 为了滚动顺畅
             -ms-scroll-chaining: chained;
             -ms-overflow-style: none;
@@ -1282,7 +1318,6 @@
             -ms-content-zoom-limit-max: 500%;
             -ms-scroll-snap-type: proximity;
             -ms-scroll-snap-points-x: snapList(100%, 200%, 300%, 400%, 500%);
-            -ms-overflow-style: none;
             .list {
               margin-top: 8px;
               border: 1px solid #F46C6C;
@@ -1329,6 +1364,15 @@
                   bottom: 0;
                   right: 0;
                   cursor: pointer;
+                  font-size: 14px;
+                  text-align: center;
+                  line-height: 24px;
+                }
+                /deep/ .el-icon-loading {
+                  position: absolute;
+                  top: 25%;
+                  left: 38%;
+                  transform: translate(-50%, -50%);
                 }
               }
             }
@@ -1447,6 +1491,10 @@
             .lists {
               height: calc(100vh - 214px);
               overflow-y: scroll;
+              /*隐藏滚动条，当IE下溢出，仍然可以滚动*/
+              -ms-overflow-style:none;
+              /*火狐下隐藏滚动条*/
+              overflow:-moz-scrollbars-none;
               -webkit-overflow-scrolling: touch; // 为了滚动顺畅
             }
             .lists::-webkit-scrollbar {
@@ -1507,12 +1555,6 @@
                         justify-content: flex-start;
                         font-size: 14px;
                         text-align: left;
-                        /*overflow: hidden;*/
-                        /*text-overflow: ellipsis;*/
-                        /*display: -webkit-box;*/
-                        /*-webkit-line-clamp: 1;*/
-                        /*display: -webkit-box;*/
-                        /*-webkit-box-orient: vertical;*/
                         overflow: hidden;
                         text-overflow: ellipsis;
                         white-space: nowrap;

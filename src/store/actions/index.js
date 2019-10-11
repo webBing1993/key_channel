@@ -105,7 +105,7 @@ const actions = {
   },
 
   resource_: (ctx, param) => {
-    openFullScreen();
+    // openFullScreen();
 
     axios({
       url: httpTool.httpUrlEnv() + 'key-channel' + param.url,
@@ -120,7 +120,7 @@ const actions = {
       timeout: param.timeout || 60000,
     }).then(response => {
       console.log("response",response);
-      closeFullScreen (openFullScreen());
+      // closeFullScreen (openFullScreen());
       if (response.data.code == 0 || response.data.errcode == 0) {
         param.onSuccess && param.onSuccess(response)
       }
@@ -134,7 +134,7 @@ const actions = {
       }
     }).catch(
       error => {
-        closeFullScreen (openFullScreen());
+        // closeFullScreen (openFullScreen());
         if(error){
           console.log("error",error)
         }
