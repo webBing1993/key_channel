@@ -601,7 +601,7 @@
       this.strangerNum = [];
       this.getLists(0,'SUSPICIOUS_GUEST',5,500,'SUSPICIOUS_GUEST');
       this.wsuri = 'wss://qa.fortrun.cn/keychannel/websocket/' + sessionStorage.roleId + '_' + encodeURIComponent(sessionStorage.session_id);
-      this.websock.close();
+//      this.websock.close();
       this.$nextTick(() => {
         this.initWebSocket();
       });
@@ -1077,15 +1077,17 @@
       },
       websocketsend(agentData){//数据发送
         console.log('============websocket数据发送成功==============');
-        if (this.websock.readyState===1) {
-          this.websock.send(agentData);
-        }else{
-          this.initWebSocket();
-        }
+//        if (this.websock.readyState===1) {
+//          this.websock.send(agentData);
+//        }else{
+//          this.initWebSocket();
+//        }
+        this.websock.send(agentData);
       },
       websocketclose(e){  //关闭通道
         console.log("关闭通道connection closed (" + e.code + ")");
         if (this.wsuri_ == this.wsuri) {
+          this.websock.close();
           setTimeout(() => {
             this.initWebSocket();
           },100);
