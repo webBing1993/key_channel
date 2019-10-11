@@ -1012,9 +1012,12 @@
 
         //ws地址
         // const wsuri = process.env.WS_API + "/websocket/threadsocket";
+        if (this.websock != null) {
+          this.websock.close();
+        }
         this.websock = new WebSocket(this.wsuri);
         console.log(this.websock);
-        this.websock.onopen = this.websocketonopen();
+        this.websock.onopen = this.websocketonopen;
         this.websock.onmessage = this.websocketonmessage;
         this.websock.onclose = this.websocketclose;
         this.websock.onerror = this.websocketerror;
@@ -1086,12 +1089,12 @@
       },
       websocketclose(e){  //关闭通道
         console.log("关闭通道connection closed (" + e.code + ")");
-        if (this.wsuri_ == this.wsuri) {
-          this.websock.close();
-          setTimeout(() => {
-            this.initWebSocket();
-          },100);
-        }
+//        if (this.wsuri_ == this.wsuri) {
+//          this.websock.close();
+//          setTimeout(() => {
+//            this.initWebSocket();
+//          },100);
+//        }
       },
       websocketerror(e){  //通道异常
         console.log("通道异常connection closed (" + e.code + ")");
