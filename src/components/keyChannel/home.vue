@@ -574,7 +574,7 @@
         wsuri_: null,  // 作对比使用
         contentWidth: [
           'width: calc(100vw - 630px);',
-          'width: calc(100vw - 330px);',
+          'width: calc(100vw - 345px);',
           'width: calc(100vw - 30px);'
         ],   // main 宽度
         contentWidthIndex: 0,  // 状态
@@ -594,7 +594,7 @@
       });
       setTimeout(() => {
         this.loading.close();
-      }, 3000);
+      }, 6000);
       this.hotelAllList();
       this.getLists(0,'',0,18,'');
       this.indistinctList = [];
@@ -632,24 +632,24 @@
       // 左边展开收缩
       closeOpenClickLeft(){
         this.colseOpenLeft = !this.colseOpenLeft;
-        if (this.colseOpenLeft || this.colseOpenRight) {
-          this.contentWidthIndex = 1;
+        if (this.colseOpenLeft && this.colseOpenRight) {
+          this.contentWidthIndex = 0;
         }else if (!this.colseOpenLeft && !this.colseOpenRight) {
           this.contentWidthIndex = 2;
         }else {
-          this.contentWidthIndex = 0;
+          this.contentWidthIndex = 1;
         }
       },
 
       // 右边展开收缩
       closeOpenClickRight() {
         this.colseOpenRight = !this.colseOpenRight;
-        if (this.colseOpenLeft || this.colseOpenRight) {
-          this.contentWidthIndex = 1;
+        if (this.colseOpenLeft && this.colseOpenRight) {
+          this.contentWidthIndex = 0;
         }else if (!this.colseOpenLeft && !this.colseOpenRight) {
           this.contentWidthIndex = 2;
         }else {
-          this.contentWidthIndex = 0;
+          this.contentWidthIndex = 1;
         }
       },
 
@@ -1124,6 +1124,7 @@
         height: calc(100vh - 81px);
         margin-right: 15px;
         overflow: hidden;
+        min-width: 20px;
         .el-aside {
           width: 280px !important;
         }
