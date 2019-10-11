@@ -599,7 +599,7 @@
       this.getLists(0,'',0,18,'');
       this.indistinctList = [];
       this.strangerNum = [];
-      this.getLists(0,'SUSPICIOUS_GUEST',5,500,'SUSPICIOUS_GUEST');
+      this.getLists(0,'SUSPICIOUS_GUEST',5,100,'SUSPICIOUS_GUEST');
       this.wsuri = 'wss://qa.fortrun.cn/keychannel/websocket/' + sessionStorage.roleId + '_' + encodeURIComponent(sessionStorage.session_id);
 //      this.websock.close();
       this.$nextTick(() => {
@@ -712,7 +712,7 @@
         this.whiteLists = [];
         this.aliveLists = [];
         this.visitorLists = [];
-        this.getLists(0,'SUSPICIOUS_GUEST',5,500,'SUSPICIOUS_GUEST');
+        this.getLists(0,'SUSPICIOUS_GUEST',5,100,'SUSPICIOUS_GUEST');
         this.wsuri = 'wss://qa.fortrun.cn/keychannel/websocket/' + item.id + '_' + encodeURIComponent(sessionStorage.session_id);
         this.websock.close();
         this.$nextTick(() => {
@@ -736,7 +736,7 @@
           this.whiteLists = [];
           this.aliveLists = [];
           this.visitorLists = [];
-          this.getLists(0,'SUSPICIOUS_GUEST',5,500,'SUSPICIOUS_GUEST');
+          this.getLists(0,'SUSPICIOUS_GUEST',5,100,'SUSPICIOUS_GUEST');
           this.wsuri = 'wss://qa.fortrun.cn/keychannel/websocket/' + sessionStorage.roleId + '_' + encodeURIComponent(sessionStorage.session_id);
           this.websock.close();
           this.$nextTick(() => {
@@ -1278,6 +1278,7 @@
             left: 0;
             top: 0;
             width: 100%;
+            height: calc(100vh - 81px);
             img {
               display: block;
               width: 100%;
@@ -1311,7 +1312,7 @@
             }
           }
           .stranger_list {
-            max-height: calc(100vh - 118px);
+            height: calc(100vh - 118px);
             overflow-y: scroll;
             /*隐藏滚动条，当IE下溢出，仍然可以滚动*/
             -ms-overflow-style:none;
