@@ -601,6 +601,7 @@
       this.strangerNum = [];
       this.getLists(0,'SUSPICIOUS_GUEST',5,500,'SUSPICIOUS_GUEST');
       this.wsuri = 'wss://qa.fortrun.cn/keychannel/websocket/' + sessionStorage.roleId + '_' + encodeURIComponent(sessionStorage.session_id);
+      this.websock.close();
       this.$nextTick(() => {
         this.initWebSocket();
       });
