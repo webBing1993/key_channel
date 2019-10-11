@@ -716,7 +716,7 @@
         this.wsuri = 'wss://qa.fortrun.cn/keychannel/websocket/' + item.id + '_' + encodeURIComponent(sessionStorage.session_id);
         this.websock.close();
         this.$nextTick(() => {
-          this.initWebSocket();
+//          this.initWebSocket();
         })
       },
 
@@ -740,7 +740,7 @@
           this.wsuri = 'wss://qa.fortrun.cn/keychannel/websocket/' + sessionStorage.roleId + '_' + encodeURIComponent(sessionStorage.session_id);
           this.websock.close();
           this.$nextTick(() => {
-            this.initWebSocket();
+//            this.initWebSocket();
           })
         }else {
           this.hotelArea.forEach(item => {
@@ -1095,6 +1095,7 @@
 //            this.initWebSocket();
 //          },100);
 //        }
+        this.initWebSocket();
       },
       websocketerror(e){  //通道异常
         console.log("通道异常connection closed (" + e.code + ")");
