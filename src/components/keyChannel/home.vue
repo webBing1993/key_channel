@@ -585,6 +585,9 @@
         },
       }
     },
+    beforeMount () {
+      this.totalList();
+    },
     mounted () {
       sessionStorage.hotelId = '';
       this.loading = Vue.prototype.$loading({
@@ -592,22 +595,20 @@
         text: '加载中...',
         background: 'rgba(0, 0, 0, 0.7)'
       });
-      setTimeout(() => {
-        this.loading.close();
-      }, 6000);
+
       this.hotelAllList();
       this.getLists(0,'',0,18,'');
       this.indistinctList = [];
       this.strangerNum = [];
       this.getLists(0,'SUSPICIOUS_GUEST',5,100,'SUSPICIOUS_GUEST');
       this.wsuri = 'wss://qa.fortrun.cn/keychannel/websocket/' + sessionStorage.roleId + '_' + encodeURIComponent(sessionStorage.session_id);
-//      this.websock.close();
       this.$nextTick(() => {
         this.initWebSocket();
       });
       this.timer = setInterval(() => {
         this.websocketsend(888);
-      },10000)
+      },10000);
+
     },
     methods: {
 
@@ -704,14 +705,9 @@
         this.hotelCurrent = index;
         sessionStorage.hotelId = item.id;
         this.getLists(0,'',0,18,'');
+        this.totalList();
         this.indistinctList = [];
         this.strangerList = [];
-        this.strangerNum = [];
-        this.toDayLists = [];
-        this.strangerLists = [];
-        this.whiteLists = [];
-        this.aliveLists = [];
-        this.visitorLists = [];
         this.getLists(0,'SUSPICIOUS_GUEST',5,100,'SUSPICIOUS_GUEST');
         this.wsuri = 'wss://qa.fortrun.cn/keychannel/websocket/' + item.id + '_' + encodeURIComponent(sessionStorage.session_id);
         this.websock.close();
@@ -730,12 +726,7 @@
           this.getLists(0,'',0,18,'');
           this.indistinctList = [];
           this.strangerList = [];
-          this.strangerNum = [];
-          this.toDayLists = [];
-          this.strangerLists = [];
-          this.whiteLists = [];
-          this.aliveLists = [];
-          this.visitorLists = [];
+          this.totalList();
           this.getLists(0,'SUSPICIOUS_GUEST',5,100,'SUSPICIOUS_GUEST');
           this.wsuri = 'wss://qa.fortrun.cn/keychannel/websocket/' + sessionStorage.roleId + '_' + encodeURIComponent(sessionStorage.session_id);
           this.websock.close();
@@ -895,9 +886,10 @@
                 }
               });
 //              this.strangerList = [...body.data.data];
-              this.totalList();
             }
-            this.loading.close();
+            setTimeout(() => {
+              this.loading.close();
+            }, 3000);
             this.$nextTick(() => {
               this.homeIndexShow = true;
               this.$refs.elAside.$children[0].$el.style.height = this.$refs.mainHeight.$el.offsetHeight + 'px';
@@ -942,6 +934,7 @@
           obj3.name = '访客';
           obj3.value = this.total5;
           this.totalLists.push(obj1, obj2, obj3, obj);
+          sessionStorage.setItem('totalLists', JSON.stringify(this.totalLists));
           console.log('this.totalLists',this.totalLists);
         })
       },
@@ -1111,7 +1104,7 @@
     },
     watch: {
 
-    }
+    },
   }
 </script>
 

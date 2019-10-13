@@ -21,12 +21,12 @@
          <div class="pie">
            <img src="../../assets/index/youshang.png" alt="">
            <p>日抓拍统计</p>
-           <div id="myChart2"/>
+           <div id="myChart2" style="width: calc(100% - 32px);height: 300px"/>
          </div>
          <!-- 折线图-->
          <div class="lineChart">
            <img src="../../assets/index/youxia.png" alt="">
-           <div id="myChart1"/>
+           <div id="myChart1" style="width: calc(100% - 32px);height: 300px"/>
          </div>
       </el-card>
 
@@ -91,9 +91,11 @@
       // 获取数据列表
       setTimeout(() => {
         // 饼图
-        this.getPie();
-        this.getList (this.startTime, this.endTime);
-      },1500);
+//        this.echarts1Options = {};
+//        this.echarts2Options = [];
+//        this.getList (this.startTime, this.endTime);
+      },0);
+
     },
     methods: {
 
@@ -150,6 +152,8 @@
 
       // 查询
       inquire() {
+        this.echarts1Options = {};
+        this.echarts2Options = [];
         this.getList (this.startTime, this.endTime);
       },
 
@@ -173,8 +177,6 @@
           this.$message('结束时间必须大于起始时间');
           return
         }
-        this.echarts1Options = {};
-        this.echarts2Options = [];
         this.illegalGuest({
           data: {
             createTimeStart: new Date(this.datetimeparse(new Date(new Date(new Date(startTime).toLocaleDateString()).getTime()),'YYYY-MM-DD hh:mm:ss')).getTime(),
@@ -208,12 +210,27 @@
               this.echarts1Options.visitorList = visitorList;
               this.echarts1Options.guestList = guestList;
 
+              let obj = {},obj1 = {}, obj2 = {}, obj3 = {};
+              obj.name = '陌生人';
+              obj.value = body.data.data.suspicious;
+              obj1.name = '在住人';
+              obj1.value = body.data.data.guest;
+              obj2.name = '工作人员';
+              obj2.value = body.data.data.staff;
+              obj3.name = '访客';
+              obj3.value = body.data.data.visitor;
+              this.echarts2Options.push(obj1, obj2, obj3, obj);
+              console.log('this.echarts2Options',this.echarts2Options);
+
               this.$nextTick(() => {
                 // 折线图
                 this.getLine();
+                this.getPie();
                 setTimeout(() => {       // 隔一天加载折线图
                   this.startTime = this.fun_date(-7);
                   this.endTime = this.datetimeparse(new Date().getTime(),'YYYY/MM/DD');
+                  this.echarts1Options = {};
+                  this.echarts2Options = [];
                   this.getList (this.startTime, this.endTime);
                 },((new Date(new Date().toLocaleDateString()).getTime()+24*60*60*1000-1) - new Date().getTime()))
               })
@@ -224,7 +241,7 @@
       // 折线图
       getLine () {
         // 基于准备好的dom，初始化echarts实例
-        let myChart1 = echarts.init(document.getElementById('myChart1'));
+        let myChart1 = echarts.init(document.getElementById('myChart1'),null,{renderer:'svg'});
         // 绘制图表，this.echarts1_option是数据
         myChart1.clear();
         myChart1.setOption({
@@ -301,12 +318,13 @@
             }
           ]
         },true)
+
       },
 
       // 饼图
       getPie () {
         // 基于准备好的dom，初始化echarts实例
-        let myChart = echarts.init(document.getElementById('myChart2'));
+        let myChart = echarts.init(document.getElementById('myChart2'),null,{renderer:'svg'});
         // 绘制图表，this.echarts1_option是数据
         console.log('this.totalLists',this.totalLists);
         console.log(this.totalLists.length);
@@ -317,7 +335,7 @@
             type: 'pie',
             radius: '55%',
             hoverAnimation:false, // 是否开启 hover 在扇区上的放大动画效果
-            data: this.totalLists,
+            data: this.echarts2Options,
             avoidLabelOverlap: true,   //是否启用防止标签重叠策略
             label:{
               align: 'left',
@@ -356,8 +374,13 @@
     watch: {
       totalLists (newV, oldV) { // watch监听props里status的变化，然后执行操作
         console.log(newV, oldV);
-        this.totalLists = newV;
-        this.getPie();
+//        this.totalLists = newV;
+//        this.getPie();
+        this.startTime = this.fun_date(-7);
+        this.endTime = this.datetimeparse(new Date().getTime(),'YYYY/MM/DD');
+        this.echarts1Options = {};
+        this.echarts2Options = [];
+        this.getList (this.startTime, this.endTime);
       }
     }
   }
@@ -417,9 +440,7 @@
     }
     #myChart1, #myChart2 {
       display: block;
-      width: calc(100% - 32px);
       padding: 8px;
-      height: 300px;
       position: absolute;
       z-index: 10;
       left: 8px;

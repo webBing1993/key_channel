@@ -177,6 +177,41 @@ const actions = {
     )
   },
 
+  resourceLoading_: (ctx, param) => {
+
+    axios({
+      url: httpTool.httpUrlEnv() + 'gemini' + param.url,
+      method: param.method || 'GET',
+      baseURL: '/',
+      headers: param.headers || {
+        Session: sessionStorage.session_id,
+        token: sessionStorage.session_id,
+      },
+      params: param.params || null,
+      data: param.body || null,
+      timeout: param.timeout || 60000,
+    }).then(response => {
+      if (response.data.code == 0 || response.data.errcode == 0) {
+        param.onSuccess && param.onSuccess(response)
+      }
+      else if (response.data.errcode !== 0) {
+        Vue.prototype.$message.error(response.body.msg);
+        param.onFail && param.onFail(response)
+      }
+      else {
+        Vue.prototype.$message.error(response.body.msg);
+        param.onFail && param.onFail(response)
+      }
+    }).catch(
+      error => {
+        if(error){
+          console.log("error",error)
+        }
+
+      }
+    )
+  },
+
   // 获取验证码
   getCode (ctx,param){
     ctx.dispatch('request',{
@@ -290,7 +325,7 @@ const actions = {
 
   // 获取图表数据
   illegalGuest(ctx, param){
-    ctx.dispatch('resource', {
+    ctx.dispatch('resourceLoading_', {
       url: '/identity/illegalGuest/statistics',
       method: 'POST',
       body:param.data,
