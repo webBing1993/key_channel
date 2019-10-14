@@ -21,7 +21,7 @@
          <div class="pie">
            <img src="../../assets/index/youshang.png" alt="">
            <p>日抓拍统计</p>
-           <div id="myChart2" style="width: calc(100% - 32px);height: 300px"/>
+           <div id="myChart2" style="width: calc(100% - 32px);height: 300px" ref="bar"/>
          </div>
          <!-- 折线图-->
          <div class="lineChart">
@@ -241,6 +241,7 @@
       // 折线图
       getLine () {
         // 基于准备好的dom，初始化echarts实例
+        document.getElementById('myChart1').setAttribute('_echarts_instance_', '');
         let myChart1 = echarts.init(document.getElementById('myChart1'),null,{renderer:'svg'});
         // 绘制图表，this.echarts1_option是数据
         myChart1.clear();
@@ -266,7 +267,7 @@
             boundaryGap: false,
             data: this.echarts1Options.timeArr,
             axisLabel: {
-              show: true,
+//              show: true,
               showMaxLabel: true,
               textStyle: {
                 color: '#ffffff'
@@ -276,7 +277,7 @@
           yAxis: {
             type: 'value',
             axisLabel: {
-              show: true,
+//              show: true,
               textStyle: {
                 color: '#ffffff'
               },
@@ -327,7 +328,6 @@
         let myChart = echarts.init(document.getElementById('myChart2'),null,{renderer:'svg'});
         // 绘制图表，this.echarts1_option是数据
         console.log('this.totalLists',this.totalLists);
-        console.log(this.totalLists.length);
         myChart.clear();
         myChart.setOption({
           series: [{

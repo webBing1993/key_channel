@@ -597,10 +597,10 @@
       });
 
       this.hotelAllList();
-      this.getLists(0,'',0,18,'');
+//      this.getLists(0,'',0,18,'');
       this.indistinctList = [];
       this.strangerNum = [];
-      this.getLists(0,'SUSPICIOUS_GUEST',5,100,'SUSPICIOUS_GUEST');
+//      this.getLists(0,'SUSPICIOUS_GUEST',5,100,'SUSPICIOUS_GUEST');
       this.wsuri = 'wss://qa.fortrun.cn/keychannel/websocket/' + sessionStorage.roleId + '_' + encodeURIComponent(sessionStorage.session_id);
       this.$nextTick(() => {
         this.initWebSocket();
@@ -609,12 +609,20 @@
         this.websocketsend(888);
       },10000);
 
+      let that = this;
+      window.addEventListener('load',function (e) {
+        that.beforeunloadHandler();
+      })
     },
     methods: {
 
       ...mapActions([
         'getDoubtfulList','totalGuest','hasChecked', 'hotelListAll'
       ]),
+
+      beforeunloadHandler (e) {
+        this.$router.replace({name:'index'})
+      },
 
       // 打开大图效果
       bigImgShow: function(url) {
@@ -684,6 +692,7 @@
               }
               console.log('this.hotelArea', this.hotelArea);
               this.$nextTick(() => {
+                this.hotelTabs(-1, '全部');
                 setTimeout(() => {
                   this.$refs.hotelListsHeigth.style.height = (this.$refs.hotelAside.offsetHeight - this.$refs.hotelTabsHeigth.offsetHeight - this.$refs.hotelSearchHeigth.offsetHeight - this.$refs.hotelTitleHeigth.offsetHeight - 16) + 'px';
                 },150)
@@ -726,7 +735,6 @@
           this.getLists(0,'',0,18,'');
           this.indistinctList = [];
           this.strangerList = [];
-          this.totalList();
           this.getLists(0,'SUSPICIOUS_GUEST',5,100,'SUSPICIOUS_GUEST');
           this.wsuri = 'wss://qa.fortrun.cn/keychannel/websocket/' + sessionStorage.roleId + '_' + encodeURIComponent(sessionStorage.session_id);
           this.websock.close();
@@ -889,7 +897,7 @@
             }
             setTimeout(() => {
               this.loading.close();
-            }, 3000);
+            }, 1000);
             this.$nextTick(() => {
               this.homeIndexShow = true;
               this.$refs.elAside.$children[0].$el.style.height = this.$refs.mainHeight.$el.offsetHeight + 'px';
