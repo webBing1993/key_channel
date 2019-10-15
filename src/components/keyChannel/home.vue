@@ -610,9 +610,9 @@
       },10000);
 
       let that = this;
-      window.addEventListener('load',function (e) {
-        that.beforeunloadHandler();
-      })
+//      window.addEventListener('load',function (e) {
+//        that.beforeunloadHandler();
+//      })
     },
     methods: {
 
@@ -1074,7 +1074,7 @@
                 }
               }
             }
-            this.totalAll();
+//            this.totalAll();
           });
           console.log(newData);
         }
