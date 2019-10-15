@@ -243,133 +243,139 @@
       // 折线图
       getLine () {
         // 基于准备好的dom，初始化echarts实例
-        let myChart1 = echarts.init(document.getElementById('myChart1'),null,{renderer:'svg'});
-        // 绘制图表，this.echarts1_option是数据
-        myChart1.clear();
-        myChart1.setOption({
-          tooltip: {
-            trigger: 'axis'
-          },
-          legend: {
-            y: 'bottom',
-            x: 'center',
-            icon: 'rect',
-            itemWidth: 20,
-            itemHeight: 10,
-            itemGap: 10,
-            textStyle:{
-              fontSize: 12,//字体大小
-              color: '#ffffff'//字体颜色
+        let myChart1 = null;
+        if (myChart1) {
+          myChart1.clear();
+        }
+        setTimeout(() => {
+          myChart1 = echarts.init(document.getElementById('myChart1'));
+          // 绘制图表，this.echarts1_option是数据
+          myChart1.setOption({
+            tooltip: {
+              trigger: 'axis'
             },
-            data:['在住人','工作人员','访客','陌生人']
-          },
-          xAxis: {
-            type: 'category',
-            boundaryGap: false,
-            data: this.echarts1Options.timeArr,
-            axisLabel: {
-//              show: true,
-              showMaxLabel: true,
-              textStyle: {
-                color: '#ffffff'
-              }
-            }
-          },
-          yAxis: {
-            type: 'value',
-            axisLabel: {
-//              show: true,
-              textStyle: {
-                color: '#ffffff'
+            legend: {
+              y: 'bottom',
+              x: 'center',
+              icon: 'rect',
+              itemWidth: 20,
+              itemHeight: 10,
+              itemGap: 10,
+              textStyle:{
+                fontSize: 12,//字体大小
+                color: '#ffffff'//字体颜色
               },
-              margin: 2,
-              formatter: function (value, index) {
-                if (value >= 1000 && value < 10000) {
-                  value = value / 1000 + "千";
-                } else if (value >= 10000) {
-                  value = value / 10000 + "万";
+              data:['在住人','工作人员','访客','陌生人']
+            },
+            xAxis: {
+              type: 'category',
+              boundaryGap: false,
+              data: this.echarts1Options.timeArr,
+              axisLabel: {
+                show: true,
+                showMaxLabel: true,
+                textStyle: {
+                  color: '#ffffff'
                 }
-                return value;
               }
-            }
-          },
-          grid: {
-            left: 40,
-            right: 40
-          },
-          series: [
-            {
-              name:'在住人',
-              type:'line',
-              data: this.echarts1Options.guestList
             },
-            {
-              name:'工作人员',
-              type:'line',
-              data: this.echarts1Options.staffList
+            yAxis: {
+              type: 'value',
+              axisLabel: {
+                show: true,
+                textStyle: {
+                  color: '#ffffff'
+                },
+                margin: 2,
+                formatter: function (value, index) {
+                  if (value >= 1000 && value < 10000) {
+                    value = value / 1000 + "千";
+                  } else if (value >= 10000) {
+                    value = value / 10000 + "万";
+                  }
+                  return value;
+                }
+              }
             },
-            {
-              name:'访客',
-              type:'line',
-              data: this.echarts1Options.visitorList
+            grid: {
+              left: 40,
+              right: 40
             },
-            {
-              name:'陌生人',
-              type:'line',
-              data: this.echarts1Options.suspiciousList
-            }
-          ]
-        },true)
-
+            series: [
+              {
+                name:'在住人',
+                type:'line',
+                data: this.echarts1Options.guestList
+              },
+              {
+                name:'工作人员',
+                type:'line',
+                data: this.echarts1Options.staffList
+              },
+              {
+                name:'访客',
+                type:'line',
+                data: this.echarts1Options.visitorList
+              },
+              {
+                name:'陌生人',
+                type:'line',
+                data: this.echarts1Options.suspiciousList
+              }
+            ]
+          },true)
+        },500)
       },
 
       // 饼图
       getPie () {
         // 基于准备好的dom，初始化echarts实例
-        let myChart = echarts.init(document.getElementById('myChart2'),null,{renderer:'svg'});
-        // 绘制图表，this.echarts1_option是数据
-        console.log('this.totalLists',this.totalLists);
-        console.log(this.totalLists.length);
-        myChart.clear();
-        myChart.setOption({
-          series: [{
-            name: '访问来源',
-            type: 'pie',
-            radius: '55%',
-            hoverAnimation:false, // 是否开启 hover 在扇区上的放大动画效果
-            data: this.echarts2Options,
-            avoidLabelOverlap: true,   //是否启用防止标签重叠策略
-            label:{
-              align: 'left',
-              normal:{
-                formatter(v) {
-                  let text = v.name;
-                  if(text.length <= 2)
-                  {
-                    return text;
-                  }else if(text.length > 2 && text.length <= 4){
-                    return text = `${text.slice(0,2)}\n${text.slice(2)}`
+        let myChart = null;
+        if (myChart) {
+          myChart.clear();
+        }
+        setTimeout(() => {
+          myChart = echarts.init(document.getElementById('myChart2'));
+          myChart.setOption({
+            series: [{
+              name: '访问来源',
+              type: 'pie',
+              radius: '55%',
+              hoverAnimation:false, // 是否开启 hover 在扇区上的放大动画效果
+              data: this.echarts2Options,
+              avoidLabelOverlap: true,   //是否启用防止标签重叠策略
+              label:{
+                align: 'left',
+                normal:{
+                  formatter(v) {
+                    let text = v.name;
+                    if(text.length <= 2)
+                    {
+                      return text;
+                    }else if(text.length > 2 && text.length <= 4){
+                      return text = `${text.slice(0,2)}\n${text.slice(2)}`
+                    }
+                  },
+                  textStyle : {
+                    fontSize : 12
                   }
-                },
-                textStyle : {
-                  fontSize : 12
                 }
               }
-            }
-          }],
-          tooltip: {
-            formatter: '{b} : {c}',// 默认值null，内容格式器
-          },
-          legend: {
-            y: 'bottom',
-            x: 'center',
-            textStyle:{
-              fontSize: 12,//字体大小
-              color: '#ffffff'//字体颜色
+            }],
+            tooltip: {
+              formatter: '{b} : {c}',// 默认值null，内容格式器
             },
-            data: ['在住人','工作人员','访客','陌生人']
-          },
-        },true);
+            legend: {
+              y: 'bottom',
+              x: 'center',
+              textStyle:{
+                fontSize: 12,//字体大小
+                color: '#ffffff'//字体颜色
+              },
+              data: ['在住人','工作人员','访客','陌生人']
+            },
+          },true);
+        },500)
       },
 
     },
