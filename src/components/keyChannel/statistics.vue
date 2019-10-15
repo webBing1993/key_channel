@@ -18,7 +18,7 @@
 
        <el-card class="box-card">
          <!-- 饼图-->
-         <div class="pie" id="pie">
+         <div class="pie">
            <img src="../../assets/index/youshang.png" alt="">
            <p>日抓拍统计</p>
            <div id="myChart2" style="width: calc(100% - 32px);height: 300px"/>
@@ -243,113 +243,95 @@
       // 折线图
       getLine () {
         // 基于准备好的dom，初始化echarts实例
-        let myChart1 = null;
-        if (myChart1) {
-          myChart1.clear();
-        }
-        setTimeout(() => {
-          myChart1 = echarts.init(document.getElementById('myChart1'));
-          // 绘制图表，this.echarts1_option是数据
-          myChart1.setOption({
-            tooltip: {
-              trigger: 'axis'
+        let myChart1 = echarts.init(document.getElementById('myChart1'),null,{renderer:'svg'});
+        // 绘制图表，this.echarts1_option是数据
+        myChart1.clear();
+        myChart1.setOption({
+          tooltip: {
+            trigger: 'axis'
+          },
+          legend: {
+            y: 'bottom',
+            x: 'center',
+            icon: 'rect',
+            itemWidth: 20,
+            itemHeight: 10,
+            itemGap: 10,
+            textStyle:{
+              fontSize: 12,//字体大小
+              color: '#ffffff'//字体颜色
             },
-            legend: {
-              y: 'bottom',
-              x: 'center',
-              icon: 'rect',
-              itemWidth: 20,
-              itemHeight: 10,
-              itemGap: 10,
-              textStyle:{
-                fontSize: 12,//字体大小
-                color: '#ffffff'//字体颜色
+            data:['在住人','工作人员','访客','陌生人']
+          },
+          xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: this.echarts1Options.timeArr,
+            axisLabel: {
+//              show: true,
+              showMaxLabel: true,
+              textStyle: {
+                color: '#ffffff'
+              }
+            }
+          },
+          yAxis: {
+            type: 'value',
+            axisLabel: {
+//              show: true,
+              textStyle: {
+                color: '#ffffff'
               },
-              data:['在住人','工作人员','访客','陌生人']
-            },
-            xAxis: {
-              type: 'category',
-              boundaryGap: false,
-              data: this.echarts1Options.timeArr,
-              axisLabel: {
-                show: true,
-                showMaxLabel: true,
-                textStyle: {
-                  color: '#ffffff'
+              margin: 2,
+              formatter: function (value, index) {
+                if (value >= 1000 && value < 10000) {
+                  value = value / 1000 + "千";
+                } else if (value >= 10000) {
+                  value = value / 10000 + "万";
                 }
+                return value;
               }
+            }
+          },
+          grid: {
+            left: 40,
+            right: 40
+          },
+          series: [
+            {
+              name:'在住人',
+              type:'line',
+              data: this.echarts1Options.guestList
             },
-            yAxis: {
-              type: 'value',
-              axisLabel: {
-                show: true,
-                textStyle: {
-                  color: '#ffffff'
-                },
-                margin: 2,
-                formatter: function (value, index) {
-                  if (value >= 1000 && value < 10000) {
-                    value = value / 1000 + "千";
-                  } else if (value >= 10000) {
-                    value = value / 10000 + "万";
-                  }
-                  return value;
-                }
-              }
+            {
+              name:'工作人员',
+              type:'line',
+              data: this.echarts1Options.staffList
             },
-            grid: {
-              left: 40,
-              right: 40
+            {
+              name:'访客',
+              type:'line',
+              data: this.echarts1Options.visitorList
             },
-            series: [
-              {
-                name:'在住人',
-                type:'line',
-                data: this.echarts1Options.guestList
-              },
-              {
-                name:'工作人员',
-                type:'line',
-                data: this.echarts1Options.staffList
-              },
-              {
-                name:'访客',
-                type:'line',
-                data: this.echarts1Options.visitorList
-              },
-              {
-                name:'陌生人',
-                type:'line',
-                data: this.echarts1Options.suspiciousList
-              }
-            ]
-          },true)
-        },1000)
+            {
+              name:'陌生人',
+              type:'line',
+              data: this.echarts1Options.suspiciousList
+            }
+          ]
+        },true)
+
       },
 
       // 饼图
       getPie () {
-//        if (document.getElementById('myChart2')) {
-//          document.getElementById('pie').removeChild(document.getElementById('myChart2'));
-//        }
-//        let targetID = document.createElement("div");
-//        targetID.setAttribute('id', 'myChart2');
-//        targetID.setAttribute('_echarts_instance_', '');
-//        targetID.style.width = 'calc(100% - 32px)';
-//        targetID.style.height = '300px';
-//        targetID.style.position = 'absolute';
-//        targetID.style.padding = '8px';
-//        targetID.style.zIndex = '10';
-//        targetID.style.left = '8px';
-//        targetID.style.top = '18px';
-//        document.getElementById('pie').appendChild(targetID);
         // 基于准备好的dom，初始化echarts实例
-        let myChart = echarts.init(document.getElementById('myChart2'));
+        let myChart = echarts.init(document.getElementById('myChart2'),null,{renderer:'svg'});
         // 绘制图表，this.echarts1_option是数据
         console.log('this.totalLists',this.totalLists);
-        let option = {};
+        console.log(this.totalLists.length);
         myChart.clear();
-        option = {
+        myChart.setOption({
           series: [{
             name: '访问来源',
             type: 'pie',
@@ -387,8 +369,7 @@
             },
             data: ['在住人','工作人员','访客','陌生人']
           },
-        };
-        myChart.setOption(option,true);
+        },true);
       },
 
     },
