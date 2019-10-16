@@ -6,27 +6,29 @@
         <div class="hotelLists" ref="hotelAside">
           <el-aside v-show="colseOpenLeft">
             <div class="bg"><img src="../../assets/index/zuo.png" alt="" ></div>
-            <div class="title" ref="hotelTitleHeigth">酒店列表</div>
-            <div class="search" ref="hotelSearchHeigth">
-              <input type="text" placeholder="请输入酒店名称" v-model="hotelName">
-              <div class="searchBtn" @click="searchHotel">
-                <img src="../../assets/index/sousuo.png" alt="">
-              </div>
-            </div>
-            <div class="hotel_tabs" ref="hotelTabsHeigth">
-              <span @click="hotelTabs(-1, '全部')">全部({{hotelAreaLen}})<img :src="hotelTab == -1 ? handerImg.img[1] : handerImg.img[0]" alt=""></span>
-              <span v-for="(item, index) in hotelArea" @click="hotelTabs(index, item.name)">{{item.name}}({{item.count}})<img :src="hotelTab == index ? handerImg.img[1] : handerImg.img[0]" alt=""></span>
-            </div>
-            <div class="hotel_lists" ref="hotelListsHeigth">
-              <div class="content" v-if="hotelLists.length != 0">
-                <div class="list" v-for="(item, index) in hotelLists" :class="hotelCurrent == index ? 'active' : ''" @click="hotelItem(item, index)">
-                  <span class="hotel_name">{{item.name}}</span>
-                  <span class="hotel_btn"><img src="../../assets/index/chakan.png" alt=""></span>
+            <div class="hotel_content">
+              <div class="title" ref="hotelTitleHeigth">酒店列表</div>
+              <div class="search" ref="hotelSearchHeigth">
+                <input type="text" placeholder="请输入酒店名称" v-model="hotelName">
+                <div class="searchBtn" @click="searchHotel">
+                  <img src="../../assets/index/sousuo.png" alt="">
                 </div>
               </div>
-              <div class="noMsg" v-else>
-                <div class="img"><img src="../../assets/index/zanwuneirong.png" alt=""></div>
-                <p>暂无内容</p>
+              <div class="hotel_tabs" ref="hotelTabsHeigth">
+                <span @click="hotelTabs(-1, '全部')">全部({{hotelAreaLen}})<img :src="hotelTab == -1 ? handerImg.img[1] : handerImg.img[0]" alt=""></span>
+                <span v-for="(item, index) in hotelArea" @click="hotelTabs(index, item.name)">{{item.name}}({{item.count}})<img :src="hotelTab == index ? handerImg.img[1] : handerImg.img[0]" alt=""></span>
+              </div>
+              <div class="hotel_lists" ref="hotelListsHeigth">
+                <div class="content" v-if="hotelLists.length != 0">
+                  <div class="list" v-for="(item, index) in hotelLists" :class="hotelCurrent == index ? 'active' : ''" @click="hotelItem(item, index)">
+                    <span class="hotel_name">{{item.name}}</span>
+                    <span class="hotel_btn"><img src="../../assets/index/chakan.png" alt=""></span>
+                  </div>
+                </div>
+                <div class="noMsg" v-else>
+                  <div class="img"><img src="../../assets/index/zanwuneirong.png" alt=""></div>
+                  <p>暂无内容</p>
+                </div>
               </div>
             </div>
           </el-aside>
@@ -1131,13 +1133,17 @@
         position: relative;
         height: calc(100vh - 81px);
         margin-right: 15px;
-        overflow-y: scroll;
-        /*隐藏滚动条，当IE下溢出，仍然可以滚动*/
-        -ms-overflow-style:none;
-        /*火狐下隐藏滚动条*/
-        overflow:-moz-scrollbars-none;
-        -webkit-overflow-scrolling: touch; // 为了滚动顺畅
+        overflow: hidden;
         min-width: 20px;
+        .hotel_content {
+          overflow-y: scroll;
+          /*隐藏滚动条，当IE下溢出，仍然可以滚动*/
+          -ms-overflow-style:none;
+          /*火狐下隐藏滚动条*/
+          overflow:-moz-scrollbars-none;
+          -webkit-overflow-scrolling: touch; // 为了滚动顺畅
+          height: calc(100vh - 81px);
+        }
         .el-aside {
           width: 280px !important;
         }
@@ -1258,7 +1264,7 @@
           }
         }
       }
-      .hotelLists::-webkit-scrollbar {
+      .hotelLists .hotel_content::-webkit-scrollbar {
         display: none; // 隐藏滚动条
       }
       .home_content {
