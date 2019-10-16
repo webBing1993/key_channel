@@ -336,6 +336,7 @@
         }
         setTimeout(() => {
           myChart = echarts.init(document.getElementById('myChart2'));
+          myChart.clear();
           myChart.setOption({
             series: [{
               name: '访问来源',
