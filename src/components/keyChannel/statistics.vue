@@ -181,6 +181,7 @@
           data: {
             createTimeStart: new Date(this.datetimeparse(new Date(new Date(new Date(startTime).toLocaleDateString()).getTime()),'YYYY-MM-DD hh:mm:ss')).getTime(),
             createTimeEnd: new Date(this.datetimeparse(new Date(new Date(new Date(endTime).toLocaleDateString()).getTime()+24*60*60*1000-1),'YYYY-MM-DD hh:mm:ss')).getTime(),
+            hotelId: sessionStorage.hotelId ? sessionStorage.hotelId : '',
           },
           onsuccess: body => {
               let list = body.data.data.list;
