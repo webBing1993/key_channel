@@ -1131,7 +1131,12 @@
         position: relative;
         height: calc(100vh - 81px);
         margin-right: 15px;
-        overflow: hidden;
+        overflow-y: scroll;
+        /*隐藏滚动条，当IE下溢出，仍然可以滚动*/
+        -ms-overflow-style:none;
+        /*火狐下隐藏滚动条*/
+        overflow:-moz-scrollbars-none;
+        -webkit-overflow-scrolling: touch; // 为了滚动顺畅
         min-width: 20px;
         .el-aside {
           width: 280px !important;
@@ -1218,12 +1223,6 @@
             }
           }
           .hotel_lists {
-            overflow-y: scroll;
-            /*隐藏滚动条，当IE下溢出，仍然可以滚动*/
-            -ms-overflow-style:none;
-            /*火狐下隐藏滚动条*/
-            overflow:-moz-scrollbars-none;
-            -webkit-overflow-scrolling: touch; // 为了滚动顺畅
             .list {
               margin-bottom: 10px;
               display: flex;
@@ -1245,9 +1244,6 @@
               background: #103A72;
             }
           }
-          .hotel_lists::-webkit-scrollbar {
-            display: none; // 隐藏滚动条
-          }
         }
         .bg {
           position: absolute;
@@ -1261,6 +1257,9 @@
             height: calc(100vh - 81px);
           }
         }
+      }
+      .hotelLists::-webkit-scrollbar {
+        display: none; // 隐藏滚动条
       }
       .home_content {
         width: calc(100vw - 630px);
