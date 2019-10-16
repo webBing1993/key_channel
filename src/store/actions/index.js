@@ -180,7 +180,7 @@ const actions = {
   resourceLoading_: (ctx, param) => {
 
     axios({
-      url: httpTool.httpUrlEnv() + 'gemini' + param.url,
+      url: httpTool.httpUrlEnv() + 'key-channel' + param.url,
       method: param.method || 'GET',
       baseURL: '/',
       headers: param.headers || {
@@ -326,7 +326,7 @@ const actions = {
   // 获取图表数据
   illegalGuest(ctx, param){
     ctx.dispatch('resourceLoading_', {
-      url: '/identity/illegalGuest/statistics',
+      url: '/keychannel/illegalGuest/statistics',
       method: 'POST',
       body:param.data,
       onSuccess: body => {
