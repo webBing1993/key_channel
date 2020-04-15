@@ -648,7 +648,7 @@
         page = page * 18;
         this.doubtfulList = [];
         let obj = {
-          createTimeStart: new Date(this.datetimeparse(new Date(new Date(new Date().toLocaleDateString()).getTime()),'YYYY-MM-DD hh:mm:ss')).getTime(),
+          createTimeStart: new Date(this.datetimeparse(new Date(new Date(new Date().toLocaleDateString()).getTime()),'YYYY/MM/DD hh:mm:ss')).getTime(),
           createTimeEnd: '',
           hotelId: sessionStorage.hotelId,
         };
@@ -680,7 +680,7 @@
             }else {
               this.strangerNum = parseInt(body.headers['x-total-count']);
               body.data.data.forEach(item => {
-                if (Math.abs(item.bluriness && item.bluriness) >= 0.6) {
+                if (Math.abs(item.bluriness && item.bluriness) >= 0.4) {
                   this.indistinctList.push(item);
                 }else {
                   this.strangerList.push(item);
@@ -824,7 +824,7 @@
           this.$nextTick(() => {
             if (newData.guestType == 'SUSPICIOUS_GUEST') {
               this.strangerNum++;
-              if (newData.bluriness && Math.abs(newData.bluriness) >= 0.6) {
+              if (newData.bluriness && Math.abs(newData.bluriness) >= 0.4) {
                 this.indistinctList.unshift(newData);
               }else {
                 this.strangerList.unshift(newData);
@@ -940,7 +940,7 @@
             that.$nextTick(() => {
               if (newData.guestType == 'SUSPICIOUS_GUEST') {
                 that.strangerNum++;
-                if (newData.bluriness && Math.abs(newData.bluriness) >= 0.6) {
+                if (newData.bluriness && Math.abs(newData.bluriness) >= 0.4) {
                   that.indistinctList.unshift(newData);
                 }else {
                   that.strangerList.unshift(newData);

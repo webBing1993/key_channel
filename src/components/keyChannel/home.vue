@@ -889,7 +889,7 @@
               this.strangerNum = parseInt(body.headers['x-total-count']);
               body.data.data.forEach(item => {
                 item.handleLoading = false;
-                if (Math.abs(item.bluriness && item.bluriness) >= 0.6) {
+                if (Math.abs(item.bluriness && item.bluriness) >= 0.4) {
                   this.indistinctList.push(item);
                 }else {
                   this.strangerList.push(item);
@@ -1043,7 +1043,7 @@
             if (newData.guestType == 'SUSPICIOUS_GUEST') {
               this.strangerNum++;
               newData.handleLoading = false;
-              if (newData.bluriness && Math.abs(newData.bluriness) >= 0.6) {
+              if (newData.bluriness && Math.abs(newData.bluriness) >= 0.4) {
                 this.indistinctList.unshift(newData);
               }else {
                 this.strangerList.unshift(newData);
@@ -1098,19 +1098,23 @@
 //            this.initWebSocket();
 //          },100);
 //        }
-        this.initWebSocket();
+//        this.initWebSocket();
       },
       websocketerror(e){  //通道异常
         console.log("通道异常connection closed (" + e.code + ")");
         this.websock.close();
-        this.initWebSocket();
+//        this.initWebSocket();
       },
 
       beforeRouteLeave(to,from,next) {
         this.websock.close();
         clearInterval(this.timer);
         next();
-      }
+      },
+
+      beforeMount() {
+        this.websock.close();
+      },
     },
     watch: {
 
