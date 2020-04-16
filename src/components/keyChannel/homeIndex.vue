@@ -995,7 +995,7 @@
 
 
       beforeRouteLeave(to,from,next) {
-//        this.websock.close();
+        this.websock.close();
         clearInterval(this.timer);
         next();
       }
