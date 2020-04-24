@@ -482,6 +482,7 @@
   export default {
     components: {ElCol, Statistics},
     name: 'keyChannel',
+    props: ['handleIndex'],
     data () {
       return {
         hotelName: sessionStorage.hotelName, // 酒店名
@@ -520,7 +521,14 @@
         loading: null,
       }
     },
+    watch: {
+      handleIndex: function (val) {
+        console.log(val);   // 接收父组件的值
+        this.websock.close();
+      }
+    },
     mounted () {
+        console.log(2222);
       this.loading = Vue.prototype.$loading({
         lock: true,
         text: '加载中...',
@@ -530,7 +538,13 @@
       this.indistinctList = [];
       this.strangerNum = [];
       this.getLists(0,'SUSPICIOUS_GUEST',5,500,'SUSPICIOUS_GUEST');
-      this.initWebSocket();
+      clearInterval(this.timer);
+      if (this.websock) {
+        this.websock.close();
+      }else {
+        this.initWebSocket();
+      }
+
 //      this.createWebSocket(wsUrl);
       this.timer = setInterval(() => {
         this.websocketsend(888);
@@ -998,11 +1012,11 @@
         this.websock.close();
         clearInterval(this.timer);
         next();
+      },
+      beforeDestroy:function(){
+        this.websock.close();
       }
     },
-    watch: {
-
-    }
   }
 </script>
 

@@ -25,7 +25,7 @@
           </el-row>
         </el-header>
         <el-container>
-          <router-view></router-view>
+          <router-view  :handleIndex="handleIndex"></router-view>
         </el-container>
       </el-container>
     </div>
