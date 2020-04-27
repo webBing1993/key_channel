@@ -605,11 +605,14 @@
 //      this.getLists(0,'SUSPICIOUS_GUEST',5,100,'SUSPICIOUS_GUEST');
       this.wsuri = 'wss://qa.fortrun.cn/keychannel/websocket/' + sessionStorage.roleId + '_' + encodeURIComponent(sessionStorage.session_id);
       this.$nextTick(() => {
-        this.initWebSocket();
+        setTimeout(() => {
+          this.initWebSocket();
+          this.timer = setInterval(() => {
+            this.websocketsend(888);
+          },10000);
+        }, 3000)
       });
-      this.timer = setInterval(() => {
-        this.websocketsend(888);
-      },10000);
+
 
       let that = this;
 //      window.addEventListener('load',function (e) {
