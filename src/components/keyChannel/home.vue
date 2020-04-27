@@ -1093,16 +1093,19 @@
       websocketclose(e){  //关闭通道
         console.log("关闭通道connection closed (" + e.code + ")");
 //        if (this.wsuri_ == this.wsuri) {
-//          this.websock.close();
-//          setTimeout(() => {
-//            this.initWebSocket();
-//          },100);
+          this.websock.close();
+          setTimeout(() => {
+            this.initWebSocket();
+          },3000);
 //        }
 //        this.initWebSocket();
       },
       websocketerror(e){  //通道异常
         console.log("通道异常connection closed (" + e.code + ")");
         this.websock.close();
+        setTimeout(() => {
+          this.initWebSocket();
+        },3000);
 //        this.initWebSocket();
       },
 
@@ -1110,11 +1113,7 @@
         this.websock.close();
         clearInterval(this.timer);
         next();
-      },
-
-      beforeMount() {
-        this.websock.close();
-      },
+      }
     },
     watch: {
 
