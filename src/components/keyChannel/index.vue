@@ -40,7 +40,7 @@
       return {
         roleShow: sessionStorage.roleId != '' ? true : false,  // 判断权限
         myName: '',
-        handleIndex: sessionStorage.getItem('handleIndex') ? sessionStorage.getItem('handleIndex') : 1,
+        handleIndex: 1,
         handerImg: {
           img: [require('../../assets/index/topweixuan.png'),require('../../assets/index/topxuanzhong.png')],
         },
@@ -49,6 +49,7 @@
     },
     mounted () {
       this.myName = sessionStorage.getItem('myName');
+      this.handleIndex = sessionStorage.getItem('handleIndex') ? sessionStorage.getItem('handleIndex') : 1;
     },
     methods: {
 
@@ -72,14 +73,14 @@
         }else {
           this.replaceto('hotelStatus');
         }
-        this.handleIndex = tab;
         sessionStorage.setItem('handleIndex', tab);
+        this.handleIndex = tab;
       }
 
     },
     watch: {
       'myName': function (val) {
-        if (val == '') {
+        if (val === '') {
           this.replaceto('/');
         }
       }

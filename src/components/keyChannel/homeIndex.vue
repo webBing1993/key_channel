@@ -519,10 +519,12 @@
         strangerTab: 1,      // 左边tab切换
         timer: null,
         loading: null,
+        handleIndex: 1,
       }
     },
     watch: {
       handleIndex: function (val) {
+        this.handleIndex = val;
         console.log(val);   // 接收父组件的值
         this.websock.close();
       }
@@ -545,7 +547,6 @@
         this.initWebSocket();
       }
 
-//      this.createWebSocket(wsUrl);
       this.timer = setInterval(() => {
         this.websocketsend(888);
       },10000)
@@ -882,131 +883,22 @@
       },
       websocketclose(e){  //关闭通道
         console.log("关闭通道connection closed (" + e.code + ")");
-        location.reload();
+        this.websock.close();
+        setTimeout(() => {
+          if (this.handleIndex == 1) {
+            this.initWebSocket();
+          }
+        },3000);
       },
       websocketerror(e){  //通道异常
         console.log("通道异常connection closed (" + e.code + ")");
-        location.reload();
+        this.websock.close();
+        setTimeout(() => {
+            if (this.handleIndex == 1) {
+              this.initWebSocket();
+            }
+        },3000);
       },
-
-
-      createWebSocket() {
-        let that = this;
-        try {
-          ws = new WebSocket(wsUrl);
-          this.init();
-        } catch(e) {
-          console.log('catch');
-          that.reconnect(wsUrl);
-        }
-      },
-      init() {
-        let that = this;
-
-        //心跳检测
-        let heartCheck = {
-          timeout: 3000,
-          timeoutObj: null,
-          serverTimeoutObj: null,
-          start: function(){
-            console.log('start');
-            let self = this;
-            this.timeoutObj && clearTimeout(this.timeoutObj);
-            this.serverTimeoutObj && clearTimeout(this.serverTimeoutObj);
-            this.timeoutObj = setTimeout(function(){
-              //这里发送一个心跳，后端收到后，返回一个心跳消息，
-              console.log('55555');
-              ws.send("888");
-              self.serverTimeoutObj = setTimeout(function() {
-                console.log(111);
-                console.log(ws);
-                ws.close();
-                // createWebSocket();
-              }, self.timeout);
-
-            }, this.timeout)
-          }
-        };
-        ws.onclose = function () {
-          console.log('链接关闭');
-          that.reconnect(wsUrl);
-          location.reload()
-        };
-        ws.onerror = function() {
-          console.log('发生异常了');
-          that.reconnect(wsUrl);
-          location.reload();
-        };
-        ws.onopen = function () {
-          //心跳检测重置
-          heartCheck.start();
-        };
-        ws.onmessage = function (e) {
-          //拿到任何消息都说明当前连接是正常的
-          console.log('接收到消息');
-          console.log(e);
-          if (e.data != '连接成功' && e.data != 888 && e.data != '888') {
-            let val = JSON.parse(e.data);
-            that.weekNum = val.weekTotal;
-            that.monthNum = val.monthTotal;
-            that.allNum = val.total;
-            let newData = JSON.parse(val.illegalGuest);
-            that.$nextTick(() => {
-              if (newData.guestType == 'SUSPICIOUS_GUEST') {
-                that.strangerNum++;
-                if (newData.bluriness && Math.abs(newData.bluriness) >= 0.4) {
-                  that.indistinctList.unshift(newData);
-                }else {
-                  that.strangerList.unshift(newData);
-                }
-              }else {
-                that.total1++;
-                that.toDayLists.unshift(newData);
-                if (that.toDayLists.length > 18) {
-                  that.toDayLists.splice(18,1);
-                }
-                if (newData.guestType == 'STAFF') {
-                  that.total3++;
-                  that.whiteLists.unshift(newData);
-                  if (that.whiteLists.length > 18) {
-                    that.whiteLists.splice(18,1);
-                  }
-                }
-                if (newData.guestType == 'GUEST_ID' || newData.guestType == 'GUEST_LIVE') {
-                  that.total4++;
-                  that.aliveLists.unshift(newData);
-                  if (that.aliveLists.length > 18) {
-                    that.aliveLists.splice(18,1);
-                  }
-                }
-                if (newData.guestType == 'VISITOR') {
-                  that.total5++;
-                  that.visitorLists.unshift(newData);
-                  if (that.visitorLists.length > 18) {
-                    that.visitorLists.splice(18,1);
-                  }
-                }
-              }
-              that.totalAll();
-            });
-            console.log(newData);
-          }
-          heartCheck.start();
-        }
-      },
-      reconnect(url) {
-        if(lockReconnect) {
-          return;
-        }
-        lockReconnect = true;
-        //没连接上会一直重连，设置延迟避免请求过多
-        tt && clearTimeout(tt);
-        tt = setTimeout( () => {
-          this.createWebSocket(url);
-          lockReconnect = false;
-        }, 4000);
-      },
-
 
       beforeRouteLeave(to,from,next) {
         this.websock.close();
