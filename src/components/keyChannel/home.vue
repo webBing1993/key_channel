@@ -916,7 +916,9 @@
       // 获取总数列表
       totalList () {
         this.totalGuest({
-          hotelId: sessionStorage.hotelId,
+          data: {
+            hotelId: sessionStorage.hotelId,
+          },
           onsuccess: body => {
             if (body.data.code == 0) {
               this.total1 = body.data.data.count;

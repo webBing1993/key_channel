@@ -40,6 +40,11 @@ export default new Router({
       path: '/statistics',
       name: '/statistics',
       component: resolve => require(['../components/keyChannel/statistics.vue'],resolve),
+    },
+    {
+      path: '/passwordUpdate',
+      name: '/passwordUpdate',
+      component: resolve => require(['../components/keyChannel/passwordUpdate.vue'],resolve),
     }
   ]
 })

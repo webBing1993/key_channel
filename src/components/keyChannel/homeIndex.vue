@@ -6,12 +6,12 @@
         <el-aside>
           <div class="bg"><img src="../../assets/index/zuo.png" alt="" ></div>
           <div class="stranger_title">
-            <div :class="strangerTab == 1 ? 'active stranger_tab' : 'stranger_tab'" @click="strangerTabClick(1)">
+            <div :class="strangerTab == 1 ? 'active stranger_tab' : 'stranger_tab'" @click="strangerTabClick(1, 1)">
               <img src="../../assets/index/zuoxuanzhong.png" alt="" v-if="strangerTab == 1">
               <img src="../../assets/index/zuoweixuan.png" alt="" v-else>
               陌生人(未处理)
             </div>
-            <div :class="strangerTab == 2 ? 'active stranger_tab' : 'stranger_tab'" @click="strangerTabClick(2)">
+            <div :class="strangerTab == 2 ? 'active stranger_tab' : 'stranger_tab'" @click="strangerTabClick(2, 1)">
               <img src="../../assets/index/zuoxuanzhong.png" alt="" v-if="strangerTab == 2">
               <img src="../../assets/index/zuoweixuan.png" alt="" v-else>
               模糊抓拍
@@ -55,7 +55,7 @@
         <!-- 中间主页-->
         <el-main ref="mainHeight">
           <el-container>
-            <el-header>
+            <el-header ref="headerHeight">
               <el-row>
                 <el-col :span="12">
                   <div class="bg"><img src="../../assets/index/zhongshnag.png" alt=""></div>
@@ -104,8 +104,19 @@
                   </el-row>
                 </el-col>
               </el-row>
+              <el-row class="locationTabs">
+                <el-col :span="24">
+                  <div class="stranger_title">
+                    <div v-for="(item, index) in selectLists" :class="locationTab == index+1 ? 'active stranger_tab' : 'stranger_tab'" @click="strangerTabClick(index, 2)">
+                      <img src="../../assets/index/zuoxuanzhong.png" alt="" v-if="locationTab == index+1">
+                      <img src="../../assets/index/zuoweixuan.png" alt="" v-else>
+                      {{ item }}
+                    </div>
+                  </div>
+                </el-col>
+              </el-row>
             </el-header>
-            <el-main>
+            <el-main ref="mainListHeight">
               <div class="bg"><img src="../../assets/index/zhong.png" alt=""></div>
               <!-- 今日抓拍列表-->
               <div class="toDay_lists lists" v-if="tab1">
@@ -520,6 +531,8 @@
         timer: null,
         loading: null,
         handleIndex: 1,
+        selectLists: [],      // 位置筛选lists
+        locationTab: 1,       // 位置筛选选择
       }
     },
     watch: {
@@ -536,10 +549,7 @@
         text: '加载中...',
         background: 'rgba(0, 0, 0, 0.7)'
       });
-      this.getLists(0,'',0,18,'');
-      this.indistinctList = [];
-      this.strangerNum = [];
-      this.getLists(0,'SUSPICIOUS_GUEST',5,500,'SUSPICIOUS_GUEST');
+      this.locations();
       clearInterval(this.timer);
       if (this.websock) {
         this.websock.close();
@@ -554,7 +564,7 @@
     methods: {
 
       ...mapActions([
-        'getDoubtfulList','totalGuest','hasChecked'
+        'getDoubtfulList','totalGuest','hasChecked', 'getLocations'
       ]),
 
       // 打开大图效果
@@ -570,6 +580,28 @@
       // 关闭大图效果
       closeBigImg: function() { //关闭图片预览
         this.maskBtn = false;
+      },
+
+      // 获取摄像头列表
+      locations() {
+          this.getLocations({
+            onsuccess: body => {
+                if (body.data.code == 0) {
+                  this.selectLists = body.data.data;
+                  this.selectLists.unshift('全部');
+                  this.getLists(0,'',0,18,'');
+                  this.indistinctList = [];
+                  this.strangerNum = [];
+                  this.getLists(0,'SUSPICIOUS_GUEST',5,500,'SUSPICIOUS_GUEST');
+                }
+            },
+            onfail: body => {
+
+            },
+            onerror: body => {
+
+            }
+          })
       },
 
       // tab切换
@@ -619,8 +651,33 @@
       },
 
       // 左边tab切换
-      strangerTabClick(index) {
-        this.strangerTab = index;
+      strangerTabClick(index, type) {
+        if (type == 1) {
+          this.strangerTab = index;
+        }else {
+          this.locationTab = parseInt(index)+1;
+
+          this.currentPage1 = 1;
+          this.currentPage2 = 1;
+          this.currentPage3 = 1;
+          this.currentPage4 = 1;
+          this.currentPage5 = 1;
+          if (this.tab1) {
+            this.getLists(0,'',0,18,'');
+          }else if (this.tab2) {
+            this.getLists(0,'SUSPICIOUS_GUEST',1,18,'READ');
+          }else if (this.tab3) {
+            this.getLists(0,'STAFF',2,18,'');
+          }else if (this.tab4) {
+            this.getLists(0,'GUEST',3,18,'');
+          }else {
+            this.getLists(0,'VISITOR',4,18,'');
+          }
+          this.indistinctList = [];
+          this.strangerNum = [];
+          this.getLists(0,'SUSPICIOUS_GUEST',5,500,'SUSPICIOUS_GUEST');
+          this.totalList();
+        }
       },
 
       // 分页
@@ -666,6 +723,7 @@
           createTimeStart: new Date(this.datetimeparse(new Date(new Date(new Date().toLocaleDateString()).getTime()),'YYYY/MM/DD hh:mm:ss')).getTime(),
           createTimeEnd: '',
           hotelId: sessionStorage.hotelId,
+          location: this.locationTab == 1 ? '' : this.selectLists[this.locationTab-1]
         };
         if (status != '') {
           obj.status = status
@@ -702,13 +760,14 @@
                 }
               });
 //              this.strangerList = [...body.data.data];
-              this.totalList();
+//              this.totalList();
             }
             this.$nextTick(() => {
               this.loading.close();
               this.$refs.elAside.$children[0].$el.style.height = this.$refs.mainHeight.$el.offsetHeight + 'px';
               this.$refs.elAside.$children[0].$el.firstChild.firstChild.style.height = (this.$refs.mainHeight.$el.offsetHeight - 1) + 'px';
               this.$refs.elAside.$children[0].$el.lastElementChild.style.maxHeight = (this.$refs.mainHeight.$el.offsetHeight - 48)+ 'px';
+              this.$refs.mainListHeight.$el.childNodes[2].style.minHeight = 'calc(100vh - '+(100 + this.$refs.headerHeight.$el.offsetHeight)+'px)';
             })
           }
         })
@@ -717,7 +776,10 @@
       // 获取总数列表
       totalList () {
         this.totalGuest({
-          hotelId: sessionStorage.hotelId,
+          data: {
+            location: this.locationTab == 1 ? '' : this.selectLists[this.locationTab-1],
+            hotelId: sessionStorage.hotelId,
+          },
           onsuccess: body => {
             if (body.data.code == 0) {
               this.total1 = body.data.data.count;
@@ -937,32 +999,7 @@
           height: calc(100vh - 81px);
         }
       }
-      .stranger_title {
-        font-size: 14px;
-        text-align: left;
-        line-height: 24px;
-        display: inline-block;
-        .stranger_tab {
-          display: inline-block;
-          width: 120px;
-          position: relative;
-          text-align: center;
-          margin-right: 20px;
-          cursor: pointer;
-          color: #3596FC;
-          img {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            left: 0;
-            top: 0;
-          }
-        }
-        .active {
-          color: #fff;
-        }
-      }
+
       .stranger_list {
         max-height: calc(100vh - 118px);
         overflow-y: scroll;
@@ -1037,11 +1074,46 @@
       }
 
     }
+    .stranger_title {
+      font-size: 14px;
+      text-align: left;
+      line-height: 24px;
+      display: inline-block;
+      .stranger_tab {
+        display: inline-block;
+        width: 120px;
+        position: relative;
+        text-align: center;
+        margin-right: 20px;
+        cursor: pointer;
+        color: #3596FC;
+        img {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          z-index: -1;
+          left: 0;
+          top: 0;
+        }
+      }
+      .active {
+        color: #fff;
+      }
+    }
     .el-main {
       padding: 0;
       .el-header {
-        height: 70px !important;
+        height: auto !important;
         padding: 0;
+        .locationTabs {
+          margin-top: 10px;
+          text-align: left;
+          .stranger_title {
+            .stranger_tab {
+              margin-bottom: 10px;
+            }
+          }
+        }
         .el-col-12 {
           height: 70px;
           margin-right: 15px;
@@ -1121,7 +1193,7 @@
         }
       }
       .el-main {
-        margin-top: 12px;
+        /*margin-top: 12px;*/
         padding: 12px 12px 40px;
         position: relative;
         overflow: hidden;

@@ -45,7 +45,7 @@ const actions = {
     }).then(response => {
       sessionStorage.setItem('onLoad',true);
       console.log("response",response);
-      if (response.data.code == 0) {
+      if (response.data.code == 0 || response.data.code == 30007) {
         param.onSuccess && param.onSuccess(response)
       }
       else if (response.data.code !== 0) {
@@ -121,7 +121,7 @@ const actions = {
     }).then(response => {
       console.log("response",response);
       // closeFullScreen (openFullScreen());
-      if (response.data.code == 0 || response.data.errcode == 0) {
+      if (response.data.code == 0 || response.data.errcode == 0 || response.data.code == 30007) {
         param.onSuccess && param.onSuccess(response)
       }
       else if (response.data.errcode !== 0) {
@@ -156,7 +156,7 @@ const actions = {
       data: param.body || null,
       timeout: param.timeout || 60000,
     }).then(response => {
-      if (response.data.code == 0 || response.data.errcode == 0) {
+      if (response.data.code == 0 || response.data.errcode == 0 || response.data.code == 30007) {
         param.onSuccess && param.onSuccess(response)
       }
       else if (response.data.errcode !== 0) {
@@ -227,6 +227,36 @@ const actions = {
     })
   },
 
+  // 修改密码
+  updatgePassword(ctx,param){
+    ctx.dispatch('request',{
+      url: '/keychannel/updatePassword',
+      method: 'POST',
+      params: param.data,
+      onSuccess: body => {
+        param.onsuccess ? param.onsuccess(body) : null
+      },
+      onFail: body => {
+        param.onfail ? param.onfail(body) : null
+      }
+    })
+  },
+
+  // 修改通知者
+  updateNotifier(ctx,param){
+    ctx.dispatch('resourceLoading',{
+      url: '/keychannel/notifier?code='+param.code,
+      method: 'POST',
+      body: param.data,
+      onSuccess: body => {
+        param.onsuccess ? param.onsuccess(body) : null
+      },
+      onFail: body => {
+        param.onfail ? param.onfail(body) : null
+      }
+    })
+  },
+
   // 登录
   loginEntry (ctx,param){
     ctx.dispatch('request',{
@@ -242,10 +272,44 @@ const actions = {
     })
   },
 
+  // 获取酒店通知者
+  notifier(ctx, param) {
+    ctx.dispatch('resourceLoading', {
+      url: '/keychannel/notifier',
+      method: 'GET',
+      onSuccess: (body,headers) => {
+        param.onsuccess ? param.onsuccess(body,headers) : null
+      }
+    })
+  },
+
+  // 修改通知手机号验证码获取
+  geNotifiertCode (ctx, param) {
+    ctx.dispatch('resourceLoading', {
+      url: '/keychannel/notifierCode',
+      method: 'POST',
+      body: param.data,
+      onSuccess: (body,headers) => {
+        param.onsuccess ? param.onsuccess(body,headers) : null
+      }
+    })
+  },
+
   // 获取酒店列表
   hotelListAll (ctx, param) {
     ctx.dispatch('resourceLoading', {
       url: '/keychannel/hotels',
+      method: 'GET',
+      onSuccess: (body,headers) => {
+        param.onsuccess ? param.onsuccess(body,headers) : null
+      }
+    })
+  },
+
+  // 获取摄像头位置list
+  getLocations(ctx, param) {
+    ctx.dispatch('resourceLoading', {
+      url: '/keychannel/locations',
       method: 'GET',
       onSuccess: (body,headers) => {
         param.onsuccess ? param.onsuccess(body,headers) : null
@@ -268,8 +332,9 @@ const actions = {
   // 获取总数列表
   totalGuest (ctx, param) {
     ctx.dispatch('resourceLoading', {
-      url: '/keychannel/illegalGuest/total?hotelId='+param.hotelId,
-      method: 'GET',
+      url: '/keychannel/illegalGuest/total',
+      method: 'POST',
+      body: param.data,
       onSuccess: (body,headers) => {
         param.onsuccess ? param.onsuccess(body,headers) : null
       }
