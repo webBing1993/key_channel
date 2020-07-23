@@ -172,7 +172,7 @@ export default {
         this.$message.error('手机格式不正确');
         return
         if (this.code === '') {
-          this.$message('请输入验证码');
+          this.$message('请输入密码');
           return
         }else if (this.code.length < 6 || this.code.length > 16) {
           this.$message('请输入６到16位数密码');
@@ -180,7 +180,7 @@ export default {
         }
       }else {
         if (this.code === '') {
-          this.$message('请输入验证码');
+          this.$message('请输入密码');
           return
         }else if (this.code.length < 6 || this.code.length > 16) {
           this.$message('请输入６到16位数密码');
