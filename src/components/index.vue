@@ -367,7 +367,7 @@ export default {
           }
           .login {
             width: 100%;
-            margin-top: 40px;
+            margin-top: 20px;
             text-align: center;
             font-size: 14px;
             color: #fff;

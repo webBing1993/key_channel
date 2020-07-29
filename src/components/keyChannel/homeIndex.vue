@@ -542,6 +542,9 @@
         this.websock.close();
       }
     },
+    beforeMount () {
+      this.totalList();
+    },
     mounted () {
         console.log(2222);
       this.loading = Vue.prototype.$loading({
