@@ -745,6 +745,7 @@
           this.websock.close();
           this.$nextTick(() => {
 //            this.initWebSocket();
+            this.totalList();
           })
         }else {
           this.hotelArea.forEach(item => {

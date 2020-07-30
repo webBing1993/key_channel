@@ -93,7 +93,7 @@
         // 饼图
         this.echarts1Options = {};
         this.echarts2Options = [];
-        this.getList (this.startTime, this.endTime);
+//        this.getList (this.startTime, this.endTime);
       },0);
 
     },
