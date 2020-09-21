@@ -29,7 +29,7 @@
               <div class="title">{{ hotelList.length != 0 ? hotelList[0].hotelName : '' }}</div>
               <div class="hotel_status">
                 <i :class="hotelList.length != 0 ? hotelList[0].processStatus == 0 ? 'redColor' : 'blueColor' : ''"></i>
-                <span :class="hotelList.length != 0 ? hotelList[0].processStatus == 0 ? 'statusRed' : 'statusBlue' : ''">{{ hotelList.length != 0 ? hotelList[0].processStatus == 0 ? '当前程序不在线' : '欢迎使用，当前程序在线' : '' }}</span>
+                <span :class="hotelList.length != 0 ? hotelList[0].processStatus == 0 ? 'statusRed' : 'statusBlue' : ''">{{ hotelList.length != 0 ? hotelList[0].processStatus == 0 ? (cameraList_ && cameraList_.length <= 2) ? '程序连接异常，请重启人证通设备' : (cameraList_ && cameraList_.length >= 3) ? '程序连接异常，请重启黑盒子设备' : '当前程序不在线' : '欢迎使用，当前程序在线' : '' }}</span>
               </div>
             </div>
             <div class="table_lists" ref="tableListsHeight">
@@ -93,6 +93,7 @@
         echarts2Options: [],   // 饼图数据
         echarts1Options: {},   // 折线图数据
         cameraList: [],
+        cameraList_: [],
         hotelList: [],
       }
     },
@@ -119,10 +120,13 @@
       this.$refs.tableListsHeight.style.maxHeight = 'calc(100% - 110px)';
       console.log(this.$refs, 556, );
 
-      this.getHotelList();
-      this.timer = setInterval(() => {
+      if (!this.roleShow) {
         this.getHotelList();
-      },60000);
+        this.timer = setInterval(() => {
+          this.getHotelList();
+        },60000);
+      }
+
     },
     methods: {
 
@@ -132,6 +136,7 @@
 
       // 酒店list
       getHotelList() {
+          console.log(5554,sessionStorage.hotelId);
         let arr = [];
         this.getHotel({
           onsuccess: body => {
@@ -141,6 +146,7 @@
                         arr.push(item)
                     }
                 });
+                console.log(this.hotelList, sessionStorage.hotelId);
               this.hotelList = arr;
               this.cameraFun( arr.length != 0 ? this.hotelList[0].hotelId : '');
             }
@@ -150,18 +156,38 @@
 
       // 摄像头状态
       cameraFun(hotelId) {
+          console.log(1111, hotelId);
           if (hotelId) {
             this.hotelCamera({
               hotelId: hotelId,
               onsuccess: body => {
                   console.log(333, body.data);
                 if (body.data.code == 0 && body.data.data) {
-                  this.cameraList = body.data.data;
+                  let arr = [], arr_ = [];
+                  if (body.data.data.length != 0) {
+                    body.data.data.forEach(item => {
+                        if (item.cameraStatus == 0) {
+                          arr_.push(item)
+                        }
+
+                    });
+                    arr = this.sortBykey(body.data.data, 'cameraStatus');
+                  }
+                  this.cameraList = arr;
+                  this.cameraList_ = arr_;
                   console.log(this.cameraList);
                 }
               }
             })
           }
+      },
+
+      sortBykey(ary, key) {
+        return ary.sort(function (a, b) {
+          let x = a[key];
+          let y = b[key];
+          return ((x < y) ? -1 : (x > y) ? 1 : 0)
+        })
       },
 
       // 获取前后几天的时间
