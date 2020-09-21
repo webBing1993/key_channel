@@ -562,7 +562,17 @@
 
       this.timer = setInterval(() => {
         this.websocketsend(888);
-      },10000)
+      },10000);
+
+      let that = this;
+      window.onresize = function() {
+        setTimeout(() => {
+          that.$refs.elAside.$children[0].$el.style.height = 'calc(100vh - '+(that.$refs.headerHeight.$el.offsetHeight - 36)+'px)';
+          that.$refs.elAside.$children[0].$el.firstChild.firstChild.style.height = 'calc(100vh - '+(that.$refs.headerHeight.$el.offsetHeight - 36)+'px)';
+          that.$refs.elAside.$children[0].$el.lastElementChild.style.maxHeight = 'calc(100vh - '+(that.$refs.headerHeight.$el.offsetHeight - 36)+'px)';
+          that.$refs.mainListHeight.$el.childNodes[2].style.minHeight = 'calc(100vh - '+(130 + that.$refs.headerHeight.$el.offsetHeight)+'px)';
+        }, 0)
+      }
     },
     methods: {
 
