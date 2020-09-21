@@ -12,13 +12,13 @@
               <div class="tabs" v-else>
                 <span :class="handleIndex == 1 ? 'active' : ''" @click="handleClick(1)"><img :src="handleIndex == 1 ? handerImg.img[1] : handerImg.img[0]" alt="">首页</span>
                 <span :class="handleIndex == 2 ? 'active' : ''" @click="handleClick(2)"><img :src="handleIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">设置</span>
-                <span :class="handleIndex == 3 ? 'active' : ''" @click="handleClick(3)" v-if="massage"><img :src="handleIndex == 3 ? handerImg.img[1] : handerImg.img[0]" alt="" >设备监控</span>
+                <!--<span :class="handleIndex == 3 ? 'active' : ''" @click="handleClick(3)" v-if="massage"><img :src="handleIndex == 3 ? handerImg.img[1] : handerImg.img[0]" alt="" >设备监控</span>-->
               </div>
             </el-col>
             <el-col :span="12">
               <el-row class="ownInfo">
                 <el-col :span="13">
-                  <div class="passContact" v-if="!roleShow">
+                  <div class="passContact">    <!--v-if="!roleShow"-->
                     <el-button @click="changePhone">
                       <span>添加设备异常通知手机号 <span>{{ phone }}</span></span>
                       <span v-if="phone !== ''">修改</span>
@@ -90,6 +90,7 @@
           time: 180,
           disabled: false
         },
+        timerNull: null,
         rules: {
           phone: [
             { required: true, message: '请填写手机号码', trigger: 'blur' },
@@ -116,7 +117,8 @@
       // 退出事件
       logout () {
         sessionStorage.removeItem('tab');
-        this.replaceto('/');
+//        this.replaceto('/');
+        window.location.href = localStorage.getItem('windowUrl_');
       },
 
       // tab点击事件
@@ -156,6 +158,11 @@
 //            this.changeItem.phone = this.phone;
 //        }
         this.changeItem.phone = '';
+        this.changeItem.code = '';
+        this.changeItem.disabled = false;
+        this.changeItem.time = 180;
+        this.changeItem.text = '获取验证码';
+        clearTimeout(this.timerNull);
         this.statusTip = true;
       },
 
@@ -224,7 +231,7 @@
         if (this.changeItem.time > 0) {
           this.changeItem.time--;
           this.changeItem.text = this.changeItem.time+"s后重新获取";
-          setTimeout(this.timer, 1000);
+          this.timerNull = setTimeout(this.timer, 1000);
         } else{
           this.changeItem.time = 0;
           this.changeItem.text = "重新获取";

@@ -9,6 +9,16 @@
         background: #041740;
       }
     </style>
+    <script>
+      let windowUrl_ = null;
+      console.log(window.location.href);
+      if (window.location.href.indexOf('.cn') != -1) {
+        windowUrl_ = window.location.href.split('#')[0].split('.cn')[0]+'.cn/';
+      } else {
+        windowUrl_ = '';
+      }
+      localStorage.setItem('windowUrl_', windowUrl_);
+    </script>
   </head>
   <body>
     <div id="app"></div>

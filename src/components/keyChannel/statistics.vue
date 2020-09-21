@@ -1,22 +1,7 @@
 <template>
   <div>
     <div class="statistics_chat">
-      <!--<div class="preparation">筛选</div>-->
-      <!--<div class="timeChoose">-->
-        <!--<span>日期</span>-->
-        <!--<span class="calendarChoose" @click="calendarShow = true">-->
-          <!--<img src="../../assets/index/riqi.png" alt="">-->
-          <!--<input type="text" readonly placeholder="选择日期" v-model="startTime">-->
-        <!--</span>-->
-        <!--<span>至</span>-->
-        <!--<span class="calendarChoose" @click="calendarShow_ = true">-->
-          <!--<img src="../../assets/index/riqi.png" alt="">-->
-          <!--<input type="text" readonly placeholder="选择日期" v-model="endTime">-->
-        <!--</span>-->
-        <!--<span class="inquire" @click="inquire">查询</span>-->
-      <!--</div>-->
-
-       <el-card class="box-card">
+       <el-card class="box-card" v-if="roleShow">
          <!-- 饼图-->
          <div class="pie">
            <img src="../../assets/index/youshang.png" alt="">
@@ -30,25 +15,57 @@
          </div>
       </el-card>
 
-
-      <!-- 日期控件-->
-      <Calendar
-        v-on:choseDay="clickDay"
-        v-on:changeMonth="changeDate"
-        v-show="calendarShow"
-      ></Calendar>
-      <Calendar
-        v-on:choseDay="clickDay_"
-        v-on:changeMonth="changeDate_"
-        v-show="calendarShow_"
-      ></Calendar>
+      <el-card class="box-card box-card_" v-else>
+        <!-- 饼图-->
+        <div class="pie pie_" ref="tableHeight">
+          <img src="../../assets/index/youshang.png" alt="">
+          <p>程序监控</p>
+          <div class="contentTable">
+            <div class="tabTip">
+              <span><i class="blueColor"></i>正常</span>
+              <span><i class="redColor"></i>故障</span>
+            </div>
+            <div class="hotel_tab">
+              <div class="title">{{ hotelList.length != 0 ? hotelList[0].hotelName : '' }}</div>
+              <div class="hotel_status">
+                <i :class="hotelList.length != 0 ? hotelList[0].processStatus == 0 ? 'redColor' : 'blueColor' : ''"></i>
+                <span :class="hotelList.length != 0 ? hotelList[0].processStatus == 0 ? 'statusRed' : 'statusBlue' : ''">{{ hotelList.length != 0 ? hotelList[0].processStatus == 0 ? '当前程序不在线' : '欢迎使用，当前程序在线' : '' }}</span>
+              </div>
+            </div>
+            <div class="table_lists" ref="tableListsHeight">
+              <div class="lists" v-if="cameraList.length != 0">
+                <div class="list" v-for="item in cameraList">
+                  <div class="list_l">
+                    <img :src="hotelList[0].processStatus == 0 ? require('../../assets/index/Group.png') : item.cameraStatus == 1 ? require('../../assets/index/Group1.png') : require('../../assets/index/Group.png')" alt="">
+                    <span class="location">{{ item.cameraType == 'IN' ? '入口' : '出口' }}</span>
+                  </div>
+                  <div class="list_r">
+                    <div>序列号：{{ item.id }}</div>
+                    <div>IP：{{ item.ipAddress }}</div>
+                    <div>最近上报：{{ datetimeparse(item.lastLoginTime, 'MM/dd hh/mm') }}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="noMsg" v-else>
+                <div class="img"><img src="../../assets/index/zanwuneirong.png" alt=""></div>
+                <p>暂无内容</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 饼图-->
+        <div class="pie">
+          <img src="../../assets/index/youxia.png" alt="">
+          <div id="myChart2" style="width: calc(100% - 32px);height: 300px"/>
+        </div>
+      </el-card>
     </div>
   </div>
 </template>
 
 <script>
   import {mapState,mapActions} from 'vuex';
-  import Calendar from 'vue-calendar-component';
+//  import Calendar from 'vue-calendar-component';
 
   // 引入基本模板
   import echarts from 'echarts'
@@ -65,16 +82,18 @@
   export default {
     name: 'statistics',
     components: {
-      Calendar
     },
     data () {
       return {
+        roleShow: sessionStorage.roleId != '' ? true : false,  // 判断权限
         calendarShow: false,
         calendarShow_: false,
         startTime: '',
         endTime: '',
         echarts2Options: [],   // 饼图数据
         echarts1Options: {},   // 折线图数据
+        cameraList: [],
+        hotelList: [],
       }
     },
     props: {
@@ -96,12 +115,54 @@
 //        this.getList (this.startTime, this.endTime);
       },0);
 
+      this.$refs.tableHeight.style.height = 'calc(100vh - 398px)';
+      this.$refs.tableListsHeight.style.maxHeight = 'calc(100% - 110px)';
+      console.log(this.$refs, 556, );
+
+      this.getHotelList();
+      this.timer = setInterval(() => {
+        this.getHotelList();
+      },60000);
     },
     methods: {
 
       ...mapActions([
-        'replaceto','illegalGuest'
+        'replaceto', 'illegalGuest', 'getHotel', 'hotelCamera'
       ]),
+
+      // 酒店list
+      getHotelList() {
+        let arr = [];
+        this.getHotel({
+          onsuccess: body => {
+            if (body.data.code == 0 && body.data.data) {
+                body.data.data.forEach(item => {
+                    if (item.hotelId == sessionStorage.hotelId) {
+                        arr.push(item)
+                    }
+                });
+              this.hotelList = arr;
+              this.cameraFun( arr.length != 0 ? this.hotelList[0].hotelId : '');
+            }
+          }
+        })
+      },
+
+      // 摄像头状态
+      cameraFun(hotelId) {
+          if (hotelId) {
+            this.hotelCamera({
+              hotelId: hotelId,
+              onsuccess: body => {
+                  console.log(333, body.data);
+                if (body.data.code == 0 && body.data.data) {
+                  this.cameraList = body.data.data;
+                  console.log(this.cameraList);
+                }
+              }
+            })
+          }
+      },
 
       // 获取前后几天的时间
       fun_date(aa){
@@ -462,6 +523,138 @@
     }
     #myChart1 {
       top: -34px;
+    }
+  }
+  .box-card_ {
+    .pie {
+      margin-top: 20px;
+    }
+    .pie_ {
+      img {
+        height: 100%;
+      }
+      margin-top: 0;
+      .contentTable {
+        height: calc(100% - 55px);
+        width: calc(100% - 32px);
+        position: absolute;
+        top: 35px;
+        left: 8px;
+        padding: 8px;
+        .tabTip {
+          text-align: left;
+          span {
+            color: #3798FC;
+            font-size: 14px;
+            margin-right: 30px;
+            display: inline-flex;
+            align-items: center;
+          }
+        }
+        i {
+          width: 14px;
+          height: 14px;
+          border-radius: 4px;
+          margin-right: 6px;
+          display: inline-block;
+        }
+        .blueColor {
+          background-color: blue;
+        }
+        .redColor {
+          background-color: red;
+        }
+        .hotel_tab {
+          margin-top: 8px;
+          width: calc(100% - 32px);
+          border: 1px solid #3798FC;
+          border-radius: 4px;
+          padding: 8px 15px;
+          background-color: #041740;
+          .title {
+            color: #fff;
+            font-size: 14px;
+            text-align: left;
+          }
+          .hotel_status {
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            span {
+              color: #3798FC;
+              font-size: 14px;
+            }
+            .statusRed {
+              color: #F46C6C;
+            }
+          }
+        }
+        .table_lists {
+          /*height: 360px;*/
+          margin-top: 15px;
+          overflow-y: scroll;
+          position: relative;
+          .lists {
+            .list {
+              background-color: #041740;
+              border: 1px solid #3798FC;
+              border-radius: 4px;
+              margin-bottom: 15px;
+              /*width: calc(100% - 0px);*/
+              padding: 12px 0;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              .list_l {
+                width: 35%;
+                img {
+                  width: 36px;
+                  height: 36px;
+                  margin: 0 auto;
+                }
+                span {
+                  margin-top: 8px;
+                  font-size: 14px;
+                  color: #fff;
+                }
+              }
+              .list_r {
+                width: 62%;
+                text-align: left;
+                div {
+                  font-size: 14px;
+                  color: #fff;
+                  margin-bottom: 8px;
+                }
+                div:last-of-type {
+                  margin-bottom: 0;
+                }
+              }
+            }
+          }
+          .noMsg {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            img {
+              width: 80px;
+            }
+            p {
+              font-size: 14px;
+              color: #fff;
+              margin-top: 10px;
+              position: static;
+            }
+          }
+        }
+        .table_lists::-webkit-scrollbar {
+          display: none;
+        }
+      }
+    }
+    #myChart2 {
+      top: -35px;
     }
   }
 
