@@ -95,6 +95,7 @@
         cameraList: [],
         cameraList_: [],
         hotelList: [],
+        timer: null
       }
     },
     props: {
@@ -122,6 +123,7 @@
 
       if (!this.roleShow) {
         this.getHotelList();
+        clearInterval(this.timer);
         this.timer = setInterval(() => {
           this.getHotelList();
         },60000);
