@@ -35,8 +35,8 @@
               <el-col :xs="12" :sm="8" :md="6" :lg="6" :xl="6"  class="list" v-for="(item,index) in cameraList" v-bind:key="index">
                 <div class="grid-content bg-purple">
                   <div class="img">
-                    <img src="../../assets/index/canmera.png" alt="" v-if="item.cameraStatus == 1">
-                    <img src="../../assets/index/canmera_.png" alt="" v-else>
+                    <img src="../../assets/index/Group1.png" alt="" v-if="item.cameraStatus == 1">
+                    <img src="../../assets/index/Group.png" alt="" v-else>
                   </div>
                   <div class="list_content">
                     <p><span>类型：</span><span>{{item.cameraType == 'IN' ? '入口' : '出口'}}</span></p>
