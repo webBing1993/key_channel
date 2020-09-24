@@ -37,7 +37,7 @@
           </el-row>
         </el-header>
         <el-container>
-          <router-view  :handleIndex="handleIndex"></router-view>
+          <router-view  :handleIndex="handleIndex_" v-if="showTemplate"></router-view>
         </el-container>
       </el-container>
     </div>
@@ -74,9 +74,11 @@
     name: 'keyChannel',
     data () {
       return {
+        showTemplate: true,
         roleShow: sessionStorage.roleId != '' ? true : false,  // 判断权限
         myName: '',
         handleIndex: 1,
+        handleIndex_: 1,
         handerImg: {
           img: [require('../../assets/index/topweixuan.png'),require('../../assets/index/topxuanzhong.png')],
         },
@@ -117,12 +119,14 @@
       // 退出事件
       logout () {
         sessionStorage.removeItem('tab');
+        sessionStorage.removeItem('handleIndex');
 //        this.replaceto('/');
         window.location.href = localStorage.getItem('windowUrl_');
       },
 
       // tab点击事件
       handleClick(tab) {
+//        this.showTemplate = false;
         if (tab == 1) {
           this.replaceto('keyChannel')
 //          this.replaceto('home')
@@ -133,6 +137,10 @@
         }
         sessionStorage.setItem('handleIndex', tab);
         this.handleIndex = tab;
+        console.log('tab', tab, new Date().getTime());
+//        this.$set('handleIndex_', tab);
+//        this.handleIndex_+=1;
+        this.handleIndex_ = tab + '&' + new Date().getTime();
       },
 
       // 获取酒店通知者

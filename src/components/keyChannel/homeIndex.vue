@@ -530,16 +530,20 @@
         strangerTab: 1,      // 左边tab切换
         timer: null,
         loading: null,
-        handleIndex: 1,
+        handleIndex_: 1,
         selectLists: [],      // 位置筛选lists
         locationTab: 1,       // 位置筛选选择
       }
     },
     watch: {
-      handleIndex: function (val) {
-        this.handleIndex = val;
-        console.log(val);   // 接收父组件的值
-        this.websock.close();
+      handleIndex: {
+        handler: function (val, oldVal) {
+        this.handleIndex_ = val.split('&')[0];
+          console.log(111333, val, oldVal);   // 接收父组件的值
+          this.websock.close();
+          clearInterval(this.timer);
+        },
+//        deep: true
       }
     },
     beforeMount () {
@@ -687,7 +691,7 @@
             this.getLists(0,'VISITOR',4,18,'');
           }
           this.indistinctList = [];
-          this.strangerNum = [];
+          this.strangerList = [];
           this.getLists(0,'SUSPICIOUS_GUEST',5,500,'SUSPICIOUS_GUEST');
           this.totalList();
         }
@@ -959,8 +963,9 @@
       websocketclose(e){  //关闭通道
         console.log("关闭通道connection closed (" + e.code + ")");
         this.websock.close();
+        clearInterval(this.timer);
         setTimeout(() => {
-          if (this.handleIndex == 1) {
+          if (this.handleIndex_ == 1) {
             this.initWebSocket();
           }
         },3000);
@@ -968,8 +973,9 @@
       websocketerror(e){  //通道异常
         console.log("通道异常connection closed (" + e.code + ")");
         this.websock.close();
+        clearInterval(this.timer);
         setTimeout(() => {
-            if (this.handleIndex == 1) {
+            if (this.handleIndex_ == 1) {
               this.initWebSocket();
             }
         },3000);
@@ -982,6 +988,7 @@
       },
       beforeDestroy:function(){
         this.websock.close();
+        clearInterval(this.timer);
       }
     },
   }
