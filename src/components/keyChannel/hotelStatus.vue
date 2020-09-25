@@ -207,7 +207,7 @@
             margin-right: 10px;
           }
           .blue {
-            background-color: blue;
+            background-color: #1AAD19;
           }
           .yellow {
             background-color: yellow;
