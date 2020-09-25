@@ -587,7 +587,7 @@
           display: inline-block;
         }
         .blueColor {
-          background-color: blue;
+          background-color: #1AAD19;
         }
         .redColor {
           background-color: red;
@@ -609,7 +609,7 @@
             display: flex;
             align-items: center;
             span {
-              color: #3798FC;
+              color: #1AAD19;
               font-size: 14px;
             }
             .statusRed {

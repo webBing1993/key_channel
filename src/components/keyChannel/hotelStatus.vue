@@ -89,6 +89,10 @@
         'getHotel','hotelCamera'
       ]),
 
+      watchTest() {
+        console.log(222123456789);
+      },
+
       // 分页
       handleSizeChange (val) {
 

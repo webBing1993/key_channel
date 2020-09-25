@@ -538,7 +538,7 @@
     watch: {
       handleIndex: {
         handler: function (val, oldVal) {
-        this.handleIndex_ = val.split('&')[0];
+          this.handleIndex_ = val.split('&')[0];
           console.log(111333, val, oldVal);   // 接收父组件的值
           this.websock.close();
           clearInterval(this.timer);
@@ -558,6 +558,7 @@
       });
       this.locations();
       clearInterval(this.timer);
+      console.log('this.websock', this.websock);
       if (this.websock) {
         this.websock.close();
       }else {
@@ -583,6 +584,13 @@
       ...mapActions([
         'getDoubtfulList','totalGuest','hasChecked', 'getLocations'
       ]),
+
+      watchTest() {
+          console.log(123456789);
+          this.handleIndex_ = 1;
+          this.websock.close();
+          clearInterval(this.timer);
+      },
 
       // 打开大图效果
       bigImgShow: function(url) {
@@ -964,18 +972,19 @@
         console.log("关闭通道connection closed (" + e.code + ")");
         this.websock.close();
         clearInterval(this.timer);
-        setTimeout(() => {
-          if (this.handleIndex_ == 1) {
-            this.initWebSocket();
-          }
-        },3000);
+        console.log(window.location.href.split('#/')[1]);
+//        setTimeout(() => {
+//          if (this.handleIndex_ == 1 && window.location.href.split('#/')[1] == 'keyChannel') {
+//            this.initWebSocket();
+//          }
+//        },3000);
       },
       websocketerror(e){  //通道异常
         console.log("通道异常connection closed (" + e.code + ")");
         this.websock.close();
         clearInterval(this.timer);
         setTimeout(() => {
-            if (this.handleIndex_ == 1) {
+            if (this.handleIndex_ == 1 && window.location.href.split('#/')[1] == 'keyChannel') {
               this.initWebSocket();
             }
         },3000);

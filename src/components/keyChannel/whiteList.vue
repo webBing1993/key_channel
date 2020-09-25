@@ -127,6 +127,11 @@
         'delWhiteItem',
         'uploadBmd'
       ]),
+
+      watchTest() {
+        console.log(111123456789);
+      },
+
       getWhite (page) {
         page = page * 30;
         this.whiteList = [];

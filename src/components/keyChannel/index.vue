@@ -37,7 +37,7 @@
           </el-row>
         </el-header>
         <el-container>
-          <router-view  :handleIndex="handleIndex_" v-if="showTemplate"></router-view>
+          <router-view  :handleIndex="handleIndex_" v-if="showTemplate" ref="square"></router-view>
         </el-container>
       </el-container>
     </div>
@@ -127,6 +127,7 @@
       // tab点击事件
       handleClick(tab) {
 //        this.showTemplate = false;
+        this.$refs.square.watchTest();
         if (tab == 1) {
           this.replaceto('keyChannel')
 //          this.replaceto('home')
