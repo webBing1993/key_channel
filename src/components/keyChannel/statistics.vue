@@ -40,8 +40,8 @@
                     <span class="location">{{ item.cameraType == 'IN' ? '入口' : '出口' }}</span>
                   </div>
                   <div class="list_r">
-                    <div>序列号：{{ item.id }}</div>
                     <div>IP：{{ item.ipAddress }}</div>
+                    <div>摄像头地址：{{ item.location ? item.location : '-' }}</div>
                     <div>最近上报：{{ datetimeparse(item.createTime, 'MM/dd hh/mm') }}</div>
                   </div>
                 </div>

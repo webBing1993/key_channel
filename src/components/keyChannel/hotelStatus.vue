@@ -43,6 +43,7 @@
                     <p><span>状态：</span><span :class="item.cameraStatus == 1 ? 'blue' : 'red'"></span></p>
                     <p><span>序列号：</span><span>{{item.id}}</span></p>
                     <p><span>IP地址：</span><span>{{item.ipAddress}}</span></p>
+                    <p><span>摄像头地址：</span><span>{{item.location ? item.location : '-'}}</span></p>
                     <p><span>上次下载时间：</span><span>{{datetimeparse(item.lastDownLoadTime, 'yy/MM/dd hh/mm/ss')}}</span></p>
                     <p><span>上次登录时间：</span><span>{{datetimeparse(item.lastLoginTime, 'yy/MM/dd hh/mm/ss')}}</span></p>
                     <p><span>本次上报时间：</span><span>{{datetimeparse(item.createTime, 'yy/MM/dd hh/mm/ss')}}</span></p>
