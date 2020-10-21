@@ -16,13 +16,13 @@
             <div class="phone">
               <div class="list">
                 <i><img src="../assets/index/shoujihao.png" alt=""></i>
-                <input name="phone" type="number" maxlength="11" placeholder="请输入11位手机号" v-model="phone"/>
+                <input name="phone" type="number" maxlength="11" placeholder="请输入11位手机号" v-model="phone" autocomplete="off"/>
               </div>
             </div>
             <div class="code">
               <div class="list">
                 <i><img src="../assets/index/mima.png" alt=""></i>
-                <input type="password" maxlength="16" placeholder="请输入密码" v-model="code"/>
+                <input type="password" maxlength="16" placeholder="请输入密码" v-model="code" autocomplete="off"/>
               </div>
             </div>
             <div class="tig">
@@ -93,8 +93,8 @@ export default {
     offsetWidthHeight() {
         console.log(this.$refs.container_bg.offsetWidth);
       this.$nextTick(() => {
-        this.$refs.container.style.width = this.$refs.container_bg.offsetWidth+'px';
-        this.$refs.container.style.height = this.$refs.container_bg.offsetHeight+'px';
+        this.$refs.container.style.width = (this.$refs.container_bg.offsetWidth == 0 ? 534 : this.$refs.container_bg.offsetWidth)+'px';
+        this.$refs.container.style.height = (this.$refs.container_bg.offsetHeight == 0 ? 512 : this.$refs.container_bg.offsetHeight)+'px';
       });
     },
 
@@ -296,6 +296,8 @@ export default {
       transform: translate(-50%, -50%);
       z-index: 10;
       .container {
+        width: 534px;
+        height: 512px;
         .inner_container {
           display: block;
           padding: 25px 30px;
@@ -339,8 +341,12 @@ export default {
               border: none;
               font-size: 16px;
               line-height: 30px;
-              background-color: transparent;
+              background-color: transparent !important;
+              -webkit-text-fill-color: #fff;
               color: #fff;
+            }
+            input:-webkit-autofill {
+              box-shadow: 0 0 0px 1000px white inset !important;
             }
             input:-moz-placeholder {
               color: #fff;
