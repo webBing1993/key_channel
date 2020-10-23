@@ -36,7 +36,7 @@
               <div class="lists" v-if="cameraList.length != 0">
                 <div class="list" v-for="item in cameraList">
                   <div class="list_l">
-                    <img :src="hotelList[0].processStatus == 0 ? require('../../assets/index/Group.png') : item.cameraStatus == 1 ? require('../../assets/index/Group1.png') : require('../../assets/index/Group.png')" alt="">
+                    <img :src="item.cameraStatus == 1 ? require('../../assets/index/Group1.png') : require('../../assets/index/Group.png')" alt="">
                     <span class="location">{{ item.cameraType == 'IN' ? '入口' : '出口' }}</span>
                   </div>
                   <div class="list_r">

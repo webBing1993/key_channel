@@ -346,7 +346,13 @@ export default {
               color: #fff;
             }
             input:-webkit-autofill {
-              box-shadow: 0 0 0px 1000px white inset !important;
+              box-shadow: 0 0 0px 1000px #113973 inset !important;
+              -webkit-text-fill-color: #ffffff !important;/*浏览器记住密码的字的颜色*/
+              transition: background-color 5000s ease-in-out 0s;/*通过延时渲染背景色变相去除背景颜色*/
+              caret-color: #acfff2;/*光标颜色*/
+            }
+            input:-webkit-autofill:focus {
+              -webkit-text-fill-color: #fff !important;
             }
             input:-moz-placeholder {
               color: #fff;
