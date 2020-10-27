@@ -29,7 +29,16 @@
                   <div class="name_logout">
                     <img src="../../assets/index/diwen.png" alt="">
                     <span class="name"><img src="../../assets/index/geren.png" alt=""><span>欢迎您，{{myName}}</span></span>
-                    <span class="logout" @click="logout">退出</span>
+                    <!--<span class="logout" @click="logout">退出</span>-->
+                    <el-dropdown class="logout">
+                      <span class="el-dropdown-link">
+                        <img src="../../assets/index/dropdown.png" alt="">
+                      </span>
+                      <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item icon="el-icon-s-unfold"  @click.native="changeRoute">切换系统</el-dropdown-item>
+                        <el-dropdown-item icon="el-icon-switch-button" @click.native="logout">退出登录</el-dropdown-item>
+                      </el-dropdown-menu>
+                    </el-dropdown>
                   </div>
                 </el-col>
               </el-row>
@@ -115,6 +124,12 @@
       ...mapActions([
         'replaceto', 'notifier', 'geNotifiertCode', 'updateNotifier'
       ]),
+
+      // 切换系统
+      changeRoute() {
+//        window.open('http://hha.fortrun.cn:8006/smartdab/#/login', '_self');
+        window.open('http://hotel.q.fortrun.cn/#', '_self');
+      },
 
       // 退出事件
       logout () {
@@ -390,6 +405,11 @@
             color: #fff;
             padding: 0 30px;
             cursor: pointer;
+            .el-dropdown-link {
+              img {
+                width: 24px;
+              }
+            }
           }
         }
         .name_logout>img {
@@ -451,6 +471,11 @@
         width: 60%;
       }
     }
+  }
+
+  /deep/ .el-dropdown-menu__item {
+    display: block;
+    font-size: 18px;
   }
 
 </style>
