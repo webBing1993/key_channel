@@ -63,7 +63,7 @@
                   <div class="tabs">
                     <el-row>
                       <el-col :span="4"  :class="tab1 ? 'active tab' : 'tab'" @click.native="tabClick(0)">
-                        <span>今日抓拍</span><span>({{total1}})</span>
+                        <span>今日处理</span><span>({{total1}})</span>
                       </el-col>
                       <el-col :span="1" style="height: 100%"></el-col>
                       <el-col :span="4"  :class="tab2 ? 'active tab' : 'tab'" @click.native="tabClick(1)">

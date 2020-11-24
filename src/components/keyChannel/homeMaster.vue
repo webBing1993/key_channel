@@ -111,7 +111,7 @@
                       <div class="tabs">
                         <el-row>
                           <el-col :span="4"  :class="tab1 ? 'active tab' : 'tab'" @click.native="tabClick(0)">
-                            <span>今日抓拍</span><span>({{total1}})</span>
+                            <span>今日处理</span><span>({{total1}})</span>
                           </el-col>
                           <el-col :span="1" style="height: 100%"></el-col>
                           <el-col :span="4"  :class="tab2 ? 'active tab' : 'tab'" @click.native="tabClick(1)">
@@ -123,11 +123,11 @@
                           </el-col>
                           <el-col :span="1" style="height: 100%"></el-col>
                           <el-col :span="4"  :class="tab4 ? 'active tab' : 'tab'" @click.native="tabClick(3)">
-                            <span>黑名单人员</span><span>({{total4}})</span>
+                            <span>黑名单</span><span>({{total4}})</span>
                           </el-col>
                           <el-col :span="1" style="height: 100%"></el-col>
                           <el-col :span="4"  :class="tab5 ? 'active tab' : 'tab'" @click.native="tabClick(4)">
-                            <span>灰名单人员</span><span>({{total5}})</span>
+                            <span>灰名单</span><span>({{total5}})</span>
                           </el-col>
                         </el-row>
                       </div>

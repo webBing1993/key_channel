@@ -27,7 +27,7 @@
                 </div>
               </div>
               <div class="content">
-                <p>工作人员</p>
+                <p>{{ tabIndex == 1 ? '灰名单人员' : '黑名单人员' }}</p>
                 <div class="name"><span>姓名：</span>{{item.name}}</div>
                 <div class="name"><span>类型：</span>{{ tabIndex == 1 ? '灰名单' : '黑名单' }}</div>
                 <div class="remove" @click="remove(item)"><img src="../../assets/index/shanchu.png" alt=""></div>
