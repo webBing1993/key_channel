@@ -388,6 +388,41 @@ const actions = {
     })
   },
 
+  // 获取灰、黑名单列表
+  getBlackList(ctx, param){
+    ctx.dispatch('resource_', {
+      url: '/keychannel/blacklist?limit='+param.limit+'&offset='+param.offset,
+      method: 'POST',
+      body: param.data,
+      onSuccess: (body,headers) => {
+        param.onsuccess ? param.onsuccess(body,headers) : null
+      }
+    })
+  },
+
+  // 添加灰、黑名单
+  addBlack(ctx, param){
+    ctx.dispatch('resource_', {
+      url: '/keychannel/blacklist/add',
+      method: 'POST',
+      body: param.data,
+      onSuccess: body => {
+        param.onsuccess ? param.onsuccess (body) : null
+      }
+    })
+  },
+
+  // 删除黑、灰名单
+  delBlackItem(ctx, param){
+    ctx.dispatch('resource_', {
+      url: '/keychannel/blacklist/delete/'+param.id,
+      method: 'DELETE',
+      onSuccess: body => {
+        param.onsuccess ? param.onsuccess(body) : null
+      }
+    })
+  },
+
   // 获取图表数据
   illegalGuest(ctx, param){
     ctx.dispatch('resourceLoading_', {

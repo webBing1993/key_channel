@@ -203,11 +203,21 @@ export default {
                 sessionStorage.hotelId = body.data.data.hotelId;
                 sessionStorage.manage = body.data.data.manage;
                 sessionStorage.roleId = body.data.data.role;
-                if (body.data.data.role == '') {
-                  this.goto('/keyChannel');
+                sessionStorage.newSys = body.data.data.newSys;
+                if (body.data.data.newSys) {
+                  if (body.data.data.role == '') {
+                    this.goto('/homeMasterIndex');
+                  }else {
+                    this.goto('/homeMaster');
+                  }
                 }else {
-                  this.goto('/keyChannel/home');
+                  if (body.data.data.role == '') {
+                    this.goto('/keyChannel');
+                  }else {
+                    this.goto('/keyChannel/home');
+                  }
                 }
+//                this.goto('/homeMaster');
 //                this.goto('/keyChannel');
               }else {
                 this.$message.error(body.data.msg);

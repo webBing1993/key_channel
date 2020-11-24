@@ -27,8 +27,22 @@ export default new Router({
           component: resolve => require(['../components/keyChannel/home.vue'],resolve),
         },
         {
+          path: '/homeMasterIndex',
+          name: 'homeMasterIndex',
+          component: resolve => require(['../components/keyChannel/homeMasterIndex.vue'],resolve),
+        },
+        {
+          path: '/homeMaster',
+          name: 'homeMaster',
+          component: resolve => require(['../components/keyChannel/homeMaster.vue'],resolve),
+        },
+        {
           path: '/whiteList',
           component: resolve => require(['../components/keyChannel/whiteList.vue'],resolve),
+        },
+        {
+          path: '/blackList',
+          component: resolve => require(['../components/keyChannel/blackList.vue'],resolve),
         },
         {
           path: '/hotelStatus',
@@ -40,6 +54,11 @@ export default new Router({
       path: '/statistics',
       name: '/statistics',
       component: resolve => require(['../components/keyChannel/statistics.vue'],resolve),
+    },
+    {
+      path: '/statisticsMaster',
+      name: '/statisticsMaster',
+      component: resolve => require(['../components/keyChannel/statisticsMaster.vue'],resolve),
     },
     {
       path: '/passwordUpdate',

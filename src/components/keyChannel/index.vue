@@ -6,13 +6,22 @@
           <el-row class="headerTab">
             <el-col :span="12" class="headerTabL">
               <img src="../../assets/index/logo.png" alt="">
-              <div class="tabs" v-if="roleShow">
+              <div class="tabs" v-if="!newSys && roleShow">
                 <span class="active"><img :src="handerImg.img[1]" alt="">首页</span>
               </div>
-              <div class="tabs" v-else>
+              <div class="tabs" v-else-if="!newSys && !roleShow">
                 <span :class="handleIndex == 1 ? 'active' : ''" @click="handleClick(1)"><img :src="handleIndex == 1 ? handerImg.img[1] : handerImg.img[0]" alt="">首页</span>
                 <span :class="handleIndex == 2 ? 'active' : ''" @click="handleClick(2)"><img :src="handleIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">设置</span>
                 <span :class="handleIndex == 3 ? 'active' : ''" @click="handleClick(3)" v-if="massage"><img :src="handleIndex == 3 ? handerImg.img[1] : handerImg.img[0]" alt="" >设备监控</span>
+              </div>
+              <div class="tabs" v-if="newSys && roleShow">
+                <span :class="handleIndex == 1 ? 'active' : ''" @click="handleClick(4)"><img :src="handleIndex == 1 ? handerImg.img[1] : handerImg.img[0]" alt="">首页</span>
+                <span :class="handleIndex == 2 ? 'active' : ''" @click="handleClick(5)"><img :src="handleIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">设置</span>
+              </div>
+              <div class="tabs" v-else-if="newSys && !roleShow">
+                <span :class="handleIndex == 1 ? 'active' : ''" @click="handleClick(6)"><img :src="handleIndex == 1 ? handerImg.img[1] : handerImg.img[0]" alt="">首页</span>
+                <span :class="handleIndex == 2 ? 'active' : ''" @click="handleClick(7)"><img :src="handleIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">设置</span>
+                <span :class="handleIndex == 3 ? 'active' : ''" @click="handleClick(8)" v-if="massage"><img :src="handleIndex == 3 ? handerImg.img[1] : handerImg.img[0]" alt="" >设备监控</span>
               </div>
             </el-col>
             <el-col :span="12">
@@ -35,7 +44,7 @@
                         <img src="../../assets/index/dropdown.png" alt="">
                       </span>
                       <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item icon="el-icon-s-unfold"  @click.native="changeRoute">切换系统</el-dropdown-item>
+                        <el-dropdown-item icon="el-icon-s-unfold" v-if="!newSys"  @click.native="changeRoute">切换系统</el-dropdown-item>
                         <el-dropdown-item icon="el-icon-switch-button" @click.native="logout">退出登录</el-dropdown-item>
                       </el-dropdown-menu>
                     </el-dropdown>
@@ -84,6 +93,7 @@
     data () {
       return {
         showTemplate: true,
+        newSys: sessionStorage.newSys == 'true' ? true : false,  // 判断是否是幼儿园相关
         roleShow: sessionStorage.roleId != '' ? true : false,  // 判断权限
         myName: '',
         handleIndex: 1,
@@ -135,6 +145,7 @@
       logout () {
         sessionStorage.removeItem('tab');
         sessionStorage.removeItem('handleIndex');
+        this.$refs.square.watchTest();
 //        this.replaceto('/');
         window.location.href = localStorage.getItem('windowUrl_');
       },
@@ -143,20 +154,34 @@
       handleClick(tab) {
 //        this.showTemplate = false;
         this.$refs.square.watchTest();
+        let t = tab;
         if (tab == 1) {
           this.replaceto('keyChannel')
+//          this.replaceto('homeMasterIndex')
 //          this.replaceto('home')
-        }else if(tab == 2) {
-          this.replaceto('whiteList')
-        }else {
+          t = 1;
+        }else if(tab == 2 || tab == 7) {
+          this.replaceto('whiteList');
+          t = 2;
+        }else if (tab == 3 || tab == 8) {
           this.replaceto('hotelStatus');
+          t = 3;
+        }else if (tab == 4) {
+          this.replaceto('homeMaster');
+          t = 1;
+        }else if (tab == 5) {
+          this.replaceto('blackList');
+          t = 2;
+        }else if (tab == 6) {
+          this.replaceto('homeMasterIndex');
+          t = 1;
         }
-        sessionStorage.setItem('handleIndex', tab);
-        this.handleIndex = tab;
+        sessionStorage.setItem('handleIndex', t);
+        this.handleIndex = t;
         console.log('tab', tab, new Date().getTime());
 //        this.$set('handleIndex_', tab);
 //        this.handleIndex_+=1;
-        this.handleIndex_ = tab + '&' + new Date().getTime();
+        this.handleIndex_ = t + '&' + new Date().getTime();
       },
 
       // 获取酒店通知者

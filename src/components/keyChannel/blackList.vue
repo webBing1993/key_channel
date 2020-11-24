@@ -1,11 +1,14 @@
-<!-- 白名单-->
+<!-- 黑名单/灰名单-->
 <template>
   <div>
     <div class="whiteList" v-show="showTrue">
-      <div class="bg"><img src="../../assets/index/baimingdan.png" alt=""></div>
-      <div class="whiteContent">
+      <div class="bg" ref="bgHeight"><img src="../../assets/index/black.png" alt=""></div>
+      <div class="whiteContent" ref="whiteHeight">
         <div class="white_title">
-          白名单
+          <div class="tabs">
+            <span :class="tabIndex == 1 ? 'active' : ''" @click="tabIndexClick(1)"><img :src="tabIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">灰名单</span>
+            <span :class="tabIndex == 2 ? 'active' : ''" @click="tabIndexClick(2)"><img :src="tabIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">黑名单</span>
+          </div>
         </div>
         <div class="search_add">
           <div class="add" @click="add"><img src="../../assets/index/tianjia.png" alt=""></div>
@@ -20,13 +23,13 @@
             <el-col :span="6"  v-for="item in whiteList" v-bind:key="item.id">
               <div class="grid-content">
                 <div class="img">
-                  <img :src="item.img_url" alt=""  @click="bigImgShow(item.img_url)">
+                  <img :src="item.imgUrl" alt=""  @click="bigImgShow(item.imgUrl)">
                 </div>
               </div>
               <div class="content">
                 <p>工作人员</p>
                 <div class="name"><span>姓名：</span>{{item.name}}</div>
-                <div class="name"><span>类型：</span>白名单</div>
+                <div class="name"><span>类型：</span>{{ tabIndex == 1 ? '灰名单' : '黑名单' }}</div>
                 <div class="remove" @click="remove(item)"><img src="../../assets/index/shanchu.png" alt=""></div>
               </div>
             </el-col>
@@ -50,7 +53,7 @@
           <div class="shadow"></div>
           <div class="add_content">
             <div class="add_title">
-              <span>添加白名单</span>
+              <span>添加{{ tabIndex == 1 ? '灰名单' : '黑名单' }}</span>
               <i @click="cancel"><img src="../../assets/index/guanbi.png" alt=""></i>
             </div>
             <div class="add_list">
@@ -60,12 +63,12 @@
                   <input type="text" v-model="add_name" placeholder="请输入姓名">
                 </div>
               </div>
-              <div class="list">
-                <div class="name">白名单类型</div>
-                <div class="add_input">
-                  <input type="text" value="工作人员" readonly>
-                </div>
-              </div>
+              <!--<div class="list">-->
+                <!--<div class="name">{{ tabIndex == 1 ? '灰名单' : '黑名单' }}类型</div>-->
+                <!--<div class="add_input">-->
+                  <!--<input type="text" value="工作人员" readonly>-->
+                <!--</div>-->
+              <!--</div>-->
               <div class="list">
                 <div class="name">添加照片</div>
                 <div class="add_input">
@@ -115,6 +118,10 @@
         addShow: false,
         bigImgSrc: "",
         maskBtn:false,         // 控制大图
+        tabIndex: 1,           // 灰名单、黑名单
+        handerImg: {
+          img: [require('../../assets/index/topweixuan.png'),require('../../assets/index/topxuanzhong.png')],
+        },
       }
     },
     mounted () {
@@ -124,10 +131,17 @@
 
       ...mapActions([
         'goto',
-        'getWhiteList',
-        'delWhiteItem',
-        'uploadBmd'
+        'getBlackList',
+        'delBlackItem',
+        'addBlack'
       ]),
+
+      // tab click
+      tabIndexClick(index) {
+        this.tabIndex = index;
+        this.currentPage = 1;
+        this.getWhite(0);
+      },
 
       watchTest() {
         console.log(111123456789);
@@ -136,19 +150,20 @@
       getWhite (page) {
         page = page * 30;
         this.whiteList = [];
-        this.getWhiteList ({
+        this.getBlackList ({
           offset: page,
           limit: 30,
           data:{
-            likeName: this.name,
-            createTimeStart:'',
-            createTimeEnd:'',
-            removed:false
+            name: this.name,
+            identityType: this.tabIndex == 1 ? 'GRAY' : 'BLACK'
           },
           onsuccess: body => {
             this.showTrue = true;
             this.total = parseInt(body.headers['x-total-count']);
             this.whiteList = [...body.data.data];
+            this.$nextTick(() => {
+                this.$refs.bgHeight.style.height = this.$refs.whiteHeight.offsetHeight + 'px';
+            })
           }
         })
       },
@@ -160,10 +175,8 @@
           cancelButtonText: '取消',
           type: 'warning',
         }).then(() => {
-          this.delWhiteItem({
-            data:{
-              ids: [item.id]
-            },
+          this.delBlackItem({
+            id: item.id,
             onsuccess:body=>{
               this.$emit('getMessage', '');
               this.$message({
@@ -225,17 +238,31 @@
         if(this.add_name == '' || this.imageUrl == ''){
           return
         }else {
-          this.uploadBmd({
+          this.addBlack({
             data:{
-              image_url: this.imageUrl,
-              name: this.add_name
+              imgUrl: this.imageUrl,
+              name: this.add_name,
+              identityType: this.tabIndex == 1 ? 'GRAY' : 'BLACK'
             },
-            onsuccess:()=>{
-              this.$emit('getMessage', '');
-              this.addShow = false;
-              this.add_name = '';
-              this.imageUrl = '';
-              this.getWhite(0);
+            onsuccess: body =>{
+                if (body.data.errcode == 0) {
+                  if (body.data.data) {
+                    this.$message({
+                      type: 'success',
+                      message: '添加成功'
+                    });
+                    this.$emit('getMessage', '');
+                    this.addShow = false;
+                    this.add_name = '';
+                    this.imageUrl = '';
+                    this.getWhite(0);
+                  }else {
+                    this.$message({
+                      type: 'error',
+                      message: '添加失败'
+                    });
+                  }
+                }
             }
           })
         }
@@ -282,7 +309,7 @@
 <style scoped lang="less">
 
   .whiteList {
-    width: calc(100vw - 60px);
+    width: calc(100vw - 80px);
     margin: 15px 15px 0;
     padding: 15px;
     position: relative;
@@ -292,7 +319,7 @@
       left: 0;
       top: 0;
       width: 100%;
-      height: calc(100vh - 60px);
+      min-height: calc(100vh - 88px);
       img {
         display: block;
         width: 100%;
@@ -305,16 +332,45 @@
       left: 0;
       top: 0;
       width: 100%;
-      height: calc(100vh - 60px);
+      min-height: calc(100vh - 88px);
     }
     .white_title {
       padding: 5px 10px;
       text-align: left;
+      height: 50px;
       font-size: 14px;
       color: #fff;
+      .tabs {
+        position: absolute;
+        left: 10px;
+        top: 15px;
+        span {
+          position: relative;
+          margin-right: 8px;
+          color: #3798FC;
+          font-size: 14px;
+          text-align: center;
+          line-height: 30px;
+          display: inline-block;
+          width: 66px;
+          cursor: pointer;
+          img {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 30px;
+            display: inline-block;
+            width: 66px;
+            z-index: -1;
+          }
+        }
+        span.active {
+          color: #fff;
+        }
+      }
     }
     .search_add {
-      margin: 30px 0;
+      margin: 20px 0 30px;
       display: flex;
       justify-content: flex-start;
       padding: 0 10px;

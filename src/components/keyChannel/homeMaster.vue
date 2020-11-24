@@ -43,16 +43,27 @@
             <el-aside>
               <div class="bg"><img src="../../assets/index/zuo.png" alt="" ></div>
               <div class="stranger_title">
-                <div :class="strangerTab == 1 ? 'active stranger_tab' : 'stranger_tab'" @click="strangerTabClick(1)">
-                  <img src="../../assets/index/zuoxuanzhong.png" alt="" v-if="strangerTab == 1">
-                  <img src="../../assets/index/zuoweixuan.png" alt="" v-else>
-                  陌生人(未处理)
+                <div class="stranger_tab">
+                  <div class="tabTitle">类型筛选</div>
+                  <el-select v-model="strangerValue" @change="strangerSelect" placeholder="请选择">
+                    <el-option
+                      v-for="item in strangerTabs"
+                      :key="item.id"
+                      :label="item.name"
+                      :value="item.id">
+                    </el-option>
+                  </el-select>
                 </div>
-                <div :class="strangerTab == 2 ? 'active stranger_tab' : 'stranger_tab'" @click="strangerTabClick(2)">
-                  <img src="../../assets/index/zuoxuanzhong.png" alt="" v-if="strangerTab == 2">
-                  <img src="../../assets/index/zuoweixuan.png" alt="" v-else>
-                  模糊抓拍
-                </div>
+                <!--<div :class="strangerTab == 1 ? 'active stranger_tab' : 'stranger_tab'" @click="strangerTabClick(1)">-->
+                  <!--<img src="../../assets/index/zuoxuanzhong.png" alt="" v-if="strangerTab == 1">-->
+                  <!--<img src="../../assets/index/zuoweixuan.png" alt="" v-else>-->
+                  <!--陌生人(未处理)-->
+                <!--</div>-->
+                <!--<div :class="strangerTab == 2 ? 'active stranger_tab' : 'stranger_tab'" @click="strangerTabClick(2)">-->
+                  <!--<img src="../../assets/index/zuoxuanzhong.png" alt="" v-if="strangerTab == 2">-->
+                  <!--<img src="../../assets/index/zuoweixuan.png" alt="" v-else>-->
+                  <!--模糊抓拍-->
+                <!--</div>-->
               </div>
               <div class="stranger_list" v-if="strangerTab == 1">
                 <div class="list" v-for="(item,index) in strangerList" :key="index">
@@ -62,7 +73,7 @@
                   <div class="list_content">
                     <p><span>时间：</span><span>{{dateDiff(item.filming_time)}} ({{datetimeparse(item.filming_time,'hh:mm:ss')}})</span></p>
                     <p><span>地点：</span><span>{{item.hotelName}}{{item.location ? item.location : '-'}}</span></p>
-                    <p><span>来源：</span><span>-</span></p>
+                    <p><span>来源：</span><span>{{ item.guestType == 'STAFF' ? '工作人员库' : item.guestType == 'GRAY' ? '灰名单人员库' : item.guestType == 'BLACK' ? '黑名单人员库' : '-' }}</span></p>
                     <!--<div class="handle" @click="handelBtn(item.illegal_guest_id,1)"><img src="../../assets/index/chuli.png" alt=""></div>-->
                     <el-button type="primary" class="handle" :loading="item.handleLoading"  @click="handelBtn(item,1)" :style="handleBg"></el-button>
                   </div>
@@ -78,9 +89,9 @@
                     <img :src="item.facial_pic" alt="" @click="bigImgShow(item.facial_pic)">
                   </div>
                   <div class="list_content">
-                    <p><span>时间：</span><span>{{dateDiff(item.filming_time)}} ({{datetimeparse(item.filming_time,'hh:mm:ss')}})</span></p>
+                    <p><span>时间：</span><span>{{datetimeparse(item.filming_time,'MM-DD hh:mm:ss')}}</span></p>
                     <p><span>地点：</span><span>{{item.hotelName}}{{item.location ? item.location : '-'}}</span></p>
-                    <p><span>来源：</span><span>-</span></p>
+                    <p><span>来源：</span><span>{{ item.guestType == 'STAFF' ? '工作人员库' : item.guestType == 'GRAY' ? '灰名单人员库' : item.guestType == 'BLACK' ? '黑名单人员库' : '-' }}</span></p>
                     <el-button type="primary" class="handle" :loading="item.handleLoading"  @click="handelBtn(item,2)"  :style="handleBg"></el-button>
                   </div>
                 </div>
@@ -112,11 +123,11 @@
                           </el-col>
                           <el-col :span="1" style="height: 100%"></el-col>
                           <el-col :span="4"  :class="tab4 ? 'active tab' : 'tab'" @click.native="tabClick(3)">
-                            <span>在住人</span><span>({{total4}})</span>
+                            <span>黑名单人员</span><span>({{total4}})</span>
                           </el-col>
                           <el-col :span="1" style="height: 100%"></el-col>
                           <el-col :span="4"  :class="tab5 ? 'active tab' : 'tab'" @click.native="tabClick(4)">
-                            <span>访客</span><span>({{total5}})</span>
+                            <span>灰名单人员</span><span>({{total5}})</span>
                           </el-col>
                         </el-row>
                       </div>
@@ -156,10 +167,7 @@
                             <div class="idCacrdImg" v-else><img src="../../assets/index/noMan.png" alt=""  @click="bigImgShow('../../assets/index/noMan.png')"></div>
                           </div>
                           <div class="list_content">
-                            <div class="title" v-if="item.guestType == 'STAFF'">工作人员</div>
-                            <div class="title"  v-else-if="item.guestType == 'GUEST_ID' || item.guestType == 'GUEST_LIVE'">住客</div>
-                            <div class="title"  v-else-if="item.guestType == 'VISITOR'">访客</div>
-                            <div class="title" v-else>陌生人</div>
+                            <div class="title">{{ item.guestType == 'STAFF' ? '工作人员' : item.guestType == 'GRAY' ? '灰名单人员' : item.guestType == 'BLACK' ? '黑名单人员' : '陌生人' }}</div>
                             <div class="content">
                               <p>
                                 <span>时间：</span>
@@ -173,17 +181,13 @@
                                 <span>来源：</span>
                                 <span>工作人员库</span>
                               </p>
-                              <p v-else-if="item.guestType == 'GUEST_ID'">
+                              <p v-else-if="item.guestType == 'GRAY'">
                                 <span>来源：</span>
-                                <span>住客身份库</span>
+                                <span>灰名单人员库</span>
                               </p>
-                              <p v-else-if="item.guestType == 'GUEST_LIVE'">
+                              <p v-else-if="item.guestType == 'BLACK'">
                                 <span>来源：</span>
-                                <span>住客现场库</span>
-                              </p>
-                              <p v-else-if="item.guestType == 'VISITOR'">
-                                <span>来源：</span>
-                                <span>访客库</span>
+                                <span>黑名单人员库</span>
                               </p>
                               <p v-else>
                                 <span>来源：</span>
@@ -192,8 +196,8 @@
                               <p>
                                 <span>类型：</span>
                                 <span v-if="item.guestType == 'STAFF'">工作人员</span>
-                                <span  v-else-if="item.guestType == 'GUEST_ID' || item.guestType == 'GUEST_LIVE'">住客</span>
-                                <span  v-else-if="item.guestType == 'VISITOR'">访客</span>
+                                <span  v-else-if="item.guestType == 'BLACK'">黑名单人员</span>
+                                <span  v-else-if="item.guestType == 'GRAY'">访客</span>
                                 <span v-else>陌生人</span>
                               </p>
                             </div>
@@ -225,10 +229,7 @@
                             <div class="idCacrdImg" v-else><img src="../../assets/index/noMan.png" alt=""  @click="bigImgShow('../../assets/index/noMan.png')"></div>
                           </div>
                           <div class="list_content">
-                            <div class="title" v-if="item.guestType == 'STAFF'">工作人员</div>
-                            <div class="title"  v-else-if="item.guestType == 'GUEST_ID' || item.guestType == 'GUEST_LIVE'">住客</div>
-                            <div class="title"  v-else-if="item.guestType == 'VISITOR'">访客</div>
-                            <div class="title" v-else>陌生人</div>
+                            <div class="title">{{ item.guestType == 'STAFF' ? '工作人员' : item.guestType == 'GRAY' ? '灰名单人员' : item.guestType == 'BLACK' ? '黑名单人员' : '陌生人' }}</div>
                             <div class="content">
                               <p>
                                 <span>时间：</span>
@@ -242,17 +243,13 @@
                                 <span>来源：</span>
                                 <span>工作人员库</span>
                               </p>
-                              <p v-else-if="item.guestType == 'GUEST_ID'">
+                              <p v-else-if="item.guestType == 'GRAY'">
                                 <span>来源：</span>
-                                <span>住客身份库</span>
+                                <span>灰名单人员库</span>
                               </p>
-                              <p v-else-if="item.guestType == 'GUEST_LIVE'">
+                              <p v-else-if="item.guestType == 'BLACK'">
                                 <span>来源：</span>
-                                <span>住客现场库</span>
-                              </p>
-                              <p v-else-if="item.guestType == 'VISITOR'">
-                                <span>来源：</span>
-                                <span>访客库</span>
+                                <span>黑名单人员库</span>
                               </p>
                               <p v-else>
                                 <span>来源：</span>
@@ -261,8 +258,8 @@
                               <p>
                                 <span>类型：</span>
                                 <span v-if="item.guestType == 'STAFF'">工作人员</span>
-                                <span v-else-if="item.guestType == 'GUEST_ID' || item.guestType == 'GUEST_LIVE'">住客</span>
-                                <span v-else-if="item.guestType == 'VISITOR'">访客</span>
+                                <span  v-else-if="item.guestType == 'BLACK'">黑名单人员</span>
+                                <span  v-else-if="item.guestType == 'GRAY'">访客</span>
                                 <span v-else>陌生人</span>
                               </p>
                             </div>
@@ -294,10 +291,7 @@
                             <div class="idCacrdImg" v-else><img src="../../assets/index/noMan.png" alt=""  @click="bigImgShow('../../assets/index/noMan.png')"></div>
                           </div>
                           <div class="list_content">
-                            <div class="title" v-if="item.guestType == 'STAFF'">工作人员</div>
-                            <div class="title" v-else-if="item.guestType == 'GUEST_ID' || item.guestType == 'GUEST_LIVE'">住客</div>
-                            <div class="title"  v-else-if="item.guestType == 'VISITOR'">访客</div>
-                            <div class="title" v-else>陌生人</div>
+                            <div class="title">{{ item.guestType == 'STAFF' ? '工作人员' : item.guestType == 'GRAY' ? '灰名单人员' : item.guestType == 'BLACK' ? '黑名单人员' : '陌生人' }}</div>
                             <div class="content">
                               <p>
                                 <span>时间：</span>
@@ -311,17 +305,13 @@
                                 <span>来源：</span>
                                 <span>工作人员库</span>
                               </p>
-                              <p v-else-if="item.guestType == 'GUEST_ID'">
+                              <p v-else-if="item.guestType == 'GRAY'">
                                 <span>来源：</span>
-                                <span>住客身份库</span>
+                                <span>灰名单人员库</span>
                               </p>
-                              <p v-else-if="item.guestType == 'GUEST_LIVE'">
+                              <p v-else-if="item.guestType == 'BLACK'">
                                 <span>来源：</span>
-                                <span>住客现场库</span>
-                              </p>
-                              <p v-else-if="item.guestType == 'VISITOR'">
-                                <span>来源：</span>
-                                <span>访客库</span>
+                                <span>黑名单人员库</span>
                               </p>
                               <p v-else>
                                 <span>来源：</span>
@@ -330,8 +320,8 @@
                               <p>
                                 <span>类型：</span>
                                 <span v-if="item.guestType == 'STAFF'">工作人员</span>
-                                <span v-else-if="item.guestType == 'GUEST_ID' || item.guestType == 'GUEST_LIVE'">住客</span>
-                                <span v-else-if="item.guestType == 'VISITOR'">访客</span>
+                                <span  v-else-if="item.guestType == 'BLACK'">黑名单人员</span>
+                                <span  v-else-if="item.guestType == 'GRAY'">访客</span>
                                 <span v-else>陌生人</span>
                               </p>
                             </div>
@@ -363,10 +353,7 @@
                             <div class="idCacrdImg" v-else><img src="../../assets/index/noMan.png" alt=""  @click="bigImgShow('../../assets/index/noMan.png')"></div>
                           </div>
                           <div class="list_content">
-                            <div class="title" v-if="item.guestType == 'STAFF'">工作人员</div>
-                            <div class="title" v-else-if="item.guestType == 'GUEST_ID' || item.guestType == 'GUEST_LIVE'">住客</div>
-                            <div class="title"  v-else-if="item.guestType == 'VISITOR'">访客</div>
-                            <div class="title" v-else>陌生人</div>
+                            <div class="title">{{ item.guestType == 'STAFF' ? '工作人员' : item.guestType == 'GRAY' ? '灰名单人员' : item.guestType == 'BLACK' ? '黑名单人员' : '陌生人' }}</div>
                             <div class="content">
                               <p>
                                 <span>时间：</span>
@@ -380,17 +367,13 @@
                                 <span>来源：</span>
                                 <span>工作人员库</span>
                               </p>
-                              <p v-else-if="item.guestType == 'GUEST_ID'">
+                              <p v-else-if="item.guestType == 'GRAY'">
                                 <span>来源：</span>
-                                <span>住客身份库</span>
+                                <span>灰名单人员库</span>
                               </p>
-                              <p v-else-if="item.guestType == 'GUEST_LIVE'">
+                              <p v-else-if="item.guestType == 'BLACK'">
                                 <span>来源：</span>
-                                <span>住客现场库</span>
-                              </p>
-                              <p v-else-if="item.guestType == 'VISITOR'">
-                                <span>来源：</span>
-                                <span>访客库</span>
+                                <span>黑名单人员库</span>
                               </p>
                               <p v-else>
                                 <span>来源：</span>
@@ -399,8 +382,8 @@
                               <p>
                                 <span>类型：</span>
                                 <span v-if="item.guestType == 'STAFF'">工作人员</span>
-                                <span v-else-if="item.guestType == 'GUEST_ID' || item.guestType == 'GUEST_LIVE'">住客</span>
-                                <span v-else-if="item.guestType == 'VISITOR'">访客</span>
+                                <span  v-else-if="item.guestType == 'BLACK'">黑名单人员</span>
+                                <span  v-else-if="item.guestType == 'GRAY'">访客</span>
                                 <span v-else>陌生人</span>
                               </p>
                             </div>
@@ -432,10 +415,7 @@
                             <div class="idCacrdImg" v-else><img src="../../assets/index/noMan.png" alt=""  @click="bigImgShow('../../assets/index/noMan.png')"></div>
                           </div>
                           <div class="list_content">
-                            <div class="title" v-if="item.guestType == 'STAFF'">工作人员</div>
-                            <div class="title" v-else-if="item.guestType == 'GUEST_ID' || item.guestType == 'GUEST_LIVE'">住客</div>
-                            <div class="title"  v-else-if="item.guestType == 'VISITOR'">访客</div>
-                            <div class="title" v-else>陌生人</div>
+                            <div class="title">{{ item.guestType == 'STAFF' ? '工作人员' : item.guestType == 'GRAY' ? '灰名单人员' : item.guestType == 'BLACK' ? '黑名单人员' : '陌生人' }}</div>
                             <div class="content">
                               <p>
                                 <span>时间：</span>
@@ -449,17 +429,13 @@
                                 <span>来源：</span>
                                 <span>工作人员库</span>
                               </p>
-                              <p v-else-if="item.guestType == 'GUEST_ID'">
+                              <p v-else-if="item.guestType == 'GRAY'">
                                 <span>来源：</span>
-                                <span>住客身份库</span>
+                                <span>灰名单人员库</span>
                               </p>
-                              <p v-else-if="item.guestType == 'GUEST_LIVE'">
+                              <p v-else-if="item.guestType == 'BLACK'">
                                 <span>来源：</span>
-                                <span>住客现场库</span>
-                              </p>
-                              <p v-else-if="item.guestType == 'VISITOR'">
-                                <span>来源：</span>
-                                <span>访客库</span>
+                                <span>黑名单人员库</span>
                               </p>
                               <p v-else>
                                 <span>来源：</span>
@@ -468,8 +444,8 @@
                               <p>
                                 <span>类型：</span>
                                 <span v-if="item.guestType == 'STAFF'">工作人员</span>
-                                <span v-else-if="item.guestType == 'GUEST_ID' || item.guestType == 'GUEST_LIVE'">住客</span>
-                                <span v-else-if="item.guestType == 'VISITOR'">访客</span>
+                                <span  v-else-if="item.guestType == 'BLACK'">黑名单人员</span>
+                                <span  v-else-if="item.guestType == 'GRAY'">访客</span>
                                 <span v-else>陌生人</span>
                               </p>
                             </div>
@@ -518,7 +494,7 @@
 
   import {mapState,mapActions} from 'vuex';
   import ElCol from "element-ui/packages/col/src/col";
-  import Statistics from './statistics.vue';
+  import Statistics from './statisticsMaster.vue';
   import Vue from 'vue'
   export default {
     components: {ElCol, Statistics},
@@ -544,7 +520,6 @@
         strangerList: [],   // 陌生人待处理的列表
         indistinctList: [], // 陌生人模糊抓拍列表
         strangerNum: 0,     // 陌生人待处理的数量
-        leftPage: 0,       // 左边页数
         tab1: true,
         tab2: false,
         tab3: false,
@@ -567,8 +542,8 @@
         toDayLists: [],        // 今日抓拍列表
         strangerLists: [],        // 陌生人列表
         whiteLists: [],        // 工作人员列表
-        aliveLists: [],        // 在住人列表
-        visitorLists: [],        // 访客列表
+        aliveLists: [],        // 黑名单人员列表
+        visitorLists: [],        // 灰名单人员列表
         websock: null,
         strangerTab: 1,      // 左边tab切换
         timer: null,
@@ -586,6 +561,36 @@
           backgroundRepeat: "no-repeat",
           backgroundSize: "100%, 100%",
         },
+        strangerTabs: [
+          {
+            name: '全部',
+            value: 'SUSPICIOUS_GUEST',
+            id: 1,
+          },
+          {
+            name: '黑名单人员(未处理)',
+            value: 'BLACK',
+            id: 2,
+          },
+          {
+            name: '灰名单人员(未处理)',
+            value: 'GRAY',
+            id: 3,
+          },
+          {
+            name: '陌生人(未处理)',
+            value: 'SUSPICIOUS_GUEST',
+            id: 4,
+          },
+          {
+            name: '模糊抓拍',
+            value: 'SUSPICIOUS_GUEST',
+            id: 5,
+          }
+        ],
+        strangerValue: 1,
+        handleIndex_: 1,
+        leftPage: 1,
       }
     },
     beforeMount () {
@@ -625,6 +630,24 @@
       ...mapActions([
         'getDoubtfulList','totalGuest','hasChecked', 'hotelListAll'
       ]),
+
+      watchTest() {
+        console.log(111123456789);
+        this.websock.close();
+        clearInterval(this.timer);
+      },
+
+      // 选择
+      strangerSelect(val) {
+          console.log(val);
+        this.strangerList = [];
+        this.leftPage = 0;
+          if (val == 1) {
+            this.getLists(0,'SUSPICIOUS_GUEST',5,100,'SUSPICIOUS_GUEST');
+          }else {
+            this.getLists(0,this.strangerTabs[val-1].value,5,100,'SUSPICIOUS_GUEST');
+          }
+      },
 
       beforeunloadHandler (e) {
         this.$router.replace({name:'index'})
@@ -724,7 +747,11 @@
         this.indistinctList = [];
         this.strangerList = [];
         this.leftPage = 0;
-        this.getLists(0,'SUSPICIOUS_GUEST',5,100,'SUSPICIOUS_GUEST');
+        if (this.strangerValue == 1) {
+          this.getLists(0,'SUSPICIOUS_GUEST',5,100,'SUSPICIOUS_GUEST');
+        }else {
+          this.getLists(0,this.strangerTabs[this.strangerValue-1].value,5,100,'SUSPICIOUS_GUEST');
+        }
         this.wsuri = 'wss://qa.fortrun.cn/keychannel/websocket/' + item.id + '_' + encodeURIComponent(sessionStorage.session_id);
         this.websock.close();
         this.$nextTick(() => {
@@ -743,7 +770,11 @@
           this.indistinctList = [];
           this.strangerList = [];
           this.leftPage = 0;
-          this.getLists(0,'SUSPICIOUS_GUEST',5,100,'SUSPICIOUS_GUEST');
+          if (this.strangerValue == 1) {
+            this.getLists(0,'SUSPICIOUS_GUEST',5,100,'SUSPICIOUS_GUEST');
+          }else {
+            this.getLists(0,this.strangerTabs[this.strangerValue-1].value,5,100,'SUSPICIOUS_GUEST');
+          }
           this.wsuri = 'wss://qa.fortrun.cn/keychannel/websocket/' + sessionStorage.roleId + '_' + encodeURIComponent(sessionStorage.session_id);
           this.websock.close();
           this.$nextTick(() => {
@@ -806,14 +837,14 @@
           this.tab3 = false;
           this.tab4 = true;
           this.tab5 = false;
-          this.getLists(0,'GUEST',3,18,'');
+          this.getLists(0,'BLACK',3,18,'READ');
         }else {
           this.tab1 = false;
           this.tab2 = false;
           this.tab3 = false;
           this.tab4 = false;
           this.tab5 = true;
-          this.getLists(0,'VISITOR',4,18,'');
+          this.getLists(0,'GRAY',4,18,'READ');
         }
         this.totalList();
       },
@@ -842,11 +873,11 @@
       },
       handleCurrentChange4(val) {
         console.log(`当前页4: ${val}`);
-        this.getLists(val-1,'GUEST',3,18,'');
+        this.getLists(val-1,'BLACK',3,18,'READ');
       },
       handleCurrentChange5(val) {
         console.log(`当前页5: ${val}`);
-        this.getLists(val-1,'VISITOR',4,18,'');
+        this.getLists(val-1,'GRAY',4,18,'READ');
       },
 
       // 距离现在相差几小时函数
@@ -902,12 +933,38 @@
               this.strangerNum = parseInt(body.headers['x-total-count']);
               body.data.data.forEach(item => {
                 item.handleLoading = false;
-                if (Math.abs(item.bluriness && item.bluriness) >= 0.4) {
-                  this.indistinctList.push(item);
-                }else {
-                  this.strangerList.push(item);
-                }
               });
+              if (this.strangerValue == 1) {
+                this.strangerList = body.data.data
+              }else if (this.strangerValue == 2) {
+                body.data.data.forEach(item => {
+                    if (item.guestType == 'BLACK') {
+                      this.strangerList.push(item);
+                    }
+                });
+              }else if (this.strangerValue == 3) {
+                body.data.data.forEach(item => {
+                  if (item.guestType == 'GRAY') {
+                    this.strangerList.push(item);
+                  }
+                });
+              }else {
+                body.data.data.forEach(item => {
+                  if (this.strangerValue == 5 && Math.abs(item.bluriness && item.bluriness) >= 0.4) {
+                    this.strangerList.push(item);
+                  }else if (this.strangerValue == 4 && Math.abs(item.bluriness && item.bluriness) < 0.4) {
+                    this.strangerList.push(item);
+                  }
+                });
+              }
+//              body.data.data.forEach(item => {
+//                item.handleLoading = false;
+//                if (Math.abs(item.bluriness && item.bluriness) >= 0.4) {
+//                  this.indistinctList.push(item);
+//                }else {
+//                  this.strangerList.push(item);
+//                }
+//              });
 //              this.strangerList = [...body.data.data];
             }
             setTimeout(() => {
@@ -934,8 +991,8 @@
               this.total1 = body.data.data.count;
               this.total2 = body.data.data.suspiciousCount;
               this.total3 = body.data.data.staffCount;
-              this.total4 = body.data.data.guestCount;
-              this.total5 = body.data.data.visitorCount;
+              this.total4 = body.data.data.blackCount;
+              this.total5 = body.data.data.grayCount;
               this.weekNum = body.data.data.weekTotal;
               this.monthNum = body.data.data.monthTotal;
               this.allNum = body.data.data.total;
@@ -961,9 +1018,13 @@
           this.totalLists.push(obj1, obj2, obj3, obj);
           sessionStorage.setItem('totalLists', JSON.stringify(this.totalLists));
           console.log('this.totalLists',this.totalLists);
-          if ((this.strangerTab == 1 && this.strangerList.length <= 50) || (this.strangerTab == 2 && this.indistinctList.length <= 50)) {
+          if (this.strangerList.length <= 50) {
             this.leftPage++;
-            this.getLists(this.leftPage,'SUSPICIOUS_GUEST',5,100,'SUSPICIOUS_GUEST');
+            if (this.strangerValue == 1) {
+              this.getLists(this.leftPage,'SUSPICIOUS_GUEST',5,100,'SUSPICIOUS_GUEST');
+            }else {
+              this.getLists(this.leftPage,this.strangerTabs[this.strangerValue-1].value,5,100,'SUSPICIOUS_GUEST');
+            }
           }
         })
       },
@@ -985,14 +1046,32 @@
                   this.$nextTick(() => {
                     this.strangerList.splice(index, 1);
                     this.total1++;
-                    this.total2++;
+                    if (item.guestType == 'BLACK') {
+                      this.total4++;
+                    }else if (item.guestType == 'GRAY') {
+                      this.total5++;
+                    }else if (item.guestType == 'STAFF') {
+                      this.total3++;
+                    }else {
+                      this.total2++;
+                    }
                     if (this.tab1 && this.currentPage1 == 1) {
-                      this.toDayLists.unshift(i);
+                      this.toDayLists.unshift(item);
                       if (this.toDayLists.length > 18) {
                         this.toDayLists.splice(18,1);
                       }
-                    }else if (this.tab2 && this.currentPage2 == 1) {
-                      this.strangerLists.unshift(i);
+                    }else if (this.tab4 && item.guestType == 'BLACK' && this.currentPage4 == 1) {
+                      this.aliveLists.unshift(item);
+                      if (this.aliveLists.length > 18) {
+                        this.aliveLists.splice(18,1);
+                      }
+                    }else if (this.tab5 && item.guestType == 'GRAY' && this.currentPage5 == 1) {
+                      this.visitorLists.unshift(item);
+                      if (this.visitorLists.length > 18) {
+                        this.visitorLists.splice(18,1);
+                      }
+                    }else if (this.tab2 && item.guestType == 'SUSPICIOUS_GUEST' && this.currentPage2 == 1) {
+                      this.strangerLists.unshift(item);
                       if (this.strangerLists.length > 18) {
                         this.strangerLists.splice(18,1);
                       }
@@ -1059,12 +1138,28 @@
           this.allNum = val.total;
           let newData = JSON.parse(val.illegalGuest);
           this.$nextTick(() => {
-            if (newData.guestType == 'SUSPICIOUS_GUEST') {
+            if (this.strangerList.length != 0) {
+              let arr = JSON.parse(JSON.stringify(this.strangerList));
+              this.strangerList.forEach((item, index) => {
+                if (item.illegal_guest_id == newData.illegal_guest_id) {
+                  arr.splice(index, 1);
+                }
+              });
+              this.strangerList = arr;
+            }
+
+            if (newData.guestType == 'SUSPICIOUS_GUEST' || newData.guestType == 'BLACK' || newData.guestType == 'GRAY') {
               this.strangerNum++;
               newData.handleLoading = false;
-              if (newData.bluriness && Math.abs(newData.bluriness) >= 0.4) {
-                this.indistinctList.unshift(newData);
-              }else {
+              if (this.strangerValue == 1) {
+                this.strangerList.unshift(newData);
+              }else if (this.strangerValue == 2 && newData.guestType == 'BLACK') {
+                this.strangerList.unshift(newData);
+              }else if (this.strangerValue == 3 && newData.guestType == 'GRAY') {
+                this.strangerList.unshift(newData);
+              }else if (this.strangerValue == 5 && newData.bluriness && Math.abs(newData.bluriness) >= 0.4) {
+                this.strangerList.unshift(newData);
+              }else if (this.strangerValue == 4 && newData.bluriness && Math.abs(newData.bluriness) < 0.4) {
                 this.strangerList.unshift(newData);
               }
             }else {
@@ -1080,14 +1175,14 @@
                   this.whiteLists.splice(18,1);
                 }
               }
-              if (newData.guestType == 'GUEST_ID' || newData.guestType == 'GUEST_LIVE') {
+              if (newData.guestType == 'BLACK') {
                 this.total4++;
                 this.aliveLists.unshift(newData);
                 if (this.aliveLists.length > 18) {
                   this.aliveLists.splice(18,1);
                 }
               }
-              if (newData.guestType == 'VISITOR') {
+              if (newData.guestType == 'GRAY') {
                 this.total5++;
                 this.visitorLists.unshift(newData);
                 if (this.visitorLists.length > 18) {
@@ -1113,9 +1208,10 @@
         console.log("关闭通道connection closed (" + e.code + ")");
 //        if (this.wsuri_ == this.wsuri) {
           this.websock.close();
-          setTimeout(() => {
-            this.initWebSocket();
-          },3000);
+          clearInterval(this.timer);
+//          setTimeout(() => {
+//            this.initWebSocket();
+//          },3000);
 //        }
 //        this.initWebSocket();
       },
@@ -1123,9 +1219,10 @@
         console.log("通道异常connection closed (" + e.code + ")");
         this.websock.close();
         setTimeout(() => {
-          this.initWebSocket();
+          if (this.handleIndex_ == 1 && window.location.href.split('#/')[1] == 'homeMaster') {
+            this.initWebSocket();
+          }
         },3000);
-//        this.initWebSocket();
       },
 
       beforeRouteLeave(to,from,next) {
@@ -1135,7 +1232,15 @@
       }
     },
     watch: {
-
+      handleIndex: {
+        handler: function (val, oldVal) {
+          this.handleIndex_ = val.split('&')[0];
+          console.log(111333, val, oldVal);   // 接收父组件的值
+          this.websock.close();
+          clearInterval(this.timer);
+        },
+//        deep: true
+      }
     },
   }
 </script>
@@ -1319,13 +1424,26 @@
             line-height: 24px;
             display: inline-block;
             .stranger_tab {
-              display: inline-block;
-              width: 120px;
               position: relative;
               text-align: center;
-              margin-right: 20px;
               cursor: pointer;
               color: #3596FC;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              width: 284px;
+              .tabTitle {
+                color: #408FE9;
+                font-size: 14px;
+              }
+              .el-select {
+                  max-width: 180px;
+                /deep/ .el-input__inner {
+                  background-color: transparent !important;
+                  color: #3596FC;
+                  border-color: #3596FC;
+                }
+              }
               img {
                 position: absolute;
                 width: 100%;
