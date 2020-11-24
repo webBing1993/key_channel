@@ -19,7 +19,7 @@
             </div>
           </div>
           <div class="stranger_list" v-if="strangerTab == 1">
-            <div class="list" v-for="(item,index) in strangerList" :key="index">
+            <div :class="item.guestType == 'BLACK' ? 'listRed list' : 'list'" v-for="(item,index) in strangerList" :key="index">
               <div class="img">
                 <img :src="item.facial_pic" alt="" @click="bigImgShow(item.facial_pic)">
               </div>
@@ -1178,6 +1178,9 @@
               cursor: pointer;
             }
           }
+        }
+        .listRed {
+          background-color: #F46C6C;
         }
       }
       .stranger_list::-webkit-scrollbar {
