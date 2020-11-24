@@ -935,7 +935,11 @@
                 item.handleLoading = false;
               });
               if (this.strangerValue == 1) {
-                this.strangerList = body.data.data
+                if (this.leftPage != 0) {
+                  this.strangerList = [this.strangerList, ...body.data.data];
+                }else {
+                  this.strangerList = body.data.data
+                }
               }else if (this.strangerValue == 2) {
                 body.data.data.forEach(item => {
                     if (item.guestType == 'BLACK') {
@@ -1018,14 +1022,6 @@
           this.totalLists.push(obj1, obj2, obj3, obj);
           sessionStorage.setItem('totalLists', JSON.stringify(this.totalLists));
           console.log('this.totalLists',this.totalLists);
-          if (this.strangerList.length <= 50) {
-            this.leftPage++;
-            if (this.strangerValue == 1) {
-              this.getLists(this.leftPage,'SUSPICIOUS_GUEST',5,100,'SUSPICIOUS_GUEST');
-            }else {
-              this.getLists(this.leftPage,this.strangerTabs[this.strangerValue-1].value,5,100,'SUSPICIOUS_GUEST');
-            }
-          }
         })
       },
 
@@ -1079,7 +1075,15 @@
                   });
                 }
                 this.totalAll();
-              })
+              });
+              if (this.strangerList.length <= 50) {
+                this.leftPage++;
+                if (this.strangerValue == 1) {
+                  this.getLists(this.leftPage,'SUSPICIOUS_GUEST',5,100,'SUSPICIOUS_GUEST');
+                }else {
+                  this.getLists(this.leftPage,this.strangerTabs[this.strangerValue-1].value,5,100,'SUSPICIOUS_GUEST');
+                }
+              }
             }else {
               this.indistinctList.forEach((i,index) => {
                 if (i.illegal_guest_id == item.illegal_guest_id) {

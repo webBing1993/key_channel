@@ -961,10 +961,6 @@
           this.totalLists.push(obj1, obj2, obj3, obj);
           sessionStorage.setItem('totalLists', JSON.stringify(this.totalLists));
           console.log('this.totalLists',this.totalLists);
-          if ((this.strangerTab == 1 && this.strangerList.length <= 50) || (this.strangerTab == 2 && this.indistinctList.length <= 50)) {
-            this.leftPage++;
-            this.getLists(this.leftPage,'SUSPICIOUS_GUEST',5,100,'SUSPICIOUS_GUEST');
-          }
         })
       },
 
@@ -1025,6 +1021,10 @@
               })
             }
             item.handleLoading = false;
+            if ((this.strangerTab == 1 && this.strangerList.length <= 50) || (this.strangerTab == 2 && this.indistinctList.length <= 50)) {
+              this.leftPage++;
+              this.getLists(this.leftPage,'SUSPICIOUS_GUEST',5,100,'SUSPICIOUS_GUEST');
+            }
           }
         })
       },
