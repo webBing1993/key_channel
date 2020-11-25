@@ -1059,6 +1059,24 @@
           this.allNum = val.total;
           let newData = JSON.parse(val.illegalGuest);
           this.$nextTick(() => {
+            if (this.strangerList.length != 0) {
+              let arr = JSON.parse(JSON.stringify(this.strangerList));
+              this.strangerList.forEach((item, index) => {
+                if (item.illegal_guest_id == newData.illegal_guest_id) {
+                  arr.splice(index, 1);
+                }
+              });
+              this.strangerList = arr;
+            }
+            if (this.indistinctList.length != 0) {
+              let arr = JSON.parse(JSON.stringify(this.indistinctList));
+              this.indistinctList.forEach((item, index) => {
+                if (item.illegal_guest_id == newData.illegal_guest_id) {
+                  arr.splice(index, 1);
+                }
+              });
+              this.indistinctList = arr;
+            }
             if (newData.guestType == 'SUSPICIOUS_GUEST') {
               this.strangerNum++;
               newData.handleLoading = false;
