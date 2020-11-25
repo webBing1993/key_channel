@@ -7,9 +7,9 @@
           <el-aside v-show="colseOpenLeft">
             <div class="bg"><img src="../../assets/index/zuo.png" alt="" ></div>
             <div class="hotel_content">
-              <div class="title" ref="hotelTitleHeigth">酒店列表</div>
+              <div class="title" ref="hotelTitleHeigth">场所列表</div>
               <div class="search" ref="hotelSearchHeigth">
-                <input type="text" placeholder="请输入酒店名称" v-model="hotelName">
+                <input type="text" placeholder="请输入场所名称" v-model="hotelName">
                 <div class="searchBtn" @click="searchHotel">
                   <img src="../../assets/index/sousuo.png" alt="">
                 </div>
