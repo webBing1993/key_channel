@@ -806,7 +806,7 @@
               });
               if (this.strangerValue == 1) {
                 if (this.leftPage != 0) {
-                  this.strangerList = [this.strangerList, ...body.data.data];
+                  this.strangerList = [...this.strangerList, ...body.data.data];
                 }else {
                   this.strangerList = body.data.data;
                 }
