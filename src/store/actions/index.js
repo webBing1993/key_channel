@@ -423,6 +423,29 @@ const actions = {
     })
   },
 
+  // 获取灰黑名单通知list
+  blackNotifierList(ctx, param){
+    ctx.dispatch('resource_', {
+      url: '/keychannel//blackNotifierlist',
+      method: 'GET',
+      onSuccess: body => {
+        param.onsuccess ? param.onsuccess(body) : null
+      }
+    })
+  },
+
+  // 灰黑名单通知手机号保存
+  notifySave(ctx, param){
+    ctx.dispatch('resource_', {
+      url: '/keychannel/blackNotifiers ',
+      method: 'POST',
+      body: param.data,
+      onSuccess: body => {
+        param.onsuccess ? param.onsuccess(body) : null
+      }
+    })
+  },
+
   // 获取图表数据
   illegalGuest(ctx, param){
     ctx.dispatch('resourceLoading_', {

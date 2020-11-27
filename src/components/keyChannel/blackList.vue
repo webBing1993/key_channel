@@ -8,9 +8,10 @@
           <div class="tabs">
             <span :class="tabIndex == 1 ? 'active' : ''" @click="tabIndexClick(1)"><img :src="tabIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">灰名单</span>
             <span :class="tabIndex == 2 ? 'active' : ''" @click="tabIndexClick(2)"><img :src="tabIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">黑名单</span>
+            <span :class="tabIndex == 3 ? 'active' : ''" @click="tabIndexClick(3)"><img :src="tabIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">告警设置</span>
           </div>
         </div>
-        <div class="search_add">
+        <div class="search_add" v-if="tabIndex < 3">
           <div class="add" @click="add"><img src="../../assets/index/tianjia.png" alt=""></div>
           <div class="search">
             <input type="text" v-model="name" placeholder="请输入人员姓名">
@@ -18,7 +19,7 @@
             <!--<i @click="reach"><img src="../../assets/index/sousuo@2x.png" alt=""></i>-->
           </div>
         </div>
-        <div v-if="whiteList.length != 0" class="whiteLists">
+        <div v-if="whiteList.length != 0 && tabIndex < 3" class="whiteLists">
           <el-row>
             <el-col :span="6"  v-for="item in whiteList" v-bind:key="item.id">
               <div class="grid-content">
@@ -43,9 +44,36 @@
             :total="total">
           </el-pagination>
         </div>
-        <div class="noMsg" v-else>
+        <div class="noMsg" v-if="whiteList.length == 0 && tabIndex < 3">
           <div class="img"><img src="../../assets/index/zanwuneirong.png" alt=""></div>
           <p>暂无内容</p>
+        </div>
+
+        <div class="waringSetting" v-if="tabIndex == 3">
+          <div class="setting_tip">
+            <img src="../../assets/index/ic_error.png" alt="">
+            <span>当抓拍到黑、灰名单时会通知以下手机号</span>
+          </div>
+          <el-form :model="notifyList" ref="notifyList" label-width="120px" class="demo-dynamic">
+            <el-form-item
+              v-for="(domain, index) in notifyList.dataLists"
+              :label="'通知手机号' + (index+1)"
+              :key="domain.key"
+            >
+              <el-input v-model="domain.phone" maxlength="11" placeholder="请输入手机号"></el-input>
+              <el-button @click.prevent="addDomain()" v-if="index == 0">
+                <img src="../../assets/index/ic_add_circle.png" alt="">
+              </el-button>
+              <el-button @click.prevent="removeDomain(domain)" v-else>
+                <img src="../../assets/index/ic_delete.png" alt="">
+              </el-button>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="onSubmit" class="submit">
+                <img src="../../assets/index/btn_affirm.png" alt="">
+              </el-button>
+            </el-form-item>
+          </el-form>
         </div>
 
         <!-- 添加人员弹框-->
@@ -122,6 +150,11 @@
         handerImg: {
           img: [require('../../assets/index/topweixuan.png'),require('../../assets/index/topxuanzhong.png')],
         },
+        notifyList: {
+          dataLists: [{
+            phone: ''
+          }],
+        },
       }
     },
     mounted () {
@@ -133,18 +166,135 @@
         'goto',
         'getBlackList',
         'delBlackItem',
-        'addBlack'
+        'addBlack',
+        'blackNotifierList',
+        'notifySave'
       ]),
 
       // tab click
       tabIndexClick(index) {
         this.tabIndex = index;
-        this.currentPage = 1;
-        this.getWhite(0);
+        if (index < 3)  {
+          this.currentPage = 1;
+          this.getWhite(0);
+        }else {
+          this.getBlackNotifierList();
+        }
       },
 
       watchTest() {
         console.log(111123456789);
+      },
+
+      // 删除
+      removeDomain(item) {
+        var index = this.notifyList.dataLists.indexOf(item);
+        if (index !== -1) {
+          if (item.id) {
+              let data = {
+                blackNotifierList: [
+                  {
+                    id: item.id,
+                    deleted: true
+                  }
+                ]
+              };
+              this.commonFun(JSON.stringify(data), 1)
+          }else {
+            this.notifyList.dataLists.splice(index, 1);
+          }
+        }
+      },
+
+      // 添加通知
+      addDomain() {
+          if (this.notifyList.dataLists.length < 5) {
+            this.notifyList.dataLists.push({
+              phone: '',
+              key: Date.now()
+            });
+          }else {
+            this.$message({
+              message: '最多只能添加五个手机号',
+              type: 'info'
+            });
+          }
+      },
+
+      // 提交
+      onSubmit() {
+        let reg = 11 && /^((13|14|15|16|17|18)[0-9]{1}\d{8})$/;
+        let blackNotifierList = [];
+        this.notifyList.dataLists.forEach(item => {
+            if (item.phone != '') {
+              if(!reg.test(item.phone)) {
+                this.$message.error('手机号格式不正确');
+                return
+              }else {
+                  let obj = {
+                      phone: item.phone
+                  };
+                  if (item.id) {
+                      obj.id = item.id
+                  }
+                  blackNotifierList.push(obj);
+              }
+            }else {
+              this.$message.error('请填写手机号');
+            }
+        });
+        if (blackNotifierList.length == this.notifyList.dataLists.length) {
+            let data = {
+              blackNotifierList: blackNotifierList
+            };
+            this.commonFun(JSON.stringify(data), 2);
+        }
+      },
+
+      // 告警提交common
+      commonFun(data, type) {
+          this.notifySave({
+            data: JSON.parse(data),
+            onsuccess: body => {
+                if (body.data.errcode == 0) {
+                    if (type == 1) {
+                      this.$message({
+                        message: '删除成功',
+                        type: 'success'
+                      });
+                    }else {
+                      this.$message({
+                        message: '保存成功',
+                        type: 'success'
+                      });
+                    }
+                    this.getBlackNotifierList();
+                }else {
+                    if (type == 1) {
+                      this.$message({
+                        message: '删除失败',
+                        type: 'warning'
+                      });
+                    }else {
+                      this.$message({
+                        message: '保存失败',
+                        type: 'warning'
+                      });
+                    }
+                }
+            }
+          })
+      },
+
+      // 获取通知列表
+      getBlackNotifierList() {
+        this.blackNotifierList({
+          onsuccess: body => {
+              if (body.data.errcode == 0) {
+                this.notifyList.dataLists = body.data.data;
+              }
+          }
+        })
       },
 
       getWhite (page) {
@@ -352,7 +502,7 @@
           text-align: center;
           line-height: 30px;
           display: inline-block;
-          width: 66px;
+          width: 74px;
           cursor: pointer;
           img {
             position: absolute;
@@ -360,7 +510,7 @@
             top: 0;
             height: 30px;
             display: inline-block;
-            width: 66px;
+            width: 74px;
             z-index: -1;
           }
         }
@@ -638,6 +788,77 @@
         font-size: 14px;
         margin-top: 20px;
         text-align: center;
+      }
+    }
+    .waringSetting {
+      margin: 20px 0 30px;
+      padding: 0 40px;
+      .setting_tip {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        margin-bottom: 30px;
+        img {
+          width: 25px;
+          height: 25px;
+          margin-right: 10px;
+        }
+        span {
+          color: #b9bec9;
+          font-size: 14px;
+        }
+      }
+      /deep/ .el-form-item__label {
+        text-align: left;
+        font-size: 14px;
+        color: #b9bec9;
+      }
+      /deep/ .el-form-item__content {
+        width: 24%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+      }
+      /deep/ .el-input {
+        margin-right: 15px;
+        input {
+          background-color: transparent;
+          font-size: 14px;
+          color: #b9bec9;
+          outline: none;
+          border-color: #4270b6;
+        }
+        input:-moz-placeholder {
+          color: #697180;
+        }
+        input:-ms-input-placeholder {
+          color: #697180;
+        }
+        input::-moz-placeholder {
+          color: #697180;
+        }
+        input::-webkit-input-placeholder {
+          color: #697180;
+        }
+      }
+      /deep/ .el-button {
+        background-color: transparent;
+        border: none;
+        padding: 8px 20px;
+        img {
+          width: 30px;
+          height: 30px;
+        }
+      }
+      .submit {
+        width: 60%;
+        margin-top: 40px;
+        padding: 0;
+        img {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
       }
     }
   }
