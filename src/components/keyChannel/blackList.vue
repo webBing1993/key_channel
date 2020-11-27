@@ -292,6 +292,12 @@
           onsuccess: body => {
               if (body.data.errcode == 0) {
                 this.notifyList.dataLists = body.data.data;
+                if (this.notifyList.dataLists.length == 0) {
+                  this.notifyList.dataLists.push({
+                    phone: '',
+                    key: Date.now()
+                  });
+                }
               }
           }
         })
