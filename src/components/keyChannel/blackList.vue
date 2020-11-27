@@ -64,7 +64,7 @@
               <el-button @click.prevent="addDomain()" v-if="index == 0">
                 <img src="../../assets/index/ic_add_circle.png" alt="">
               </el-button>
-              <el-button @click.prevent="removeDomain(domain)" v-else>
+              <el-button @click.prevent="removeDomain(domain)">
                 <img src="../../assets/index/ic_delete.png" alt="">
               </el-button>
             </el-form-item>
@@ -202,6 +202,9 @@
               this.commonFun(JSON.stringify(data), 1)
           }else {
             this.notifyList.dataLists.splice(index, 1);
+            if (this.notifyList.dataLists.length == 0) {
+                this.addDomain();
+            }
           }
         }
       },
@@ -820,13 +823,14 @@
         color: #b9bec9;
       }
       /deep/ .el-form-item__content {
-        width: 24%;
+        width: 26%;
         display: flex;
         align-items: center;
         justify-content: flex-start;
       }
       /deep/ .el-input {
         margin-right: 15px;
+        width: 50%;
         input {
           background-color: transparent;
           font-size: 14px;
@@ -857,7 +861,7 @@
         }
       }
       .submit {
-        width: 60%;
+        width: 56%;
         margin-top: 40px;
         padding: 0;
         img {
