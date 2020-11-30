@@ -86,11 +86,11 @@ const actions = {
         param.onSuccess && param.onSuccess(response)
       }
       else if (response.data.errcode !== 0) {
-        Vue.prototype.$message.error(response.body.msg);
+        Vue.prototype.$message.error(response.data.msg || response.data.errmsg);
         param.onFail && param.onFail(response)
       }
       else {
-        Vue.prototype.$message.error(response.body.msg);
+        Vue.prototype.$message.error(response.data.msg || response.data.errmsg);
         param.onFail && param.onFail(response)
       }
     }).catch(
@@ -121,15 +121,19 @@ const actions = {
     }).then(response => {
       console.log("response",response);
       // closeFullScreen (openFullScreen());
-      if (response.data.code == 0 || response.data.errcode == 0 || response.data.code == 30007) {
+      if (response.data.errcode == "") {
+        Vue.prototype.$message.error(response.data.msg || response.data.errmsg);
+        param.onFail && param.onFail(response)
+      }
+      else if (response.data.code == 0 || response.data.errcode == 0 || response.data.code == 30007) {
         param.onSuccess && param.onSuccess(response)
       }
       else if (response.data.errcode !== 0) {
-        Vue.prototype.$message.error(response.body.msg);
+        Vue.prototype.$message.error(response.data.msg || response.data.errmsg);
         param.onFail && param.onFail(response)
       }
       else {
-        Vue.prototype.$message.error(response.body.msg);
+        Vue.prototype.$message.error(response.data.msg || response.data.errmsg);
         param.onFail && param.onFail(response)
       }
     }).catch(
@@ -160,11 +164,11 @@ const actions = {
         param.onSuccess && param.onSuccess(response)
       }
       else if (response.data.errcode !== 0) {
-        Vue.prototype.$message.error(response.body.msg);
+        Vue.prototype.$message.error(response.data.msg || response.data.errmsg);
         param.onFail && param.onFail(response)
       }
       else {
-        Vue.prototype.$message.error(response.body.msg);
+        Vue.prototype.$message.error(response.data.msg || response.data.errmsg);
         param.onFail && param.onFail(response)
       }
     }).catch(
@@ -195,11 +199,11 @@ const actions = {
         param.onSuccess && param.onSuccess(response)
       }
       else if (response.data.errcode !== 0) {
-        Vue.prototype.$message.error(response.body.msg);
+        Vue.prototype.$message.error(response.data.msg || response.data.errmsg);
         param.onFail && param.onFail(response)
       }
       else {
-        Vue.prototype.$message.error(response.body.msg);
+        Vue.prototype.$message.error(response.data.msg || response.data.errmsg);
         param.onFail && param.onFail(response)
       }
     }).catch(
