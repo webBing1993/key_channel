@@ -41,6 +41,10 @@ export default new Router({
           component: resolve => require(['../components/keyChannel/whiteList.vue'],resolve),
         },
         {
+          path: '/whiteListMaster',
+          component: resolve => require(['../components/keyChannel/whiteListMaster.vue'],resolve),
+        },
+        {
           path: '/blackList',
           component: resolve => require(['../components/keyChannel/blackList.vue'],resolve),
         },

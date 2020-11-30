@@ -160,8 +160,11 @@
 //          this.replaceto('homeMasterIndex')
 //          this.replaceto('home')
           t = 1;
-        }else if(tab == 2 || tab == 7) {
+        }else if(tab == 2) {
           this.replaceto('whiteList');
+          t = 2;
+        }else if(tab == 7) {
+          this.replaceto('whiteListMaster');
           t = 2;
         }else if (tab == 3 || tab == 8) {
           this.replaceto('hotelStatus');
