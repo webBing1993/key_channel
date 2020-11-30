@@ -626,6 +626,12 @@
         'getDoubtfulList','totalGuest','hasChecked', 'hotelListAll'
       ]),
 
+      watchTest() {
+        console.log(111123456789);
+        this.websock.close();
+        clearInterval(this.timer);
+      },
+
       beforeunloadHandler (e) {
         this.$router.replace({name:'index'})
       },

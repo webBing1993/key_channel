@@ -27,7 +27,7 @@
             <el-col :span="12">
               <el-row class="ownInfo">
                 <el-col :span="13">
-                  <div class="passContact">    <!--v-if="!roleShow"-->
+                  <div class="passContact" v-if="!roleShow">
                     <el-button @click="changePhone">
                       <span>添加设备异常通知手机号 <span>{{ phone }}</span></span>
                       <span v-if="phone !== ''">修改</span>
