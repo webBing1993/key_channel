@@ -252,10 +252,10 @@
         this.echarts2Options = [];
         console.log('arr:',arr);
 //        console.log('arr_:',arr.reverse());
-        if (arr.length > 7) {
-          this.$message('筛选时间不可大于7天');
-          return
-        }
+//        if (arr.length > 7) {
+//          this.$message('筛选时间不可大于7天');
+//          return
+//        }
         if (startTime == '') {
           this.$message.error('请选择初始时间');
           return;
@@ -473,11 +473,14 @@
     },
     watch: {
       totalLists (newV, oldV) { // watch监听props里status的变化，然后执行操作
-        console.log(newV, oldV);
+        console.log('totalLists', newV, oldV);
 //        this.totalLists = newV;
 //        this.getPie();
-        this.startTime = this.fun_date(-7);
-        this.endTime = this.datetimeparse(new Date().getTime(),'YYYY/MM/DD');
+//        this.startTime = this.fun_date(-7);
+//        this.endTime = this.datetimeparse(new Date().getTime(),'YYYY/MM/DD');
+        this.startTime = this.datetimeparse(newV[4],'YYYY/MM/DD');
+        this.endTime = this.datetimeparse(newV[5],'YYYY/MM/DD');
+          console.log(this.startTime, this.endTime);
         this.echarts1Options = {};
         this.echarts2Options = [];
         this.getList (this.startTime, this.endTime);

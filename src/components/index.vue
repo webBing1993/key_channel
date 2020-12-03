@@ -164,7 +164,7 @@ export default {
 
     // 登录
     login(){
-      let reg = 11 && /^((13|14|15|16|17|18)[0-9]{1}\d{8})$/;
+      let reg = 11 && /^((13|14|15|16|17|18|19)[0-9]{1}\d{8})$/;
       if(this.phone === ''){
         this.$message('请输入手机号码');
         return

@@ -6,12 +6,13 @@
       <div class="whiteContent" ref="whiteHeight">
         <div class="white_title">
           <div class="tabs">
-            <span :class="tabIndex == 1 ? 'active' : ''" @click="tabIndexClick(1)"><img :src="tabIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">灰名单</span>
-            <span :class="tabIndex == 2 ? 'active' : ''" @click="tabIndexClick(2)"><img :src="tabIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">黑名单</span>
-            <span :class="tabIndex == 3 ? 'active' : ''" @click="tabIndexClick(3)"><img :src="tabIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">告警设置</span>
+            <span :class="tabIndex == 1 ? 'active' : ''" @click="tabIndexClick(1)"><img :src="tabIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">白名单</span>
+            <span :class="tabIndex == 2 ? 'active' : ''" @click="tabIndexClick(2)"><img :src="tabIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">灰名单</span>
+            <span :class="tabIndex == 3 ? 'active' : ''" @click="tabIndexClick(3)"><img :src="tabIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">黑名单</span>
+            <span :class="tabIndex == 4 ? 'active' : ''" @click="tabIndexClick(4)"><img :src="tabIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">告警设置</span>
           </div>
         </div>
-        <div class="search_add" v-if="tabIndex < 3">
+        <div class="search_add" v-if="tabIndex < 4">
           <div class="add" @click="add"><img src="../../assets/index/tianjia.png" alt=""></div>
           <div class="search">
             <input type="text" v-model="name" placeholder="请输入人员姓名">
@@ -19,7 +20,7 @@
             <!--<i @click="reach"><img src="../../assets/index/sousuo@2x.png" alt=""></i>-->
           </div>
         </div>
-        <div v-if="whiteList.length != 0 && tabIndex < 3" class="whiteLists">
+        <div v-if="whiteList.length != 0 && tabIndex < 4" class="whiteLists">
           <el-row>
             <el-col :span="6"  v-for="item in whiteList" v-bind:key="item.id">
               <div class="grid-content">
@@ -28,9 +29,9 @@
                 </div>
               </div>
               <div class="content">
-                <p>{{ tabIndex == 1 ? '灰名单人员' : '黑名单人员' }}</p>
+                <p>{{ tabIndex == 1 ? '白名单人员' : tabIndex == 2 ? '灰名单人员' : '黑名单人员' }}</p>
                 <div class="name"><span>姓名：</span>{{item.name}}</div>
-                <div class="name"><span>类型：</span>{{ tabIndex == 1 ? '灰名单' : '黑名单' }}</div>
+                <div class="name"><span>类型：</span>{{ tabIndex == 1 ? '白名单' : tabIndex == 2 ? '灰名单' : '黑名单' }}</div>
                 <div class="remove" @click="remove(item)"><img src="../../assets/index/shanchu.png" alt=""></div>
               </div>
             </el-col>
@@ -44,12 +45,12 @@
             :total="total">
           </el-pagination>
         </div>
-        <div class="noMsg" v-if="whiteList.length == 0 && tabIndex < 3">
+        <div class="noMsg" v-if="whiteList.length == 0 && tabIndex < 4">
           <div class="img"><img src="../../assets/index/zanwuneirong.png" alt=""></div>
           <p>暂无内容</p>
         </div>
 
-        <div class="waringSetting" v-if="tabIndex == 3">
+        <div class="waringSetting" v-if="tabIndex == 4">
           <div class="setting_tip">
             <img src="../../assets/index/ic_error.png" alt="">
             <span>当抓拍到黑、灰名单时会通知以下手机号</span>
@@ -81,7 +82,7 @@
           <div class="shadow"></div>
           <div class="add_content">
             <div class="add_title">
-              <span>添加{{ tabIndex == 1 ? '灰名单' : '黑名单' }}</span>
+              <span>添加{{ tabIndex == 1 ? '白名单' : tabIndex == 2 ? '灰名单' : '黑名单' }}</span>
               <i @click="cancel"><img src="../../assets/index/guanbi.png" alt=""></i>
             </div>
             <div class="add_list">
@@ -91,12 +92,12 @@
                   <input type="text" v-model="add_name" placeholder="请输入姓名">
                 </div>
               </div>
-              <!--<div class="list">-->
-                <!--<div class="name">{{ tabIndex == 1 ? '灰名单' : '黑名单' }}类型</div>-->
-                <!--<div class="add_input">-->
-                  <!--<input type="text" value="工作人员" readonly>-->
-                <!--</div>-->
-              <!--</div>-->
+              <div class="list" v-if="tabIndex == 1">
+                <div class="name">白名单类型</div>
+                <div class="add_input">
+                  <input type="text" value="工作人员" readonly>
+                </div>
+              </div>
               <div class="list">
                 <div class="name">添加照片</div>
                 <div class="add_input">
@@ -314,7 +315,7 @@
           limit: 30,
           data:{
             name: this.name,
-            identityType: this.tabIndex == 1 ? 'GRAY' : 'BLACK'
+            identityType: this.tabIndex == 1 ? 'GROUP_STAFF' : this.tabIndex == 2 ? 'GRAY' : 'BLACK'
           },
           onsuccess: body => {
             this.showTrue = true;
@@ -401,7 +402,7 @@
             data:{
               imgUrl: this.imageUrl,
               name: this.add_name,
-              identityType: this.tabIndex == 1 ? 'GRAY' : 'BLACK'
+              identityType: this.tabIndex == 1 ? 'GROUP_STAFF' : this.tabIndex == 2 ? 'GRAY' : 'BLACK'
             },
             onsuccess: body =>{
                 if (body.data.errcode == 0) {

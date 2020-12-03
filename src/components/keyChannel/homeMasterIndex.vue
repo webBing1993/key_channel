@@ -26,7 +26,7 @@
               <div class="list_content">
                 <p><span>时间：</span><span>{{dateDiff(item.filming_time)}} ({{datetimeparse(item.filming_time,'hh:mm:ss')}})</span></p>
                 <p><span>地点：</span><span>{{item.location ? item.location : '-'}}</span></p>
-                <p><span>来源：</span><span>{{ item.guestType == 'STAFF' ? '工作人员库' : item.guestType == 'GRAY' ? '灰名单库' : item.guestType == 'BLACK' ? '黑名单库' : '-' }}</span></p>
+                <p><span>来源：</span><span>{{ item.guestType == 'STAFF' ? '工作人员库' : item.guestType == 'GROUP_STAFF' ? '集团工作人员库' : item.guestType == 'GRAY' ? '灰名单库' : item.guestType == 'BLACK' ? '黑名单库' : '-' }}</span></p>
                 <div class="handle" @click="handelBtn(item.illegal_guest_id,1)"><img src="../../assets/index/chuli.png" alt=""></div>
               </div>
             </div>
@@ -43,7 +43,7 @@
               <div class="list_content">
                 <p><span>时间：</span><span>{{datetimeparse(item.filming_time,'MM-DD hh:mm:ss')}}</span></p>
                 <p><span>地点：</span><span>{{item.location ? item.location : '-'}}</span></p>
-                <p><span>来源：</span><span>{{ item.guestType == 'STAFF' ? '工作人员库' : item.guestType == 'GRAY' ? '灰名单库' : item.guestType == 'BLACK' ? '黑名单库' : '-' }}</span></p>
+                <p><span>来源：</span><span>{{ item.guestType == 'STAFF' ? '工作人员库' : item.guestType == 'GROUP_STAFF' ? '集团工作人员库' : item.guestType == 'GRAY' ? '灰名单库' : item.guestType == 'BLACK' ? '黑名单库' : '-' }}</span></p>
                 <div class="handle" @click="handelBtn(item.illegal_guest_id,2)"><img src="../../assets/index/chuli.png" alt=""></div>
               </div>
             </div>
@@ -58,51 +58,78 @@
           <el-container>
             <el-header ref="headerHeight">
               <el-row>
-                <el-col :span="12">
+                <el-col :span="8">
                   <div class="bg"><img src="../../assets/index/zhongshnag.png" alt=""></div>
-                  <div class="tabs">
-                    <el-row>
-                      <el-col :span="4"  :class="tab1 ? 'active tab' : 'tab'" @click.native="tabClick(0)">
-                        <span>今日处理</span><span>({{total1}})</span>
-                      </el-col>
-                      <el-col :span="1" style="height: 100%"></el-col>
-                      <el-col :span="4"  :class="tab2 ? 'active tab' : 'tab'" @click.native="tabClick(1)">
-                        <span>陌生人</span><span>({{total2}})</span>
-                      </el-col>
-                      <el-col :span="1" style="height: 100%"></el-col>
-                      <el-col :span="4"  :class="tab3 ? 'active tab' : 'tab'" @click.native="tabClick(2)">
-                        <span>工作人员</span><span>({{total3}})</span>
-                      </el-col>
-                      <el-col :span="1" style="height: 100%"></el-col>
-                      <el-col :span="4"  :class="tab4 ? 'active tab' : 'tab'" @click.native="tabClick(3)">
-                        <span>黑名单</span><span>({{total4}})</span>
-                      </el-col>
-                      <el-col :span="1" style="height: 100%"></el-col>
-                      <el-col :span="4"  :class="tab5 ? 'active tab' : 'tab'" @click.native="tabClick(4)">
-                        <span>灰名单</span><span>({{total5}})</span>
-                      </el-col>
-                    </el-row>
+                  <div class="timerChange">
+                    <div class="time_title">日期筛选</div>
+                    <div class="timer_change" v-show="activeNames == 1">
+                      <el-date-picker
+                        v-model="dayTime"
+                        type="datetimerange"
+                        format="yyyy-MM-dd HH:mm"
+                        range-separator="-"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                        @change="handleTimeChange">
+                      </el-date-picker>
+                    </div>
+                    <div class="timer_change" v-show="activeNames == 2">
+                      <el-date-picker
+                        v-model="weekTime"
+                        type="week"
+                        format="yyyy 第 WW 周"
+                        placeholder="选择周"
+                        @change="handleTimeChange">
+                      </el-date-picker>
+                    </div>
+                    <div class="timer_change" v-show="activeNames == 3">
+                      <el-date-picker
+                        v-model="monthTime"
+                        type="month"
+                        format="yyyy-MM月"
+                        placeholder="选择日期"
+                        @change="handleTimeChange">
+                      </el-date-picker>
+                    </div>
                   </div>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="16">
                   <div class="bg"><img src="../../assets/index/zhongshnag.png" alt=""></div>
-                  <el-row>
-                    <el-col :span="6">
-                      <img src="../../assets/index/paizhao.png" alt="">
-                    </el-col>
-                    <el-col :span="6">
-                      <span>本周抓拍</span>
-                      <span>{{weekNum}}</span>
-                    </el-col>
-                    <el-col :span="6">
-                      <span>本月抓拍</span>
-                      <span>{{monthNum}}</span>
-                    </el-col>
-                    <el-col :span="6">
-                      <span>总抓拍</span>
-                      <span>{{allNum}}</span>
-                    </el-col>
-                  </el-row>
+                  <div class="tabs">
+                    <div :class="activeNames == 1 ? 'tabs_item is_active' : 'tabs_item'">
+                      <div class="item_tab_one" @click="handleChange(1)">
+                        今日处理 <span>{{total1}}</span>
+                      </div>
+                      <div class="item_tab_two" v-if="activeNames == 1">
+                        <div :class="tab2 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(1)">陌生人 <span>{{total2}}</span></div>
+                        <div :class="tab3 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(2)">工作人员 <span>{{total3}}</span></div>
+                        <div :class="tab4 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(3)">黑名单 <span>{{total4}}</span></div>
+                        <div :class="tab5 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(4)">灰名单 <span>{{total5}}</span></div>
+                      </div>
+                    </div>
+                    <div :class="activeNames == 2 ? 'tabs_item is_active' : 'tabs_item'">
+                      <div class="item_tab_one" @click="handleChange(2)">
+                        本周抓拍 <span>{{weekNum}}</span>
+                      </div>
+                      <div class="item_tab_two" v-if="activeNames == 2">
+                        <div :class="tab2 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(1)">陌生人 <span>{{total2}}</span></div>
+                        <div :class="tab3 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(2)">工作人员 <span>{{total3}}</span></div>
+                        <div :class="tab4 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(3)">黑名单 <span>{{total4}}</span></div>
+                        <div :class="tab5 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(4)">灰名单 <span>{{total5}}</span></div>
+                      </div>
+                    </div>
+                    <div :class="activeNames == 3 ? 'tabs_item is_active' : 'tabs_item'">
+                      <div class="item_tab_one" @click="handleChange(3)">
+                        本月抓拍 <span>{{monthNum}}</span>
+                      </div>
+                      <div class="item_tab_two" v-if="activeNames == 3">
+                        <div :class="tab2 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(1)">陌生人 <span>{{total2}}</span></div>
+                        <div :class="tab3 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(2)">工作人员 <span>{{total3}}</span></div>
+                        <div :class="tab4 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(3)">黑名单 <span>{{total4}}</span></div>
+                        <div :class="tab5 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(4)">灰名单 <span>{{total5}}</span></div>
+                      </div>
+                    </div>
+                  </div>
                 </el-col>
               </el-row>
               <el-row class="locationTabs">
@@ -122,49 +149,36 @@
               <!-- 今日抓拍列表-->
               <div class="toDay_lists lists" v-if="tab1">
                 <el-row :gutter="8">
-                  <el-col :xs="12" :sm="8" :md="6" :lg="4" :xl="4"  class="list" v-for="(item,index) in toDayLists" v-bind:key="index">
+                  <el-col :xs="4" :sm="4" :md="3" :lg="2" :xl="2"  class="list" v-for="(item,index) in toDayLists" v-bind:key="index">
                     <div class="grid-content bg-purple">
-                      <div class="imgs">
-                        <div class="nowImg"><img :src="item.facial_pic" alt="" @click="bigImgShow(item.facial_pic)"></div>
-                        <div class="idCacrdImg" v-if="item.most_similar_pic"><img :src="item.most_similar_pic" alt=""  @click="bigImgShow(item.most_similar_pic)"></div>
-                        <div class="idCacrdImg" v-else><img src="../../assets/index/noMan.png" alt=""  @click="bigImgShow('../../assets/index/noMan.png')"></div>
-                      </div>
-                      <div class="list_content">
-                        <div class="title">{{ item.guestType == 'STAFF' ? '工作人员' : item.guestType == 'GRAY' ? '灰名单' : item.guestType == 'BLACK' ? '黑名单' : '陌生人' }}</div>
-                        <div class="content">
-                          <p>
-                            <span>时间：</span>
-                            <span>{{dateDiff(item.filming_time)}} ({{datetimeparse(item.filming_time,'hh:mm:ss')}})</span>
-                          </p>
-                          <p>
-                            <span>地点：</span>
-                            <span>{{item.location}}</span>
-                          </p>
-                          <p v-if="item.guestType == 'STAFF'">
-                            <span>来源：</span>
-                            <span>工作人员库</span>
-                          </p>
-                          <p v-else-if="item.guestType == 'GRAY'">
-                            <span>来源：</span>
-                            <span>灰名单库</span>
-                          </p>
-                          <p v-else-if="item.guestType == 'BLACK'">
-                            <span>来源：</span>
-                            <span>黑名单库</span>
-                          </p>
-                          <p v-else>
-                            <span>来源：</span>
-                            <span>-</span>
-                          </p>
-                          <p>
-                            <span>类型：</span>
-                            <span v-if="item.guestType == 'STAFF'">工作人员</span>
-                            <span  v-else-if="item.guestType == 'BLACK'">黑名单</span>
-                            <span  v-else-if="item.guestType == 'GRAY'">访客</span>
-                            <span v-else>陌生人</span>
-                          </p>
+                      <el-popover
+                        placement="right"
+                        title="人员详情"
+                        width="200"
+                        trigger="hover">
+                        <div class="popoverBox">
+                          <div class="popover_list">
+                            <span>抓拍时间：</span>
+                            <span>{{ datetimeparse(item.filming_time,'hh:mm:ss') }}</span>
+                          </div>
+                          <div class="popover_list">
+                            <span>人员类型：</span>
+                            <span>{{ item.guestType == 'STAFF' ? '工作人员' : item.guestType == 'GROUP_STAFF' ? '集团工作人员' : item.guestType == 'GRAY' ? '灰名单' : item.guestType == 'BLACK' ? '黑名单' : '陌生人' }}</span>
+                          </div>
+                          <div class="popover_list">
+                            <span>抓拍地点：</span>
+                            <span>{{ item.location }}</span>
+                          </div>
                         </div>
-                      </div>
+                        <el-button slot="reference">
+                          <div class="img">
+                            <img :src="item.facial_pic" alt=""  @click.stop="bigImgShow(item.facial_pic)">
+                          </div>
+                          <div class="content">
+                            {{ dateDiff(item.filming_time) }}
+                          </div>
+                        </el-button>
+                      </el-popover>
                     </div>
                   </el-col>
                 </el-row>
@@ -172,7 +186,7 @@
                   @size-change="handleSizeChange"
                   @current-change="handleCurrentChange1"
                   :current-page.sync="currentPage1"
-                  :page-size="18"
+                  :page-size="60"
                   layout="total, prev, pager, next"
                   :total="total1" v-if="toDayLists.length != 0">
                 </el-pagination>
@@ -184,49 +198,36 @@
               <!-- 陌生人列表-->
               <div class="stranger_lists lists" v-if="tab2">
                 <el-row :gutter="8">
-                  <el-col :xs="12" :sm="8" :md="6" :lg="4" :xl="4"  class="list" v-for="(item,index) in strangerLists" v-bind:key="index">
+                  <el-col :xs="4" :sm="4" :md="3" :lg="2" :xl="2"  class="list" v-for="(item,index) in strangerLists" v-bind:key="index">
                     <div class="grid-content bg-purple">
-                      <div class="imgs">
-                        <div class="nowImg"><img :src="item.facial_pic" alt="" @click="bigImgShow(item.facial_pic)"></div>
-                        <div class="idCacrdImg" v-if="item.most_similar_pic"><img :src="item.most_similar_pic" alt=""  @click="bigImgShow(item.most_similar_pic)"></div>
-                        <div class="idCacrdImg" v-else><img src="../../assets/index/noMan.png" alt=""  @click="bigImgShow('../../assets/index/noMan.png')"></div>
-                      </div>
-                      <div class="list_content">
-                        <div class="title">{{ item.guestType == 'STAFF' ? '工作人员' : item.guestType == 'GRAY' ? '灰名单' : item.guestType == 'BLACK' ? '黑名单' : '陌生人' }}</div>
-                        <div class="content">
-                          <p>
-                            <span>时间：</span>
-                            <span>{{dateDiff(item.filming_time)}} ({{datetimeparse(item.filming_time,'hh:mm:ss')}})</span>
-                          </p>
-                          <p>
-                            <span>地点：</span>
-                            <span>{{item.location}}</span>
-                          </p>
-                          <p v-if="item.guestType == 'STAFF'">
-                            <span>来源：</span>
-                            <span>工作人员库</span>
-                          </p>
-                          <p v-else-if="item.guestType == 'GRAY'">
-                            <span>来源：</span>
-                            <span>灰名单库</span>
-                          </p>
-                          <p v-else-if="item.guestType == 'BLACK'">
-                            <span>来源：</span>
-                            <span>黑名单库</span>
-                          </p>
-                          <p v-else>
-                            <span>来源：</span>
-                            <span>-</span>
-                          </p>
-                          <p>
-                            <span>类型：</span>
-                            <span v-if="item.guestType == 'STAFF'">工作人员</span>
-                            <span  v-else-if="item.guestType == 'BLACK'">黑名单</span>
-                            <span  v-else-if="item.guestType == 'GRAY'">访客</span>
-                            <span v-else>陌生人</span>
-                          </p>
+                      <el-popover
+                        placement="right"
+                        title="人员详情"
+                        width="200"
+                        trigger="hover">
+                        <div class="popoverBox">
+                          <div class="popover_list">
+                            <span>抓拍时间：</span>
+                            <span>{{ datetimeparse(item.filming_time,'hh:mm:ss') }}</span>
+                          </div>
+                          <div class="popover_list">
+                            <span>人员类型：</span>
+                            <span>{{ item.guestType == 'STAFF' ? '工作人员' : item.guestType == 'GROUP_STAFF' ? '集团工作人员' : item.guestType == 'GRAY' ? '灰名单' : item.guestType == 'BLACK' ? '黑名单' : '陌生人' }}</span>
+                          </div>
+                          <div class="popover_list">
+                            <span>抓拍地点：</span>
+                            <span>{{ item.location }}</span>
+                          </div>
                         </div>
-                      </div>
+                        <el-button slot="reference">
+                          <div class="img">
+                            <img :src="item.facial_pic" alt=""  @click.stop="bigImgShow(item.facial_pic)">
+                          </div>
+                          <div class="content">
+                            {{ dateDiff(item.filming_time) }}
+                          </div>
+                        </el-button>
+                      </el-popover>
                     </div>
                   </el-col>
                 </el-row>
@@ -234,7 +235,7 @@
                   @size-change="handleSizeChange"
                   @current-change="handleCurrentChange2"
                   :current-page.sync="currentPage2"
-                  :page-size="18"
+                  :page-size="60"
                   layout="total, prev, pager, next"
                   :total="total2" v-if="strangerLists.length != 0">
                 </el-pagination>
@@ -246,49 +247,36 @@
               <!-- 工作人员列表-->
               <div class="white_lists lists" v-if="tab3">
                 <el-row :gutter="8">
-                  <el-col :xs="12" :sm="8" :md="6" :lg="4" :xl="4"  class="list" v-for="(item,index) in whiteLists" v-bind:key="index">
+                  <el-col :xs="4" :sm="4" :md="3" :lg="2" :xl="2"  class="list" v-for="(item,index) in whiteLists" v-bind:key="index">
                     <div class="grid-content bg-purple">
-                      <div class="imgs">
-                        <div class="nowImg"><img :src="item.facial_pic" alt="" @click="bigImgShow(item.facial_pic)"></div>
-                        <div class="idCacrdImg" v-if="item.most_similar_pic"><img :src="item.most_similar_pic" alt=""  @click="bigImgShow(item.most_similar_pic)"></div>
-                        <div class="idCacrdImg" v-else><img src="../../assets/index/noMan.png" alt=""  @click="bigImgShow('../../assets/index/noMan.png')"></div>
-                      </div>
-                      <div class="list_content">
-                        <div class="title">{{ item.guestType == 'STAFF' ? '工作人员' : item.guestType == 'GRAY' ? '灰名单' : item.guestType == 'BLACK' ? '黑名单' : '陌生人' }}</div>
-                        <div class="content">
-                          <p>
-                            <span>时间：</span>
-                            <span>{{dateDiff(item.filming_time)}} ({{datetimeparse(item.filming_time,'hh:mm:ss')}})</span>
-                          </p>
-                          <p>
-                            <span>地点：</span>
-                            <span>{{item.location}}</span>
-                          </p>
-                          <p v-if="item.guestType == 'STAFF'">
-                            <span>来源：</span>
-                            <span>工作人员库</span>
-                          </p>
-                          <p v-else-if="item.guestType == 'GRAY'">
-                            <span>来源：</span>
-                            <span>灰名单库</span>
-                          </p>
-                          <p v-else-if="item.guestType == 'BLACK'">
-                            <span>来源：</span>
-                            <span>黑名单库</span>
-                          </p>
-                          <p v-else>
-                            <span>来源：</span>
-                            <span>-</span>
-                          </p>
-                          <p>
-                            <span>类型：</span>
-                            <span v-if="item.guestType == 'STAFF'">工作人员</span>
-                            <span  v-else-if="item.guestType == 'BLACK'">黑名单</span>
-                            <span  v-else-if="item.guestType == 'GRAY'">访客</span>
-                            <span v-else>陌生人</span>
-                          </p>
+                      <el-popover
+                        placement="right"
+                        title="人员详情"
+                        width="200"
+                        trigger="hover">
+                        <div class="popoverBox">
+                          <div class="popover_list">
+                            <span>抓拍时间：</span>
+                            <span>{{ datetimeparse(item.filming_time,'hh:mm:ss') }}</span>
+                          </div>
+                          <div class="popover_list">
+                            <span>人员类型：</span>
+                            <span>{{ item.guestType == 'STAFF' ? '工作人员' : item.guestType == 'GROUP_STAFF' ? '集团工作人员' : item.guestType == 'GRAY' ? '灰名单' : item.guestType == 'BLACK' ? '黑名单' : '陌生人' }}</span>
+                          </div>
+                          <div class="popover_list">
+                            <span>抓拍地点：</span>
+                            <span>{{ item.location }}</span>
+                          </div>
                         </div>
-                      </div>
+                        <el-button slot="reference">
+                          <div class="img">
+                            <img :src="item.facial_pic" alt=""  @click.stop="bigImgShow(item.facial_pic)">
+                          </div>
+                          <div class="content">
+                            {{ dateDiff(item.filming_time) }}
+                          </div>
+                        </el-button>
+                      </el-popover>
                     </div>
                   </el-col>
                 </el-row>
@@ -296,7 +284,7 @@
                   @size-change="handleSizeChange"
                   @current-change="handleCurrentChange3"
                   :current-page.sync="currentPage3"
-                  :page-size="18"
+                  :page-size="60"
                   layout="total, prev, pager, next"
                   :total="total3" v-if="whiteLists.length != 0">
                 </el-pagination>
@@ -308,49 +296,36 @@
               <!-- 在住人列表-->
               <div class="ailve_lists lists" v-if="tab4">
                 <el-row :gutter="8">
-                  <el-col :xs="12" :sm="8" :md="6" :lg="4" :xl="4"  class="list" v-for="(item,index) in aliveLists" v-bind:key="index">
+                  <el-col :xs="4" :sm="4" :md="3" :lg="2" :xl="2"  class="list" v-for="(item,index) in aliveLists" v-bind:key="index">
                     <div class="grid-content bg-purple">
-                      <div class="imgs">
-                        <div class="nowImg"><img :src="item.facial_pic" alt="" @click="bigImgShow(item.facial_pic)"></div>
-                        <div class="idCacrdImg" v-if="item.most_similar_pic"><img :src="item.most_similar_pic" alt=""  @click="bigImgShow(item.most_similar_pic)"></div>
-                        <div class="idCacrdImg" v-else><img src="../../assets/index/noMan.png" alt=""  @click="bigImgShow('../../assets/index/noMan.png')"></div>
-                      </div>
-                      <div class="list_content">
-                        <div class="title">{{ item.guestType == 'STAFF' ? '工作人员' : item.guestType == 'GRAY' ? '灰名单' : item.guestType == 'BLACK' ? '黑名单' : '陌生人' }}</div>
-                        <div class="content">
-                          <p>
-                            <span>时间：</span>
-                            <span>{{dateDiff(item.filming_time)}} ({{datetimeparse(item.filming_time,'hh:mm:ss')}})</span>
-                          </p>
-                          <p>
-                            <span>地点：</span>
-                            <span>{{item.location}}</span>
-                          </p>
-                          <p v-if="item.guestType == 'STAFF'">
-                            <span>来源：</span>
-                            <span>工作人员库</span>
-                          </p>
-                          <p v-else-if="item.guestType == 'GRAY'">
-                            <span>来源：</span>
-                            <span>灰名单库</span>
-                          </p>
-                          <p v-else-if="item.guestType == 'BLACK'">
-                            <span>来源：</span>
-                            <span>黑名单库</span>
-                          </p>
-                          <p v-else>
-                            <span>来源：</span>
-                            <span>-</span>
-                          </p>
-                          <p>
-                            <span>类型：</span>
-                            <span v-if="item.guestType == 'STAFF'">工作人员</span>
-                            <span  v-else-if="item.guestType == 'BLACK'">黑名单</span>
-                            <span  v-else-if="item.guestType == 'GRAY'">访客</span>
-                            <span v-else>陌生人</span>
-                          </p>
+                      <el-popover
+                        placement="right"
+                        title="人员详情"
+                        width="200"
+                        trigger="hover">
+                        <div class="popoverBox">
+                          <div class="popover_list">
+                            <span>抓拍时间：</span>
+                            <span>{{ datetimeparse(item.filming_time,'hh:mm:ss') }}</span>
+                          </div>
+                          <div class="popover_list">
+                            <span>人员类型：</span>
+                            <span>{{ item.guestType == 'STAFF' ? '工作人员' : item.guestType == 'GROUP_STAFF' ? '集团工作人员' : item.guestType == 'GRAY' ? '灰名单' : item.guestType == 'BLACK' ? '黑名单' : '陌生人' }}</span>
+                          </div>
+                          <div class="popover_list">
+                            <span>抓拍地点：</span>
+                            <span>{{ item.location }}</span>
+                          </div>
                         </div>
-                      </div>
+                        <el-button slot="reference">
+                          <div class="img">
+                            <img :src="item.facial_pic" alt=""  @click.stop="bigImgShow(item.facial_pic)">
+                          </div>
+                          <div class="content">
+                            {{ dateDiff(item.filming_time) }}
+                          </div>
+                        </el-button>
+                      </el-popover>
                     </div>
                   </el-col>
                 </el-row>
@@ -358,7 +333,7 @@
                   @size-change="handleSizeChange"
                   @current-change="handleCurrentChange4"
                   :current-page.sync="currentPage4"
-                  :page-size="18"
+                  :page-size="60"
                   layout="total, prev, pager, next"
                   :total="total4" v-if="aliveLists.length != 0">
                 </el-pagination>
@@ -370,49 +345,36 @@
               <!-- 访客列表-->
               <div class="ailve_lists lists" v-if="tab5">
                 <el-row :gutter="8">
-                  <el-col :xs="12" :sm="8" :md="6" :lg="4" :xl="4"  class="list" v-for="(item,index) in visitorLists" v-bind:key="index">
+                  <el-col :xs="4" :sm="4" :md="3" :lg="2" :xl="2"  class="list" v-for="(item,index) in visitorLists" v-bind:key="index">
                     <div class="grid-content bg-purple">
-                      <div class="imgs">
-                        <div class="nowImg"><img :src="item.facial_pic" alt="" @click="bigImgShow(item.facial_pic)"></div>
-                        <div class="idCacrdImg" v-if="item.most_similar_pic"><img :src="item.most_similar_pic" alt=""  @click="bigImgShow(item.most_similar_pic)"></div>
-                        <div class="idCacrdImg" v-else><img src="../../assets/index/noMan.png" alt=""  @click="bigImgShow('../../assets/index/noMan.png')"></div>
-                      </div>
-                      <div class="list_content">
-                        <div class="title">{{ item.guestType == 'STAFF' ? '工作人员' : item.guestType == 'GRAY' ? '灰名单' : item.guestType == 'BLACK' ? '黑名单' : '陌生人' }}</div>
-                        <div class="content">
-                          <p>
-                            <span>时间：</span>
-                            <span>{{dateDiff(item.filming_time)}} ({{datetimeparse(item.filming_time,'hh:mm:ss')}})</span>
-                          </p>
-                          <p>
-                            <span>地点：</span>
-                            <span>{{item.location}}</span>
-                          </p>
-                          <p v-if="item.guestType == 'STAFF'">
-                            <span>来源：</span>
-                            <span>工作人员库</span>
-                          </p>
-                          <p v-else-if="item.guestType == 'GRAY'">
-                            <span>来源：</span>
-                            <span>灰名单库</span>
-                          </p>
-                          <p v-else-if="item.guestType == 'BLACK'">
-                            <span>来源：</span>
-                            <span>黑名单库</span>
-                          </p>
-                          <p v-else>
-                            <span>来源：</span>
-                            <span>-</span>
-                          </p>
-                          <p>
-                            <span>类型：</span>
-                            <span v-if="item.guestType == 'STAFF'">工作人员</span>
-                            <span  v-else-if="item.guestType == 'BLACK'">黑名单</span>
-                            <span  v-else-if="item.guestType == 'GRAY'">访客</span>
-                            <span v-else>陌生人</span>
-                          </p>
+                      <el-popover
+                        placement="right"
+                        title="人员详情"
+                        width="200"
+                        trigger="hover">
+                        <div class="popoverBox">
+                          <div class="popover_list">
+                            <span>抓拍时间：</span>
+                            <span>{{ datetimeparse(item.filming_time,'hh:mm:ss') }}</span>
+                          </div>
+                          <div class="popover_list">
+                            <span>人员类型：</span>
+                            <span>{{ item.guestType == 'STAFF' ? '工作人员' : item.guestType == 'GROUP_STAFF' ? '集团工作人员' : item.guestType == 'GRAY' ? '灰名单' : item.guestType == 'BLACK' ? '黑名单' : '陌生人' }}</span>
+                          </div>
+                          <div class="popover_list">
+                            <span>抓拍地点：</span>
+                            <span>{{ item.location }}</span>
+                          </div>
                         </div>
-                      </div>
+                        <el-button slot="reference">
+                          <div class="img">
+                            <img :src="item.facial_pic" alt=""  @click.stop="bigImgShow(item.facial_pic)">
+                          </div>
+                          <div class="content">
+                            {{ dateDiff(item.filming_time) }}
+                          </div>
+                        </el-button>
+                      </el-popover>
                     </div>
                   </el-col>
                 </el-row>
@@ -420,7 +382,7 @@
                   @size-change="handleSizeChange"
                   @current-change="handleCurrentChange5"
                   :current-page.sync="currentPage5"
-                  :page-size="18"
+                  :page-size="60"
                   layout="total, prev, pager, next"
                   :total="total5" v-if="visitorLists.length != 0">
                 </el-pagination>
@@ -528,6 +490,10 @@
         ],
         strangerValue: 1,
         leftPage: 0,
+        activeNames: 1,
+        dayTime: [],
+        weekTime: '',
+        monthTime: '',
       }
     },
     watch: {
@@ -542,6 +508,16 @@
       }
     },
     beforeMount () {
+      if (this.activeNames == 1  && this.dayTime.length == 0) {
+        // 日选择
+        this.dayTime.push(new Date().toLocaleDateString(), new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 60000));
+      }else if (this.activeNames == 2 && this.weekTime === '') {
+        // 周选择
+        this.weekTime = new Date(new Date()-(new Date().getDay()-1)*86400000+(24*60*60*1000)).toLocaleDateString();
+      }else if (this.activeNames == 3 && this.monthTime === '') {
+        // 月选择
+        this.monthTime = new Date().toLocaleDateString();
+      }
       this.totalList();
     },
     mounted () {
@@ -587,6 +563,88 @@
           clearInterval(this.timer);
       },
 
+
+      // 主体一级选择
+      handleChange(val) {
+        this.activeNames = val;
+        if (val == 1  && this.dayTime.length == 0) {
+          // 日选择
+          this.dayTime.push(new Date().toLocaleDateString(), new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 60000));
+        }else if (val == 2 && this.weekTime === '') {
+          // 周选择
+          this.weekTime = new Date(new Date()-(new Date().getDay()-1)*86400000+(24*60*60*1000)).toLocaleDateString();
+        }else if (val == 3 && this.monthTime === '') {
+          // 月选择
+          this.monthTime = new Date().toLocaleDateString();
+        }
+        this.handleTabChange(0);
+      },
+
+      // 二级选择
+      handleTabChange(num) {
+        this.currentPage1 = 1;
+        this.currentPage2 = 1;
+        this.currentPage3 = 1;
+        this.currentPage4 = 1;
+        this.currentPage5 = 1;
+        if (num == 0) {
+          this.tab1 = true;
+          this.tab2 = false;
+          this.tab3 = false;
+          this.tab4 = false;
+          this.tab5 = false;
+          this.getLists(0,'',0,60,'');
+        }else if (num == 1) {
+          this.tab1 = false;
+          this.tab2 = true;
+          this.tab3 = false;
+          this.tab4 = false;
+          this.tab5 = false;
+          this.getLists(0,'SUSPICIOUS_GUEST',1,60,'READ');
+        }else if (num == 2) {
+          this.tab1 = false;
+          this.tab2 = false;
+          this.tab3 = true;
+          this.tab4 = false;
+          this.tab5 = false;
+          this.getLists(0,'STAFF',2,60,'');
+        }else if (num == 3) {
+          this.tab1 = false;
+          this.tab2 = false;
+          this.tab3 = false;
+          this.tab4 = true;
+          this.tab5 = false;
+          this.getLists(0,'BLACK',3,60,'READ');
+        }else {
+          this.tab1 = false;
+          this.tab2 = false;
+          this.tab3 = false;
+          this.tab4 = false;
+          this.tab5 = true;
+          this.getLists(0,'GRAY',4,60,'READ');
+        }
+        if (this.strangerList.length < 100) {
+          this.getLists(0,this.strangerTabs[this.strangerValue-1].value,5,100,'SUSPICIOUS_GUEST');
+        }
+        this.totalList();
+      },
+
+      // 日期选择
+      handleTimeChange(val) {
+          console.log(val);
+          if (this.tab1) {
+            this.handleTabChange(0);
+          }else if (this.tab2) {
+            this.handleTabChange(1);
+          }else if (this.tab3) {
+            this.handleTabChange(2);
+          }else if (this.tab4) {
+            this.handleTabChange(3);
+          }else {
+            this.handleTabChange(4);
+          }
+      },
+
       // 选择
       strangerSelect(val) {
         console.log(val);
@@ -621,7 +679,7 @@
                 if (body.data.code == 0) {
                   this.selectLists = body.data.data;
                   this.selectLists.unshift('全部');
-                  this.getLists(0,'',0,18,'');
+                  this.getLists(0,'',0,60,'');
                   this.indistinctList = [];
                   this.strangerNum = [];
                   this.leftPage = 0;
@@ -641,52 +699,6 @@
           })
       },
 
-      // tab切换
-      tabClick(num) {
-        this.currentPage1 = 1;
-        this.currentPage2 = 1;
-        this.currentPage3 = 1;
-        this.currentPage4 = 1;
-        this.currentPage5 = 1;
-        if (num == 0) {
-          this.tab1 = true;
-          this.tab2 = false;
-          this.tab3 = false;
-          this.tab4 = false;
-          this.tab5 = false;
-          this.getLists(0,'',0,18,'');
-        }else if (num == 1) {
-          this.tab1 = false;
-          this.tab2 = true;
-          this.tab3 = false;
-          this.tab4 = false;
-          this.tab5 = false;
-          this.getLists(0,'SUSPICIOUS_GUEST',1,18,'READ');
-        }else if (num == 2) {
-          this.tab1 = false;
-          this.tab2 = false;
-          this.tab3 = true;
-          this.tab4 = false;
-          this.tab5 = false;
-          this.getLists(0,'STAFF',2,18,'');
-        }else if (num == 3) {
-          this.tab1 = false;
-          this.tab2 = false;
-          this.tab3 = false;
-          this.tab4 = true;
-          this.tab5 = false;
-          this.getLists(0,'BLACK',3,18,'READ');
-        }else {
-          this.tab1 = false;
-          this.tab2 = false;
-          this.tab3 = false;
-          this.tab4 = false;
-          this.tab5 = true;
-          this.getLists(0,'GRAY',4,18,'READ');
-        }
-        this.totalList();
-      },
-
       // 左边tab切换
       strangerTabClick(index, type) {
         if (type == 1) {
@@ -700,15 +712,15 @@
           this.currentPage4 = 1;
           this.currentPage5 = 1;
           if (this.tab1) {
-            this.getLists(0,'',0,18,'');
+            this.getLists(0,'',0,60,'');
           }else if (this.tab2) {
-            this.getLists(0,'SUSPICIOUS_GUEST',1,18,'READ');
+            this.getLists(0,'SUSPICIOUS_GUEST',1,60,'READ');
           }else if (this.tab3) {
-            this.getLists(0,'STAFF',2,18,'');
+            this.getLists(0,'STAFF',2,60,'');
           }else if (this.tab4) {
-            this.getLists(0,'BLACK',3,18,'READ');
+            this.getLists(0,'BLACK',3,60,'READ');
           }else {
-            this.getLists(0,'GRAY',4,18,'READ');
+            this.getLists(0,'GRAY',4,60,'READ');
           }
           this.indistinctList = [];
           this.strangerList = [];
@@ -730,23 +742,23 @@
 
       handleCurrentChange1(val) {
         console.log(`当前页: ${val}`);
-        this.getLists(val-1,'',0,18,'');
+        this.getLists(val-1,'',0,60,'');
       },
       handleCurrentChange2(val) {
         console.log(`当前页2: ${val}`);
-        this.getLists(val-1,'SUSPICIOUS_GUEST ',1,18,'READ');
+        this.getLists(val-1,'SUSPICIOUS_GUEST ',1,60,'READ');
       },
       handleCurrentChange3(val) {
         console.log(`当前页3: ${val}`);
-        this.getLists(val-1,'STAFF',2,18,'');
+        this.getLists(val-1,'STAFF',2,60,'');
       },
       handleCurrentChange4(val) {
         console.log(`当前页4: ${val}`);
-        this.getLists(val-1,'BLACK',3,18,'READ');
+        this.getLists(val-1,'BLACK',3,60,'READ');
       },
       handleCurrentChange5(val) {
         console.log(`当前页5: ${val}`);
-        this.getLists(val-1,'GRAY',4,18,'READ');
+        this.getLists(val-1,'GRAY',4,60,'READ');
       },
 
       // 距离现在相差几小时函数
@@ -766,11 +778,25 @@
 
       // 获取数据列表
       getLists (page,statuses,type,limit,status) {
-        page = page * 18;
+        page = page * 60;
         this.doubtfulList = [];
+        let startTime, endTime;
+        if (this.activeNames == 1) {
+          startTime = new Date(this.dayTime[0]).getTime();
+          endTime = new Date(this.dayTime[1]).getTime() + 59*1000;
+        }else if (this.activeNames == 2) {
+          startTime = new Date(this.weekTime).getTime() - (24*60*60*1000);
+          endTime = new Date(this.weekTime).getTime() + (24*60*60*1000*6)-1000;
+        }else if (this.activeNames == 3) {
+          let year = this.datetimeparse(new Date(this.monthTime).getTime(), 'yy');
+          let month = this.datetimeparse(new Date(this.monthTime).getTime(), 'MM');
+          let day = new Date(year,month,0).getDate();
+          startTime = new Date(this.monthTime).getTime();
+          endTime = new Date(year+'/'+month+'/'+day).getTime() + (24*60*60*1000)-1000;
+        }
         let obj = {
-          createTimeStart: new Date(this.datetimeparse(new Date(new Date(new Date().toLocaleDateString()).getTime()),'YYYY/MM/DD hh:mm:ss')).getTime(),
-          createTimeEnd: '',
+          createTimeStart: startTime,
+          createTimeEnd: endTime,
           hotelId: sessionStorage.hotelId,
           location: this.locationTab == 1 ? '' : this.selectLists[this.locationTab-1]
         };
@@ -845,8 +871,23 @@
 
       // 获取总数列表
       totalList () {
+        let startTime, endTime;
+        if (this.activeNames == 1) {
+          startTime = new Date(this.dayTime[0]).getTime();
+          endTime = new Date(this.dayTime[1]).getTime() + 59*1000;
+        }else if (this.activeNames == 2) {
+          startTime = new Date(this.weekTime).getTime() - (24*60*60*1000);
+          endTime = new Date(this.weekTime).getTime() + (24*60*60*1000*6)-1000;
+        }else if (this.activeNames == 3) {
+          let year = this.datetimeparse(new Date(this.monthTime).getTime(), 'yy');
+          let month = this.datetimeparse(new Date(this.monthTime).getTime(), 'MM');
+          let day = new Date(year,month,0).getDate();
+          startTime = new Date(this.monthTime).getTime();
+          endTime = new Date(year+'/'+month+'/'+day).getTime() + (24*60*60*1000)-1000;
+        }
         this.totalGuest({
           data: {
+
             location: this.locationTab == 1 ? '' : this.selectLists[this.locationTab-1],
             hotelId: sessionStorage.hotelId,
           },
@@ -879,7 +920,21 @@
           obj2.value = this.total3;
           obj3.name = '访客';
           obj3.value = this.total5;
-          this.totalLists.push(obj1, obj2, obj3, obj);
+          let startTime, endTime;
+          if (this.activeNames == 1) {
+            startTime = new Date(this.dayTime[0]).getTime();
+            endTime = new Date(this.dayTime[1]).getTime() + 59*1000;
+          }else if (this.activeNames == 2) {
+            startTime = new Date(this.weekTime).getTime() - (24*60*60*1000);
+            endTime = new Date(this.weekTime).getTime() + (24*60*60*1000*6)-1000;
+          }else if (this.activeNames == 3) {
+            let year = this.datetimeparse(new Date(this.monthTime).getTime(), 'yy');
+            let month = this.datetimeparse(new Date(this.monthTime).getTime(), 'MM');
+            let day = new Date(year,month,0).getDate();
+            startTime = new Date(this.monthTime).getTime();
+            endTime = new Date(year+'/'+month+'/'+day).getTime() + (24*60*60*1000)-1000;
+          }
+          this.totalLists.push(obj1, obj2, obj3, obj, startTime, endTime);
           console.log('this.totalLists',this.totalLists);
         })
       },
@@ -911,23 +966,23 @@
                     }
                     if (this.tab1 && this.currentPage1 == 1) {
                       this.toDayLists.unshift(item);
-                      if (this.toDayLists.length > 18) {
-                        this.toDayLists.splice(18,1);
+                      if (this.toDayLists.length > 60) {
+                        this.toDayLists.splice(60,1);
                       }
                     }else if (this.tab4 && item.guestType == 'BLACK' && this.currentPage4 == 1) {
                       this.aliveLists.unshift(item);
-                      if (this.aliveLists.length > 18) {
-                        this.aliveLists.splice(18,1);
+                      if (this.aliveLists.length > 60) {
+                        this.aliveLists.splice(60,1);
                       }
                     }else if (this.tab5 && item.guestType == 'GRAY' && this.currentPage5 == 1) {
                       this.visitorLists.unshift(item);
-                      if (this.visitorLists.length > 18) {
-                        this.visitorLists.splice(18,1);
+                      if (this.visitorLists.length > 60) {
+                        this.visitorLists.splice(60,1);
                       }
                     }else if (this.tab2 && item.guestType == 'SUSPICIOUS_GUEST' && this.currentPage2 == 1) {
                       this.strangerLists.unshift(item);
-                      if (this.strangerLists.length > 18) {
-                        this.strangerLists.splice(18,1);
+                      if (this.strangerLists.length > 60) {
+                        this.strangerLists.splice(60,1);
                       }
                     }
                   });
@@ -951,13 +1006,13 @@
                     this.total2++;
                     if (this.tab1 && this.currentPage1 == 1) {
                       this.toDayLists.unshift(item);
-                      if (this.toDayLists.length > 18) {
-                        this.toDayLists.splice(18,1);
+                      if (this.toDayLists.length > 60) {
+                        this.toDayLists.splice(60,1);
                       }
                     }else if (this.tab2 && this.currentPage2 == 1) {
                       this.strangerLists.unshift(item);
-                      if (this.strangerLists.length > 18) {
-                        this.strangerLists.splice(18,1);
+                      if (this.strangerLists.length > 60) {
+                        this.strangerLists.splice(60,1);
                       }
                     }
                   });
@@ -1022,28 +1077,28 @@
             }else {
               this.total1++;
               this.toDayLists.unshift(newData);
-              if (this.toDayLists.length > 18) {
-                this.toDayLists.splice(18,1);
+              if (this.toDayLists.length > 60) {
+                this.toDayLists.splice(60,1);
               }
               if (newData.guestType == 'STAFF') {
                 this.total3++;
                 this.whiteLists.unshift(newData);
-                if (this.whiteLists.length > 18) {
-                  this.whiteLists.splice(18,1);
+                if (this.whiteLists.length > 60) {
+                  this.whiteLists.splice(60,1);
                 }
               }
               if (newData.guestType == 'BLACK') {
                 this.total4++;
                 this.aliveLists.unshift(newData);
-                if (this.aliveLists.length > 18) {
-                  this.aliveLists.splice(18,1);
+                if (this.aliveLists.length > 60) {
+                  this.aliveLists.splice(60,1);
                 }
               }
               if (newData.guestType == 'GRAY') {
                 this.total5++;
                 this.visitorLists.unshift(newData);
-                if (this.visitorLists.length > 18) {
-                  this.visitorLists.splice(18,1);
+                if (this.visitorLists.length > 60) {
+                  this.visitorLists.splice(60,1);
                 }
               }
             }
@@ -1268,9 +1323,92 @@
             }
           }
         }
-        .el-col-12 {
+        .el-col-8 {
           height: 70px;
+          width: calc(33.33333% - 15px);
           margin-right: 15px;
+          position: relative;
+          .bg {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 8;
+            width: 100%;
+            height: 70px;
+            img {
+              display: inline-block;
+              width: 100%;
+              height: 100%;
+            }
+          }
+          .timerChange {
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            flex-direction: column;
+            .time_title {
+              font-size: 16px;
+              color: #408FE9;
+              padding-left: 13px;
+              height: 50%;
+              display: inline-flex;
+              width: calc(100% - 13px);
+              align-items: center;
+              justify-content: space-between;
+              border-bottom: 1px solid #265792;
+            }
+            /deep/ .el-date-editor .el-range-input {
+              width: 40%;
+            }
+            /deep/ .el-date-editor.el-input {
+              width: 100%;
+            }
+            /deep/ .el-date-editor--datetimerange.el-input,
+            /deep/.el-date-editor--datetimerange.el-input__inner,
+            /deep/ .el-input--prefix .el-input__inner {
+              width: 100%;
+              padding: 0 10px;
+              height: 50%;
+              line-height: 1;
+            }
+            /deep/ .el-input--prefix .el-input__inner {
+              padding: 0 30px;
+            }
+            /deep/ .el-input__inner {
+              background-color: transparent;
+              border: none;
+              font-size: 16px;
+              color: #FFFFFF;
+              .el-range-input {
+                background-color: transparent;
+                font-size: 16px;
+                color: #FFFFFF;
+              }
+            }
+            /deep/ .el-date-editor .el-range-separator {
+              width: 6%;
+              font-size: 16px;
+              color: #FFFFFF;
+            }
+            /deep/ .el-date-editor .el-range__close-icon {
+              display: none;
+            }
+            /deep/ .el-input__icon {
+              line-height: 1;
+            }
+            /deep/ .el-icon-circle-close {
+              display: none;
+            }
+          }
+        }
+        .el-col-16 {
+          height: 70px;
           position: relative;
           .bg {
             position: absolute;
@@ -1291,56 +1429,63 @@
             left: 0;
             top: 0;
             width: 100%;
-            height: 100%;
             z-index: 10;
-            .el-row {
-              height: 100%;
-              .tab {
-                color: #408FE9;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            .tabs_item {
+              display: inline-flex;
+              align-items: center;
+              justify-content: space-around;
+              .item_tab_one {
+                background-color: transparent;
+                border: none;
                 font-size: 14px;
-                cursor: pointer;
-                height: 100%;
-                display: flex;
+                color: #A6ADB4;
+                height: 70px;
+                line-height: normal;
+                display: inline-flex;
                 align-items: center;
                 justify-content: center;
                 flex-direction: column;
+                cursor: pointer;
                 span {
                   display: block;
                 }
               }
-              .active {
-                color: #fff;
+              .item_tab_two {
+                width: 80%;
+                height: 100%;
+                display: inline-flex;
+                align-items: center;
+                justify-content: space-around;
+                .item_tab {
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: center;
+                  flex-direction: column;
+                  height: 100%;
+                  cursor: pointer;
+                  font-size: 14px;
+                  color: #3798FC;
+                  span {
+                    display: block;
+                    margin-top: 8px;
+                  }
+                }
+                .active {
+                  color: #FAFAFB;
+                }
               }
             }
-          }
-        }
-        .el-col-12:last-of-type {
-          width: calc(50% - 15px);
-          margin-right: 0;
-          .el-row {
-            height: 100%;
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 10;
-            .el-col-6 {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              font-size: 14px;
-              color: #A6ADB4;
-              height: 100%;
-              flex-direction: column;
-              img {
-                display: inline-flex;
-                width: 26.7px;
-                height: 20.7px;
-              }
-              span {
-                display: flex;
-                word-wrap:break-word
+            .tabs_item.is_active {
+              width: 70%;
+              .item_tab_one {
+                font-size: 16px;
+                color: #fff;
+                span {
+                  margin-top: 8px;
+                }
               }
             }
           }
@@ -1376,78 +1521,34 @@
           .list {
             margin: 0 0 8px;
             .grid-content {
-              border: 1px solid #3798FC;
               border-radius: 8px;
-              padding: 5px;
-              .imgs {
-                display: flex;
-                justify-content: space-between;
-                div {
-                  position:relative;
-                  width: 48.5%;
-                  height:0;
-                  padding-top:50%;
-                  border-radius: 8px;
+              .el-button {
+                padding: 0;
+                width: 100%;
+                background: transparent;
+                border: none;
+                .img {
+                  width: 100%;
+                  height: 0;
+                  padding-bottom: 100%;
+                  position: relative;
                   img {
-                    position:absolute;
-                    top:0;
-                    left:0;
-                    width:100%;
-                    height:100%;
-                    border-radius: 8px;
-                    cursor: pointer;
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    border-radius: 8px 8px 0 0;
                   }
-                }
-              }
-              .list_content {
-                .title {
-                  font-size: 20px;
-                  color: #fff;
-                  margin: 8px 0;
-                  text-align: left;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                  white-space: nowrap;
-                }
-                .title:hover {
-                  overflow: inherit;
-                  background-color: #041740;
-                  z-index: 5;
                 }
                 .content {
-                  p {
-                    height: 22px;
-                    display: flex;
-                    justify-content: flex-start;
-                    font-size: 14px;
-                    text-align: left;
-                    /*overflow: hidden;*/
-                    /*text-overflow: ellipsis;*/
-                    /*display: -webkit-box;*/
-                    /*-webkit-line-clamp: 1;*/
-                    /*display: -webkit-box;*/
-                    /*-webkit-box-orient: vertical;*/
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
-                    span:first-of-type {
-                      color: #408FE9;
-                    }
-                    span:last-of-type {
-                      color: #fff;
-                      font-size: 15px;
-                    }
-                  }
-                  p:hover {
-                    overflow: inherit;
-                    span {
-                      background-color: #041740;
-                      z-index: 5;
-                    }
-                  }
-                  p:nth-of-type(3) span:last-of-type {
-                    color: #F46C6C;
-                  }
+                  background: #103A72;
+                  border: 1px solid #3798FC;
+                  padding: 11px 0;
+                  text-align: center;
+                  font-size: 14px;
+                  color: #FFFFFF;
                 }
               }
             }
