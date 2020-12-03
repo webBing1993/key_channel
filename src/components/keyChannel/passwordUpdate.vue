@@ -59,7 +59,7 @@
           name: [
             { required: true, message: '请填写手机号码', trigger: 'blur' },
             { pattern: /^1\d{10}$/, message: '请填写11位手机号码' },
-            { pattern: /^((13|14|15|16|17|18)[0-9]{1}\d{8})$/, message: '请填写正确的手机号码' }
+            { pattern: /^((13|14|15|16|17|18|19)[0-9]{1}\d{8})$/, message: '请填写正确的手机号码' }
           ],
           code: [
             { required: true, message: '请填写短信验证码', trigger: 'blur' },
@@ -88,7 +88,7 @@
 
       // 获取验证码
       sendcode() {
-        let reg = 11 && /^((13|14|15|16|17|18)[0-9]{1}\d{8})$/;
+        let reg = 11 && /^((13|14|15|16|17|18|19)[0-9]{1}\d{8})$/;
         if(this.ruleForm.name === ''){
           this.$message('请输入手机号码');
           return;
