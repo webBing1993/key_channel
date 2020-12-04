@@ -188,7 +188,7 @@
                   :current-page.sync="currentPage1"
                   :page-size="60"
                   layout="total, prev, pager, next"
-                  :total="total1" v-if="toDayLists.length != 0">
+                  :total="activeNames == 1 ? total1 : activeNames == 2 ? weekNum : monthNum" v-if="toDayLists.length != 0">
                 </el-pagination>
                 <div class="noMsg" v-else>
                   <div class="img"><img src="../../assets/index/zanwuneirong.png" alt=""></div>
@@ -567,13 +567,13 @@
       // 主体一级选择
       handleChange(val) {
         this.activeNames = val;
-        if (val == 1  && this.dayTime.length == 0) {
+        if (val == 1) {
           // 日选择
-          this.dayTime.push(new Date().toLocaleDateString(), new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 60000));
-        }else if (val == 2 && this.weekTime === '') {
+          this.dayTime = [new Date().toLocaleDateString(), new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 60000)];
+        }else if (val == 2) {
           // 周选择
           this.weekTime = new Date(new Date()-(new Date().getDay()-1)*86400000+(24*60*60*1000)).toLocaleDateString();
-        }else if (val == 3 && this.monthTime === '') {
+        }else if (val == 3) {
           // 月选择
           this.monthTime = new Date().toLocaleDateString();
         }
@@ -791,7 +791,7 @@
           let year = this.datetimeparse(new Date(this.monthTime).getTime(), 'yy');
           let month = this.datetimeparse(new Date(this.monthTime).getTime(), 'MM');
           let day = new Date(year,month,0).getDate();
-          startTime = new Date(this.monthTime).getTime();
+          startTime = new Date(new Date(year+'/'+month+'/'+'01').toLocaleDateString()).getTime();
           endTime = new Date(year+'/'+month+'/'+day).getTime() + (24*60*60*1000)-1000;
         }
         let obj = {
@@ -882,7 +882,7 @@
           let year = this.datetimeparse(new Date(this.monthTime).getTime(), 'yy');
           let month = this.datetimeparse(new Date(this.monthTime).getTime(), 'MM');
           let day = new Date(year,month,0).getDate();
-          startTime = new Date(this.monthTime).getTime();
+          startTime = new Date(new Date(year+'/'+month+'/'+'01').toLocaleDateString()).getTime();
           endTime = new Date(year+'/'+month+'/'+day).getTime() + (24*60*60*1000)-1000;
         }
         this.totalGuest({
@@ -931,7 +931,7 @@
             let year = this.datetimeparse(new Date(this.monthTime).getTime(), 'yy');
             let month = this.datetimeparse(new Date(this.monthTime).getTime(), 'MM');
             let day = new Date(year,month,0).getDate();
-            startTime = new Date(this.monthTime).getTime();
+            startTime = new Date(new Date(year+'/'+month+'/'+'01').toLocaleDateString()).getTime();
             endTime = new Date(year+'/'+month+'/'+day).getTime() + (24*60*60*1000)-1000;
           }
           this.totalLists.push(obj1, obj2, obj3, obj, startTime, endTime);
