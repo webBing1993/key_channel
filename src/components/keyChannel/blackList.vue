@@ -6,10 +6,10 @@
       <div class="whiteContent" ref="whiteHeight">
         <div class="white_title">
           <div class="tabs">
-            <span :class="tabIndex == 1 ? 'active' : ''" @click="tabIndexClick(1)"><img :src="tabIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">白名单</span>
+            <span :class="tabIndex == 1 ? 'active' : ''" @click="tabIndexClick(1)"><img :src="tabIndex == 1 ? handerImg.img[1] : handerImg.img[0]" alt="">白名单</span>
             <span :class="tabIndex == 2 ? 'active' : ''" @click="tabIndexClick(2)"><img :src="tabIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">灰名单</span>
-            <span :class="tabIndex == 3 ? 'active' : ''" @click="tabIndexClick(3)"><img :src="tabIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">黑名单</span>
-            <span :class="tabIndex == 4 ? 'active' : ''" @click="tabIndexClick(4)"><img :src="tabIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">告警设置</span>
+            <span :class="tabIndex == 3 ? 'active' : ''" @click="tabIndexClick(3)"><img :src="tabIndex == 3 ? handerImg.img[1] : handerImg.img[0]" alt="">黑名单</span>
+            <span :class="tabIndex == 4 ? 'active' : ''" @click="tabIndexClick(4)"><img :src="tabIndex == 4 ? handerImg.img[1] : handerImg.img[0]" alt="">告警设置</span>
           </div>
         </div>
         <div class="search_add" v-if="tabIndex < 4">
@@ -175,7 +175,7 @@
       // tab click
       tabIndexClick(index) {
         this.tabIndex = index;
-        if (index < 3)  {
+        if (index < 4)  {
           this.currentPage = 1;
           this.getWhite(0);
         }else {

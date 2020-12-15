@@ -16,11 +16,11 @@
               </div>
               <div class="tabs" v-if="newSys && roleShow">
                 <span :class="handleIndex == 1 ? 'active' : ''" @click="handleClick(4)"><img :src="handleIndex == 1 ? handerImg.img[1] : handerImg.img[0]" alt="">首页</span>
-                <span :class="handleIndex == 2 ? 'active' : ''" @click="handleClick(5)"><img :src="handleIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">设置</span>
+                <span :class="handleIndex == 2 ? 'active' : ''" @click="handleClick(5)"><img :src="handleIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">名单库</span>
               </div>
               <div class="tabs" v-else-if="newSys && !roleShow">
                 <span :class="handleIndex == 1 ? 'active' : ''" @click="handleClick(6)"><img :src="handleIndex == 1 ? handerImg.img[1] : handerImg.img[0]" alt="">首页</span>
-                <span :class="handleIndex == 2 ? 'active' : ''" @click="handleClick(7)"><img :src="handleIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">设置</span>
+                <span :class="handleIndex == 2 ? 'active' : ''" @click="handleClick(7)"><img :src="handleIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">名单库</span>
                 <span :class="handleIndex == 3 ? 'active' : ''" @click="handleClick(8)" v-if="massage"><img :src="handleIndex == 3 ? handerImg.img[1] : handerImg.img[0]" alt="" >设备监控</span>
               </div>
             </el-col>
@@ -342,7 +342,7 @@
               text-align: center;
               line-height: 30px;
               display: inline-block;
-              width: 66px;
+              width: 74px;
               cursor: pointer;
               img {
                 position: absolute;
@@ -350,7 +350,7 @@
                 top: 0;
                 height: 30px;
                 display: inline-block;
-                width: 66px;
+                width: 74px;
                 z-index: -1;
               }
             }

@@ -187,7 +187,10 @@
                   <div class="toDay_lists lists" v-if="tab1">
                     <el-row :gutter="8">
                       <el-col :xs="4" :sm="4" :md="3" :lg="2" :xl="2"  class="list" v-for="(item,index) in toDayLists" v-bind:key="index">
-                        <div class="grid-content bg-purple">
+                        <div :class="item.guestType == 'BLACK' ? 'grid-content bg-purple listRed' : item.guestType == 'GRAY' ? 'listYellow grid-content bg-purple' : 'grid-content bg-purple'">
+                          <div class="img">
+                            <img :src="item.facial_pic" alt=""  @click.stop="bigImgShow(item.facial_pic)">
+                          </div>
                           <el-popover
                             placement="right"
                             title="人员详情"
@@ -208,12 +211,9 @@
                               </div>
                             </div>
                             <el-button slot="reference">
-                              <div class="img">
-                                <img :src="item.facial_pic" alt=""  @click.stop="bigImgShow(item.facial_pic)">
-                              </div>
-                              <div class="content">
+                              <div :class="item.guestType == 'BLACK' ? 'content listRed' : item.guestType == 'GRAY' ? 'listYellow content' : 'content'">
                                 {{ dateDiff(item.filming_time) }}
-                          </div>
+                              </div>
                             </el-button>
                           </el-popover>
                         </div>
@@ -236,7 +236,10 @@
                   <div class="stranger_lists lists" v-if="tab2">
                     <el-row :gutter="8">
                       <el-col :xs="4" :sm="4" :md="3" :lg="2" :xl="2"  class="list" v-for="(item,index) in strangerLists" v-bind:key="index">
-                        <div class="grid-content bg-purple">
+                        <div :class="item.guestType == 'BLACK' ? 'grid-content bg-purple listRed' : item.guestType == 'GRAY' ? 'listYellow grid-content bg-purple' : 'grid-content bg-purple'">
+                          <div class="img">
+                            <img :src="item.facial_pic" alt=""  @click.stop="bigImgShow(item.facial_pic)">
+                          </div>
                           <el-popover
                             placement="right"
                             title="人员详情"
@@ -257,12 +260,9 @@
                               </div>
                             </div>
                             <el-button slot="reference">
-                              <div class="img">
-                                <img :src="item.facial_pic" alt=""  @click.stop="bigImgShow(item.facial_pic)">
-                              </div>
-                              <div class="content">
+                              <div :class="item.guestType == 'BLACK' ? 'content listRed' : item.guestType == 'GRAY' ? 'listYellow content' : 'content'">
                                 {{ dateDiff(item.filming_time) }}
-                          </div>
+                              </div>
                             </el-button>
                           </el-popover>
                         </div>
@@ -285,7 +285,10 @@
                   <div class="white_lists lists" v-if="tab3">
                     <el-row :gutter="8">
                       <el-col :xs="4" :sm="4" :md="3" :lg="2" :xl="2"  class="list" v-for="(item,index) in whiteLists" v-bind:key="index">
-                        <div class="grid-content bg-purple">
+                        <div :class="item.guestType == 'BLACK' ? 'grid-content bg-purple listRed' : item.guestType == 'GRAY' ? 'listYellow grid-content bg-purple' : 'grid-content bg-purple'">
+                          <div class="img">
+                            <img :src="item.facial_pic" alt=""  @click.stop="bigImgShow(item.facial_pic)">
+                          </div>
                           <el-popover
                             placement="right"
                             title="人员详情"
@@ -306,12 +309,9 @@
                               </div>
                             </div>
                             <el-button slot="reference">
-                              <div class="img">
-                                <img :src="item.facial_pic" alt=""  @click.stop="bigImgShow(item.facial_pic)">
-                              </div>
-                              <div class="content">
+                              <div :class="item.guestType == 'BLACK' ? 'content listRed' : item.guestType == 'GRAY' ? 'listYellow content' : 'content'">
                                 {{ dateDiff(item.filming_time) }}
-                          </div>
+                              </div>
                             </el-button>
                           </el-popover>
                         </div>
@@ -334,7 +334,10 @@
                   <div class="ailve_lists lists" v-if="tab4">
                     <el-row :gutter="8">
                       <el-col :xs="4" :sm="4" :md="3" :lg="2" :xl="2"  class="list" v-for="(item,index) in aliveLists" v-bind:key="index">
-                        <div class="grid-content bg-purple">
+                        <div :class="item.guestType == 'BLACK' ? 'grid-content bg-purple listRed' : item.guestType == 'GRAY' ? 'listYellow grid-content bg-purple' : 'grid-content bg-purple'">
+                          <div class="img">
+                            <img :src="item.facial_pic" alt=""  @click.stop="bigImgShow(item.facial_pic)">
+                          </div>
                           <el-popover
                             placement="right"
                             title="人员详情"
@@ -355,12 +358,9 @@
                               </div>
                             </div>
                             <el-button slot="reference">
-                              <div class="img">
-                                <img :src="item.facial_pic" alt=""  @click.stop="bigImgShow(item.facial_pic)">
-                              </div>
-                              <div class="content">
+                              <div :class="item.guestType == 'BLACK' ? 'content listRed' : item.guestType == 'GRAY' ? 'listYellow content' : 'content'">
                                 {{ dateDiff(item.filming_time) }}
-                          </div>
+                              </div>
                             </el-button>
                           </el-popover>
                         </div>
@@ -383,7 +383,10 @@
                   <div class="ailve_lists lists" v-if="tab5">
                     <el-row :gutter="8">
                       <el-col :xs="4" :sm="4" :md="3" :lg="2" :xl="2"  class="list" v-for="(item,index) in visitorLists" v-bind:key="index">
-                        <div class="grid-content bg-purple">
+                        <div :class="item.guestType == 'BLACK' ? 'grid-content bg-purple listRed' : item.guestType == 'GRAY' ? 'listYellow grid-content bg-purple' : 'grid-content bg-purple'">
+                          <div class="img">
+                            <img :src="item.facial_pic" alt=""  @click.stop="bigImgShow(item.facial_pic)">
+                          </div>
                           <el-popover
                             placement="right"
                             title="人员详情"
@@ -404,12 +407,9 @@
                               </div>
                             </div>
                             <el-button slot="reference">
-                              <div class="img">
-                                <img :src="item.facial_pic" alt=""  @click.stop="bigImgShow(item.facial_pic)">
-                              </div>
-                              <div class="content">
+                              <div :class="item.guestType == 'BLACK' ? 'content listRed' : item.guestType == 'GRAY' ? 'listYellow content' : 'content'">
                                 {{ dateDiff(item.filming_time) }}
-                          </div>
+                              </div>
                             </el-button>
                           </el-popover>
                         </div>
@@ -944,7 +944,11 @@
         let iHour;
         iHour = parseInt(Math.abs(newTime - outTime) / 1000 / 60 / 60);
         if (iHour > 0) {
-          return iHour+'小时前';
+          if (iHour > 24) {
+            return this.datetimeparse(outTime,'MM/dd').split('/')[0] + '月' + this.datetimeparse(outTime,'MM/dd').split('/')[1] + '日'
+          }else {
+            return iHour+'小时前';
+          }
         }else {
           let m;
           m = parseInt(Math.abs(newTime - outTime) / 1000 / 60);
@@ -1638,10 +1642,10 @@
               }
             }
             .listRed {
-              background-color: #F46C6C;
+              background-color: #FB2142;
             }
             .listYellow {
-              background-color: #debd5dfc;
+              background-color: #F5A623;
             }
           }
           .stranger_list::-webkit-scrollbar {
@@ -1699,6 +1703,12 @@
                   align-items: center;
                   justify-content: space-between;
                   border-bottom: 1px solid #265792;
+                }
+                .timer_change {
+                  display: inline-flex;
+                  align-items: center;
+                  justify-content: flex-start;
+                  width: 100%;
                 }
                 /deep/ .el-date-editor .el-range-input {
                   width: 42%;
@@ -1866,40 +1876,66 @@
               }
               .list {
                 margin: 0 0 8px;
+                min-width: 96px;
                 .grid-content {
                   border-radius: 8px;
+                  border: 2px solid #3798FC;
+                  .img {
+                    width: 100%;
+                    height: 0;
+                    padding-bottom: 100%;
+                    position: relative;
+                    img {
+                      display: block;
+                      width: 100%;
+                      height: 100%;
+                      position: absolute;
+                      left: 0;
+                      top: 0;
+                      border-radius: 8px 8px 0 0;
+                      cursor: pointer;
+                    }
+                  }
                   .el-button {
                     padding: 0;
                     width: 100%;
                     background: transparent;
                     border: none;
-                    .img {
-                      width: 100%;
-                      height: 0;
-                      padding-bottom: 100%;
-                      position: relative;
-                      img {
-                        display: block;
-                        width: 100%;
-                        height: 100%;
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                        border-radius: 8px 8px 0 0;
-                      }
-                    }
+                    border-radius: 0 0 8px 8px;
                     .content {
                       background: #103A72;
-                      border: 1px solid #3798FC;
                       padding: 11px 0;
                       text-align: center;
                       font-size: 14px;
                       color: #FFFFFF;
+                      border-radius: 0 0 8px 8px;
+                    }
+                    .listRed {
+                      background-color: #FB2142;
+                    }
+                    .listYellow {
+                      background-color: #F5A623;
+                    }
+                  }
+                }
+                .listRed {
+                  border-color: #FB2142;
+                  .el-button {
+                    .content {
+                      border-radius: 0;
+                    }
+                  }
+                }
+                .listYellow {
+                  border-color: #F5A623;
+                  .el-button {
+                    .content {
+                      border-radius: 0;
                     }
                   }
                 }
                 .grid-content:hover {
-                  border: 1px solid #F46C6C;
+                  /*border: 1px solid #F46C6C;*/
                 }
               }
             }
