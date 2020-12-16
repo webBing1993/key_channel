@@ -144,33 +144,41 @@
                     <el-col :span="16">
                       <div class="bg"><img src="../../assets/index/zhongshnag.png" alt=""></div>
                       <div class="tabs">
-                        <div :class="activeNames == 1 ? 'tabs_item is_active' : 'tabs_item'">
+                        <div :class="activeNames_ ? 'tabs_item is_active' : 'tabs_item'">
+                          <div class="item_tab_two" v-if="activeNames_">
+                            <div :class="tab2 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(1)">陌生人 <span>{{total2}}</span></div>
+                            <div :class="tab3 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(2)">工作人员 <span>{{total3}}</span></div>
+                            <div :class="tab4 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(3)">黑名单 <span>{{total4}}</span></div>
+                            <div :class="tab5 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(4)">灰名单 <span>{{total5}}</span></div>
+                          </div>
+                        </div>
+                        <div :class="(!activeNames_ && activeNames == 1) ? 'tabs_item is_active' : 'tabs_item'">
                           <div class="item_tab_one" @click="handleChange(1)">
                             今日处理 <span>{{total1}}</span>
                           </div>
-                          <div class="item_tab_two" v-if="activeNames == 1">
+                          <div class="item_tab_two" v-if="(!activeNames_ && activeNames == 1)">
                             <div :class="tab2 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(1)">陌生人 <span>{{total2}}</span></div>
                             <div :class="tab3 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(2)">工作人员 <span>{{total3}}</span></div>
                             <div :class="tab4 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(3)">黑名单 <span>{{total4}}</span></div>
                             <div :class="tab5 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(4)">灰名单 <span>{{total5}}</span></div>
                           </div>
                         </div>
-                        <div :class="activeNames == 2 ? 'tabs_item is_active' : 'tabs_item'">
+                        <div :class="(!activeNames_ && activeNames == 2) ? 'tabs_item is_active' : 'tabs_item'">
                           <div class="item_tab_one" @click="handleChange(2)">
                             本周抓拍 <span>{{weekNum}}</span>
                           </div>
-                          <div class="item_tab_two" v-if="activeNames == 2">
+                          <div class="item_tab_two" v-if="(!activeNames_ && activeNames == 2)">
                             <div :class="tab2 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(1)">陌生人 <span>{{total2}}</span></div>
                             <div :class="tab3 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(2)">工作人员 <span>{{total3}}</span></div>
                             <div :class="tab4 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(3)">黑名单 <span>{{total4}}</span></div>
                             <div :class="tab5 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(4)">灰名单 <span>{{total5}}</span></div>
                           </div>
                         </div>
-                        <div :class="activeNames == 3 ? 'tabs_item is_active' : 'tabs_item'">
+                        <div :class="(!activeNames_ && activeNames == 3) ? 'tabs_item is_active' : 'tabs_item'">
                           <div class="item_tab_one" @click="handleChange(3)">
                             本月抓拍 <span>{{monthNum}}</span>
                           </div>
-                          <div class="item_tab_two" v-if="activeNames == 3">
+                          <div class="item_tab_two" v-if="(!activeNames_ && activeNames == 3)">
                             <div :class="tab2 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(1)">陌生人 <span>{{total2}}</span></div>
                             <div :class="tab3 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(2)">工作人员 <span>{{total3}}</span></div>
                             <div :class="tab4 ? 'item_tab active' : 'item_tab'" @click="handleTabChange(3)">黑名单 <span>{{total4}}</span></div>
@@ -225,7 +233,7 @@
                       :current-page.sync="currentPage1"
                       :page-size="60"
                       layout="total, prev, pager, next"
-                      :total="activeNames == 1 ? total1 : activeNames == 2 ? weekNum : monthNum" v-if="toDayLists.length != 0">
+                      :total="total" v-if="toDayLists.length != 0">
                     </el-pagination>
                     <div class="noMsg" v-else>
                       <div class="img"><img src="../../assets/index/zanwuneirong.png" alt=""></div>
@@ -274,7 +282,7 @@
                       :current-page.sync="currentPage2"
                       :page-size="60"
                       layout="total, prev, pager, next"
-                      :total="total2" v-if="strangerLists.length != 0">
+                      :total="total" v-if="strangerLists.length != 0">
                     </el-pagination>
                     <div class="noMsg" v-else>
                       <div class="img"><img src="../../assets/index/zanwuneirong.png" alt=""></div>
@@ -323,7 +331,7 @@
                       :current-page.sync="currentPage3"
                       :page-size="60"
                       layout="total, prev, pager, next"
-                      :total="total3" v-if="whiteLists.length != 0">
+                      :total="total" v-if="whiteLists.length != 0">
                     </el-pagination>
                     <div class="noMsg" v-else>
                       <div class="img"><img src="../../assets/index/zanwuneirong.png" alt=""></div>
@@ -372,7 +380,7 @@
                       :current-page.sync="currentPage4"
                       :page-size="60"
                       layout="total, prev, pager, next"
-                      :total="total4" v-if="aliveLists.length != 0">
+                      :total="total" v-if="aliveLists.length != 0">
                     </el-pagination>
                     <div class="noMsg" v-else>
                       <div class="img"><img src="../../assets/index/zanwuneirong.png" alt=""></div>
@@ -421,7 +429,7 @@
                       :current-page.sync="currentPage5"
                       :page-size="60"
                       layout="total, prev, pager, next"
-                      :total="total5" v-if="visitorLists.length != 0">
+                      :total="total" v-if="visitorLists.length != 0">
                     </el-pagination>
                     <div class="noMsg" v-else>
                       <div class="img"><img src="../../assets/index/zanwuneirong.png" alt=""></div>
@@ -492,6 +500,7 @@
         currentPage3: 1,
         currentPage4: 1,
         currentPage5: 1,
+        total: 0,              // 数量
         total1: 0,              // 今日抓拍数量
         total2: 0,              // 陌生人数量
         total3: 0,              // 工作人员数量
@@ -557,6 +566,7 @@
         dayTime: [],
         weekTime: '',
         monthTime: '',
+        activeNames_: false,
       }
     },
     beforeMount () {
@@ -616,6 +626,7 @@
 
       // 主体一级选择
       handleChange(val) {
+        this.activeNames_ = false;
         this.activeNames = val;
         if (val == 1) {
           // 日选择
@@ -682,6 +693,7 @@
       // 日期选择
       handleTimeChange(val) {
         console.log(val);
+        this.activeNames_ = true;
         if (this.tab1) {
           this.handleTabChange(0);
         }else if (this.tab2) {
@@ -991,6 +1003,9 @@
           limit: limit,
           data: obj,
           onsuccess: body => {
+            if (type <= 4) {
+              this.total = parseInt(body.headers['x-total-count']);
+            }
             if (type == 0) {
 //              this.total1 = parseInt(body.headers['x-total-count']);
               this.toDayLists = [...body.data.data];
