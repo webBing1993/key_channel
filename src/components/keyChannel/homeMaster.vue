@@ -826,6 +826,9 @@
         this.websock.close();
         this.$nextTick(() => {
 //          this.initWebSocket();
+          setTimeout(() => {
+            this.initWebSocket();
+          }, 3000)
         })
       },
 
@@ -849,6 +852,10 @@
           this.websock.close();
           this.$nextTick(() => {
 //            this.initWebSocket();
+            console.log(7778888);
+            setTimeout(() => {
+              this.initWebSocket();
+            },3000);
             this.totalList();
           })
         }else {
