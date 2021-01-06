@@ -27,7 +27,7 @@
               </el-input>
             </el-form-item>
             <el-form-item label="设置新密码" prop="password">
-              <el-input v-model="ruleForm.password" maxlength="16" placeholder="8-16位，必须包含数字和字母" type="password"></el-input>
+              <el-input v-model="ruleForm.password" maxlength="6" placeholder="请输入6位数字密码" type="password"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="text" @click="submitForm('ruleForm')">
@@ -66,8 +66,7 @@
           ],
           password: [
             { required: true, message: '请设置新密码', trigger: 'blur' },
-            { min: 6, max: 16, message: '密码长度在 6 到 16 个字符之间', trigger: 'blur' },
-            { pattern: /^(?![^a-zA-Z]+$)(?!\D+$)/, message: '密码必须包含数字和字母' }
+            { pattern: /^\d{6}$/, message: '密码为6位数的数字' }
           ],
         }
       }

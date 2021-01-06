@@ -22,7 +22,7 @@
             <div class="code">
               <div class="list">
                 <i><img src="../assets/index/mima.png" alt=""></i>
-                <input type="password" maxlength="16" placeholder="请输入密码" v-model="code" autocomplete="off"/>
+                <input type="password" maxlength="6" placeholder="请输入密码" v-model="code" autocomplete="off"/>
               </div>
             </div>
             <div class="tig">
@@ -174,16 +174,16 @@ export default {
         if (this.code === '') {
           this.$message('请输入密码');
           return
-        }else if (this.code.length < 6 || this.code.length > 16) {
-          this.$message('请输入６到16位数密码');
+        }else if (this.code.length != 6) {
+          this.$message('请输入６位数密码');
           return
         }
       }else {
         if (this.code === '') {
           this.$message('请输入密码');
           return
-        }else if (this.code.length < 6 || this.code.length > 16) {
-          this.$message('请输入６到16位数密码');
+        }else if (this.code.length != 6) {
+          this.$message('请输入６位数密码');
           return
         }else {
           this.loginLoading = true;
