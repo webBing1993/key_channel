@@ -380,10 +380,34 @@ const actions = {
     })
   },
 
+  // 白名单删除操作new
+  newDelWhiteItem(ctx, param){
+    ctx.dispatch('resource_', {
+      url: '/keychannel/whitelist',
+      method: 'DELETE',
+      body:param.data,
+      onSuccess: body => {
+        param.onsuccess ? param.onsuccess(body) : null
+      }
+    })
+  },
+
   // 添加白名单
   uploadBmd(ctx, param){
     ctx.dispatch('resource', {
       url: '/identity/whiteList',
+      method: 'POST',
+      body:param.data,
+      onSuccess: body => {
+        param.onsuccess ? param.onsuccess (body) : null
+      }
+    })
+  },
+
+  // 添加白名单new
+  newUploadBmd(ctx, param){
+    ctx.dispatch('resource_', {
+      url: '/keychannel/whiteList',
       method: 'POST',
       body:param.data,
       onSuccess: body => {
@@ -480,6 +504,18 @@ const actions = {
       method: 'GET',
       onSuccess: (body,headers) => {
         param.onsuccess ? param.onsuccess(body,headers) : null
+      }
+    })
+  },
+
+  // 获取操作日志
+  getOperationLog(ctx, param){
+    ctx.dispatch('resource_', {
+      url: '/keychannel/operateLog/list?limit='+param.limit+'&offset='+param.offset,
+      method: 'POST',
+      body: param.data,
+      onSuccess: body => {
+        param.onsuccess ? param.onsuccess(body) : null
       }
     })
   },

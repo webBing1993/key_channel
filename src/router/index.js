@@ -51,6 +51,10 @@ export default new Router({
         {
           path: '/hotelStatus',
           component: resolve => require(['../components/keyChannel/hotelStatus.vue'],resolve),
+        },
+        {
+          path: '/operationLog',
+          component: resolve => require(['../components/keyChannel/operationLog.vue'],resolve),
         }
       ]
     },

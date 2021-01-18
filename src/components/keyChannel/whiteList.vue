@@ -2,7 +2,7 @@
 <template>
   <div>
     <div class="whiteList" v-show="showTrue">
-      <div class="bg"><img src="../../assets/index/baimingdan.png" alt=""></div>
+      <div class="bg" ref="bgHeight"><img src="../../assets/index/baimingdan.png" alt=""></div>
       <div class="whiteContent">
         <div class="white_title">
           白名单
@@ -15,19 +15,19 @@
             <!--<i @click="reach"><img src="../../assets/index/sousuo@2x.png" alt=""></i>-->
           </div>
         </div>
-        <div v-if="whiteList.length != 0" class="whiteLists">
-          <el-row>
+        <div v-if="whiteList.length != 0" class="whiteLists" ref="whiteLists">
+          <el-row :gutter="15">
             <el-col :span="6"  v-for="item in whiteList" v-bind:key="item.id">
               <div class="grid-content">
                 <div class="img">
                   <img :src="item.img_url" alt=""  @click="bigImgShow(item.img_url)">
                 </div>
-              </div>
-              <div class="content">
-                <p>工作人员</p>
-                <div class="name"><span>姓名：</span>{{item.name}}</div>
-                <div class="name"><span>类型：</span>白名单</div>
-                <div class="remove" @click="remove(item)"><img src="../../assets/index/shanchu.png" alt=""></div>
+                <div class="content">
+                  <p>工作人员</p>
+                  <div class="name"><span>姓名：</span>{{item.name}}</div>
+                  <div class="name"><span>类型：</span>白名单</div>
+                  <div class="remove" @click="remove(item)"><img src="../../assets/index/shanchu.png" alt=""></div>
+                </div>
               </div>
             </el-col>
           </el-row>
@@ -49,43 +49,91 @@
         <div class="addToggle" v-if="addShow">
           <div class="shadow"></div>
           <div class="add_content">
-            <div class="add_title">
-              <span>添加白名单</span>
-              <i @click="cancel"><img src="../../assets/index/guanbi.png" alt=""></i>
-            </div>
-            <div class="add_list">
-              <div class="list">
-                <div class="name">人员姓名</div>
-                <div class="add_input">
-                  <input type="text" v-model="add_name" placeholder="请输入姓名">
-                </div>
-              </div>
-              <div class="list">
-                <div class="name">白名单类型</div>
-                <div class="add_input">
-                  <input type="text" value="工作人员" readonly>
-                </div>
-              </div>
-              <div class="list">
-                <div class="name">添加照片</div>
-                <div class="add_input">
+            <div class="content_left">
+              <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+                <el-tab-pane label="现场拍照" name="first">
+                  <video
+                    ref="video"
+                    :width="videoWidth"
+                    :height="videoHeight"
+                    preload
+                    style="object-fit: cover"
+                    autoplay
+                    playsinline
+                    muted
+                  >
+                  </video>
+                  <canvas ref="canvas" :width="videoWidth" :height="videoHeight" v-show="pause"></canvas>
+                  <!-- 未检测到摄像设备-->
+                  <div class="noVideo" v-if="noPause">
+                    <div>
+                      <img src="../../assets/index/Icon-paizhao.png" alt="">
+                      <p>未检测到摄像设备请手动【添加照片】</p>
+                    </div>
+                  </div>
+                  <div class="btns_">
+                    <el-button v-if="!noPause && !imageUrl" @click="tabePhone">立即拍照</el-button>
+                    <el-button v-else-if="activeName== 'first' && imageUrl" @click="reTabePhone">重新拍照</el-button>
+                    <el-button v-if="noPause" @click="uploadBtn">添加照片</el-button>
+                  </div>
+                </el-tab-pane>
+                <el-tab-pane label="本地上传" name="second">
                   <el-upload
-                    class="avatar-uploader"
+                    class="upload-demo"
                     :action="uploadUrl"
                     :headers="getHeader"
                     :show-file-list="false"
                     :on-success="handleAvatarSuccess1"
                     :before-upload="beforeAvatarUpload1"
-                    list-type="picture">
+                    list-type="picture"
+                    ref="upload">
                     <img :src="imageUrl" alt="" v-if="imageUrl != ''">
-                    <el-button v-else><img src="../../assets/index/tianjiazhaopian.png" alt=""></el-button>
+                    <div class="noImg" v-else></div>
+                    <div class="btns_">
+                      <el-button >添加照片</el-button>
+                    </div>
                   </el-upload>
+                </el-tab-pane>
+              </el-tabs>
+            </div>
+            <div class="content_right">
+              <div class="closeTip">
+                <i @click="cancel"><img src="../../assets/index/guanbi.png" alt=""></i>
+              </div>
+              <div class="lists">
+                <div class="list">
+                  <div class="list_title">人员姓名</div>
+                  <div class="list_content">
+                    <el-input v-model="add_name" placeholder="请输入人员姓名" clearable></el-input>
+                  </div>
+                </div>
+                <div class="list">
+                  <div class="list_title">名单类型</div>
+                  <div class="list_content">
+                    <el-radio-group v-model="identityTypes" size="mini">
+                      <el-radio-button label="STAFF">白名单</el-radio-button>
+                      <el-radio-button label="LODGER">住客</el-radio-button>
+                    </el-radio-group>
+                  </div>
+                </div>
+                <div class="list">
+                  <div class="list_title">有效期</div>
+                  <div class="list_content">
+                    <el-date-picker
+                      v-model="expireTime"
+                      type="date"
+                      placeholder="选择日期"
+                      format="yyyy - MM - dd"
+                      value-format="timestamp">
+                    </el-date-picker>
+                    <el-checkbox v-model="expireChecked">长期有效</el-checkbox>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="btns">
-              <div class="cancel" @click="cancel">取消</div>
-              <div class="sure" @click="sure">确认</div>
+              <div class="btns">
+                <el-button class="sure" @click="sure">保存</el-button>
+                <el-button class="cancel" @click="cancel">取消</el-button>
+              </div>
             </div>
           </div>
         </div>
@@ -101,8 +149,10 @@
 <script>
   import {mapState,mapActions} from 'vuex';
   import httpTool from '../../tool/httpTool.js'
+  import axios from 'axios'
+  import ElButton from "../../../node_modules/element-ui/packages/button/src/button";
   export default {
-    name: 'keyChannel',
+    components: {ElButton}, name: 'keyChannel',
     data () {
       return {
         showTrue: false,
@@ -111,10 +161,18 @@
         total: 0,
         name: '',
         add_name: '',
+        identityTypes: '',
+        expireTime: '',
+        expireChecked: false,
         imageUrl: '',
         addShow: false,
         bigImgSrc: "",
         maskBtn:false,         // 控制大图
+        activeName: 'second',
+        pause: false,
+        noPause: false,
+        videoWidth: 317,
+        videoHeight: 303,
       }
     },
     mounted () {
@@ -125,9 +183,84 @@
       ...mapActions([
         'goto',
         'getWhiteList',
-        'delWhiteItem',
-        'uploadBmd'
+        'newDelWhiteItem',
+        'newUploadBmd'
       ]),
+
+      handleClick(tab, event) {
+        this.imageUrl = '';
+        if (this.activeName == 'first') {
+            this.initVideo();
+        }
+      },
+
+      initVideo() {
+        let that = this;
+        that.video = document.getElementById("webcam");
+        setTimeout(() => {
+          navigator.getUserMedia = navigator.getUserMedia ||
+            navigator.webkitGetUserMedia ||
+            navigator.mozGetUserMedia;
+
+          if (navigator.getUserMedia) {
+            navigator.getUserMedia({
+//                audio: true,
+                video: {
+                  width: 1280,
+                  height: 800
+                }
+              },
+              function(stream) {
+                let video = that.$refs.video;
+                video.srcObject = stream;
+                video.onloadedmetadata = function(e) {
+                  video.play();
+                };
+              },
+              function(err) {
+                this.noParse = true;
+              }
+            )}
+
+        }, 300);
+      },
+
+      // 立即拍照
+      tabePhone() {
+        let that = this;
+        let video = that.$refs.video;
+        let canvas = that.$refs.canvas;
+        let context = canvas.getContext("2d");
+        context.drawImage(video, 0, 0, that.videoWidth, that.videoHeight);
+        let imgUrl = canvas.toBlob((blob) => {
+          let filename = `${new Date().getTime()}.jpg`;
+          //转换canvas图片数据格式为formData
+          let file2 = new File([blob], filename, {type: 'image/jpg'});
+          let formData = new FormData();
+          formData.append('file', file2);
+          console.log('that.getHeader', that.getHeader);
+          axios.post(that.uploadUrl, formData, { headers: that.getHeader}).then(res=> {
+            console.log(111, res);
+            if (res.data.errcode == 0) {
+              video.pause();
+              that.imageUrl = res.data.data;
+            }
+          })
+        })
+      },
+
+      // 重新拍照
+      reTabePhone() {
+        this.imageUrl = '';
+        this.initVideo();
+      },
+
+      // 添加图片
+      uploadBtn() {
+        this.imageUrl = '';
+        this.activeName = 'second';
+        this.$refs.upload.$el.children[0].children[2].click();
+      },
 
       watchTest() {
         console.log(111123456789);
@@ -143,12 +276,16 @@
             likeName: this.name,
             createTimeStart:'',
             createTimeEnd:'',
-            removed:false
+            removed:false,
+            identityTypes:["STAFF","LODGER"]
           },
           onsuccess: body => {
             this.showTrue = true;
             this.total = parseInt(body.headers['x-total-count']);
             this.whiteList = [...body.data.data];
+            this.$nextTick(() => {
+              this.$refs.whiteLists.style.height = (this.$refs.bgHeight.offsetHeight - 210) + 'px';
+            })
           }
         })
       },
@@ -160,7 +297,7 @@
           cancelButtonText: '取消',
           type: 'warning',
         }).then(() => {
-          this.delWhiteItem({
+          this.newDelWhiteItem({
             data:{
               ids: [item.id]
             },
@@ -190,6 +327,11 @@
 
       // 取消事件
       cancel () {
+        this.imageUrl = '';
+        this.add_name= '';
+        this.identityTypes = '';
+        this.expireTime = '';
+        this.expireChecked = false;
         this.addShow = false;
       },
 
@@ -222,23 +364,51 @@
 
       // 确认
       sure () {
-        if(this.add_name == '' || this.imageUrl == ''){
-          return
-        }else {
-          this.uploadBmd({
-            data:{
-              image_url: this.imageUrl,
-              name: this.add_name
-            },
-            onsuccess:()=>{
-              this.$emit('getMessage', '');
-              this.addShow = false;
-              this.add_name = '';
-              this.imageUrl = '';
-              this.getWhite(0);
-            }
-          })
+        if (!this.imageUrl) {
+          this.$message({
+            type: 'warning',
+            message: '请添加人员图'
+          });
+          return;
         }
+        if(this.add_name == ''){
+          this.$message({
+            type: 'warning',
+            message: '请填写人员姓名'
+          });
+          return
+        }
+        if(this.identityTypes == ''){
+          this.$message({
+            type: 'warning',
+            message: '请选择名单类型'
+          });
+          return
+        }
+        if(!this.expireChecked && !this.expireTime){
+          this.$message({
+            type: 'warning',
+            message: '请选择有效期'
+          });
+          return
+        }
+        let data = {
+          image_url: this.imageUrl,
+          name: this.add_name,
+          identityType: this.identityTypes
+        };
+        if (!this.expireChecked) {
+          data.expireTime = this.expireTime
+        }
+        console.log('data', data);
+        this.newUploadBmd({
+          data: data,
+          onsuccess:()=>{
+            this.$emit('getMessage', '');
+            this.cancel();
+            this.getWhite(0);
+          }
+        })
       },
 
       // 分页
@@ -265,7 +435,8 @@
     },
     computed: {
       uploadUrl(){
-        return 'http://qa.fortrun.cn/' + 'gemini/identity/whiteList/pic'
+//        return 'http://qa.fortrun.cn/' + 'gemini/identity/whiteList/pic'
+        return httpTool.httpUrlEnv() +  'gemini/identity/whiteList/pic'
       },
       getHeader(){
         return {
@@ -281,7 +452,7 @@
 <style scoped lang="less">
 
   .whiteList {
-    width: calc(100vw - 60px);
+    width: calc(100vw - 80px);
     margin: 15px 15px 0;
     padding: 15px;
     position: relative;
@@ -291,7 +462,7 @@
       left: 0;
       top: 0;
       width: 100%;
-      height: calc(100vh - 60px);
+      height: calc(100vh - 80px);
       img {
         display: block;
         width: 100%;
@@ -388,20 +559,25 @@
     }
     .whiteLists {
       padding: 0 10px;
+      overflow-y: scroll;
+    }
+    .whiteLists::-webkit-scrollbar {
+      display: none;
     }
     .el-row {
       margin: 0 !important;
       .el-col {
-        width: 320px;
-        border: 1px solid #3798FC;
+        /*width: 320px;*/
         position: relative;
-        margin-right: 15px;
         margin-bottom: 15px;
-        background-color: #103A72;
-        display: flex;
-        justify-content: flex-start;
-        border-radius: 8px;
-        padding: 8px;
+        .grid-content {
+          border: 1px solid #3798FC;
+          border-radius: 8px;
+          padding: 8px;
+          background-color: #103A72;
+          display: flex;
+          justify-content: flex-start;
+        }
         .img {
           display: inline-block;
           width: 100px;
@@ -431,7 +607,7 @@
           }
           .remove {
             position: absolute;
-            right: 8px;
+            right: 16px;
             bottom: 8px;
             width: 60px;
             height: 24px;
@@ -458,99 +634,129 @@
       }
       .add_content {
         background: #FFFFFF;
-        border: 1px solid #EAEEF5;
-        border-radius: 4px;
+        border-radius: 2px;
         position: fixed;
-        padding: 8px 12px;
+        padding: 8px 12px 52px;
         z-index: 10;
-        width: 424px;
+        width: 768px;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
-        .add_title {
-          display: flex;
-          justify-content: space-between;
-          color: #606266;
-          font-size: 18px;
-          i {
-            display: inline-flex;
-            width: 10px;
-            height: 10px;
-            padding: 8px;
-            cursor: pointer;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        .content_left {
+          width: 50%;
+          position: relative;
+          padding-right: 39px;
+          /deep/ .el-tabs__nav-wrap {
+            padding-left: 26px;
+          }
+          /deep/ .el-upload {
+            img {
+              display: block;
+              width: 317px;
+              height: 303px;
+              border-radius: 8px;
+            }
+          }
+          .noImg {
+            width: 317px;
+            height: 303px;
+            background: #F5F5F5;
+            border-radius: 8px;
+          }
+          .noVideo {
+            background: #F5F5F5;
+            border-radius: 8px;
+            display: flex;
+            width: 317px;
+            height: 303px;
+            align-items: center;
+            justify-content: center;
+            div {
+              width: 130px;
+              img {
+                margin-bottom: 22px;
+              }
+              p {
+                font-size: 14px;
+                color: #6D6D6D;
+              }
+            }
           }
         }
-        .add_list {
-          .list {
-            margin-top: 15px;
-            display: flex;
-            justify-content: space-between;
-            .name {
-              font-size: 14px;
-              color: #909399;
-              margin-top: 13px;
-              margin-right: 30px;
+        .content_left:after {
+          position: absolute;
+          width: 1px;
+          background: rgba(151,151,151,0.14);
+          height: 305px;
+          right: 0;
+          top: 36px;
+        }
+        .content_right {
+          width: 50%;
+          padding-left: 54px;
+          .closeTip {
+            text-align: right;
+            i {
+              padding: 9px 5px;
+              width: 8px;
+              height: 8px;
+              cursor: pointer;
+              display: inline-block;
             }
-            .add_input {
-              input {
-                width: 302px;
-                height: 40px;
-                line-height: 40px;
-                background: #FFFFFF;
-                border: 1px solid #D8DCE6;
-                border-radius: 4px;
-                padding-left: 15px;
-                color: #909399;
-              }
-              input:-moz-placeholder {
-                color: #C0C4CC;
-                font-size: 14px;
-              }
-              input:-ms-input-placeholder {
-                color: #C0C4CC;
-                font-size: 14px;
-              }
-              input::-moz-placeholder {
-                color: #C0C4CC;
-                font-size: 14px;
-              }
-              input::-webkit-input-placeholder {
-                color: #C0C4CC;
-                font-size: 14px;
-              }
-              .el-button {
-                padding: 0;
-                border: none;
-              }
-              img {
-                display: inline-flex;
-                width: 100px;
-                height: 100px;
-              }
+            img {
+              width: 100%;
+              height: 100%;
+              display: block;
             }
           }
-          .list:last-of-type {
-            justify-content: flex-start;
-            .name {
-              margin-right: 49px;
+          .lists {
+            .list {
+              margin-bottom: 23px;
+              .list_title {
+                font-size: 14px;
+                color: #303133;
+                margin-bottom: 12px;
+                text-align: left;
+              }
+              .list_content {
+                text-align: left;
+                /deep/ .el-input--suffix .el-input__inner {
+                  width: 194px;
+                }
+                /deep/ .el-icon-circle-close {
+                  display: none;
+                }
+                /deep/ .el-radio-button {
+                  margin-right: 20px;
+                }
+                /deep/ .el-radio-button--mini .el-radio-button__inner {
+                  border: 1px solid #DCDFE6;
+                  border-radius: 4px;
+                  padding: 13px 25px;
+                }
+              }
             }
           }
         }
         .btns {
           display: flex;
-          justify-content: flex-end;
+          justify-content: flex-start;
           text-align: center;
-          div {
-            font-size: 12px;
-            width: 56px;
-            height: 32px;
-            line-height: 32px;
+          margin-top: 90px;
+          .el-button {
+            width: 98px;
+            line-height: 36px;
             text-align: center;
             border-radius: 4px;
             display: inline-flex;
             justify-content: center;
-            margin-left: 10px;
+            margin-right: 10px;
             cursor: pointer;
+            font-size: 14px;
+            padding: 0;
           }
           .cancel {
             color: #606266;
@@ -559,6 +765,18 @@
           .sure {
             color: #fff;
             background: #409EFF;
+          }
+        }
+        .btns_ {
+          margin-top: 18px;
+          .el-button {
+            border: 1px solid #3798FC;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #3798FC;
+            width: 98px;
+            line-height: 36px;
+            padding: 0;
           }
         }
       }
@@ -603,6 +821,14 @@
     left: 50%;
     transform: translate(-50%, -50%);
     margin: auto;
+  }
+
+  /deep/ .el-pagination {
+    position: fixed;
+    width: calc(100vw - 80px);
+    bottom: 0;
+    padding: 25px 0;
+    left: 15px;
   }
 
   /deep/ .el-pagination__total {
