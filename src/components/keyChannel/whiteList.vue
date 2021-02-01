@@ -24,8 +24,8 @@
                 </div>
                 <div class="content">
                   <p>工作人员</p>
-                  <div class="name"><span>姓名：</span>{{item.name}}</div>
-                  <div class="name"><span>类型：</span>白名单</div>
+                  <div class="name"><span>姓名：</span>{{ item.name }}</div>
+                  <div class="name"><span>类型：</span>{{ item.identityType == 'STAFF' ? '白名单' : '住客' }}</div>
                   <div class="remove" @click="remove(item)"><img src="../../assets/index/shanchu.png" alt=""></div>
                 </div>
               </div>

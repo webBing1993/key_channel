@@ -39,7 +39,7 @@
             <el-table-column
               label="活动时间" >
               <template slot-scope="scope" >
-                <span>{{ scope.row.time }}</span>
+                <span>{{ datetimeparse(scope.row.createTime, 'yy/MM/dd hh:mm') }}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -49,13 +49,13 @@
             <el-table-column
               label="账号名称"  >
               <template slot-scope="scope">
-                <span>{{ scope.row.name }}</span>
+                <span>{{ scope.row.account == 'SYSTEM' ? '系统自动操作' : scope.row.operator + '/' + scope.row.account }}</span>
               </template>
             </el-table-column>
             <el-table-column
               label="操作内容"  >
               <template slot-scope="scope">
-                <span>{{ scope.row.content }}</span>
+                <span>{{ scope.row.type == 'ADD_STAFF' ? '增加员工' : scope.row.type == 'ADD_LODGER' ? '增加住客' : scope.row.type == 'DEL_LODGER' ? '删除住客' : scope.row.type == 'DEL_STAFF' ? '删除员工' : scope.row.type == 'UPDATE_SUSPICIOUS_GUEST_STATUS' ? '处理陌生人' : scope.row.type == 'UPDATE_BLACK_STATUS' ? '处理黑名单' : scope.row.type == 'UPDATE_BLACK_STATUS' ? '处理灰名单人员' : '' }}</span>
               </template>
             </el-table-column>
           </el-table>
@@ -196,6 +196,12 @@
         /deep/ .el-form-item {
           margin-right: 80px;
         }
+        /deep/ .el-form-item:first-of-type {
+          width: 35%;
+          .el-form-item__content {
+            width: 100%;
+          }
+        }
         /deep/ .el-form-item__label {
           font-size: 14px;
           color: #ffffff;
@@ -241,6 +247,7 @@
       /deep/ .el-table td, /deep/ .el-table th.is-leaf {
         border-bottom: none;
         border-top: 2px solid #142B5B;
+        background-color: transparent;
       }
       /deep/ .el-table {
         background: transparent;

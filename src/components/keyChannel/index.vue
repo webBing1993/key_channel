@@ -8,13 +8,12 @@
               <img src="../../assets/index/logo.png" alt="">
               <div class="tabs" v-if="!newSys && roleShow">
                 <span class="active"><img :src="handerImg.img[1]" alt="">首页</span>
-                <span :class="handleIndex == 2 ? 'active' : ''" @click="handleClick(2)"><img :src="handleIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">设置</span>
               </div>
               <div class="tabs" v-else-if="!newSys && !roleShow">
                 <span :class="handleIndex == 1 ? 'active' : ''" @click="handleClick(1)"><img :src="handleIndex == 1 ? handerImg.img[1] : handerImg.img[0]" alt="">首页</span>
                 <span :class="handleIndex == 2 ? 'active' : ''" @click="handleClick(2)"><img :src="handleIndex == 2 ? handerImg.img[1] : handerImg.img[0]" alt="">设置</span>
                 <span :class="handleIndex == 3 ? 'active' : ''" @click="handleClick(3)" v-if="massage"><img :src="handleIndex == 3 ? handerImg.img[1] : handerImg.img[0]" alt="" >设备监控</span>
-                <span :class="handleIndex == 9 ? 'active' : ''" @click="handleClick(9)"><img :src="handleIndex == 3 ? handerImg.img[1] : handerImg.img[0]" alt="" >操作日志</span>
+                <span :class="handleIndex == 4 ? 'active' : ''" @click="handleClick(9)"><img :src="handleIndex == 4 ? handerImg.img[1] : handerImg.img[0]" alt="" >操作日志</span>
               </div>
               <div class="tabs" v-if="newSys && roleShow">
                 <span :class="handleIndex == 1 ? 'active' : ''" @click="handleClick(4)"><img :src="handleIndex == 1 ? handerImg.img[1] : handerImg.img[0]" alt="">首页</span>
